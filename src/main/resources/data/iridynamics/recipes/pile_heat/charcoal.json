@@ -1,0 +1,17 @@
+{
+  "type": "iridynamics:pile_heat",
+  "input": {
+    "type": 0,
+    "ingredient": {
+      "item": "iridynamics:wood_brick"
+    },
+    "count": 4
+  },
+  "output": {
+    "base": {
+      "item": "minecraft:charcoal"
+    }
+  },
+  "temperature": 1000.0,
+  "energy": 20000000.0
+}

@@ -1,0 +1,9 @@
+{
+  "loader": "iridynamics:material_tool",
+  "parent": "forge:item/default",
+  "tool": "iridynamics:knife",
+  "textures": {
+    "layer0": "iridynamics:item/tool/knife_0",
+    "layer1": "iridynamics:item/tool/knife_1"
+  }
+}

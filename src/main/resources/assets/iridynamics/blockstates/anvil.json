@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "iridynamics:block/anvil"
+    },
+    "facing=east": {
+      "model": "iridynamics:block/anvil",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "iridynamics:block/anvil",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "iridynamics:block/anvil",
+      "y": 270
+    }
+  }
+}

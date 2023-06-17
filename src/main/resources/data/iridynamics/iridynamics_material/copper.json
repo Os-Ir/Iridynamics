@@ -1,0 +1,20 @@
+{
+  "type": "copper",
+  "tool_property": {
+    "durability": 51200,
+    "harvest_level": 2,
+    "efficiency": 5.0
+  },
+  "render": {
+    "color": 11811840
+  },
+  "physical": {
+    "density": 8960.0,
+    "thermal_conductivity": 401.0,
+    "heat_capacity": 385.0
+  },
+  "heat": {
+    "type": "simple_solid_liquid",
+    "melting_point": 1358.0
+  }
+}

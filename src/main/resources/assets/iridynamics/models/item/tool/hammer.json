@@ -1,0 +1,9 @@
+{
+  "loader": "iridynamics:material_tool",
+  "parent": "forge:item/default",
+  "tool": "iridynamics:hammer",
+  "textures": {
+    "layer0": "iridynamics:item/tool/hammer_0",
+    "layer1": "iridynamics:item/tool/hammer_1"
+  }
+}

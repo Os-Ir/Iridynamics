@@ -1,0 +1,8 @@
+{
+	"loader": "iridynamics:material",
+	"parent": "forge:item/default",
+	"shape": "dust",
+	"textures": {
+		"texture": "iridynamics:item/material/dust"
+	}
+}

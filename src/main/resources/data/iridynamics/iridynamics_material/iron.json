@@ -1,0 +1,20 @@
+{
+  "type": "iron",
+  "tool_property": {
+    "durability": 204800,
+    "harvest_level": 2,
+    "efficiency": 6.0
+  },
+  "render": {
+    "color": 11184810
+  },
+  "physical": {
+    "density": 7870.0,
+    "thermal_conductivity": 80.0,
+    "heat_capacity": 450.0
+  },
+  "heat": {
+    "type": "simple_solid_liquid",
+    "melting_point": 1808.0
+  }
+}

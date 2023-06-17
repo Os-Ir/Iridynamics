@@ -1,0 +1,8 @@
+{
+  "loader": "iridynamics:material",
+  "parent": "forge:item/default",
+  "shape": "chisel_head",
+  "textures": {
+    "texture": "iridynamics:item/material/chisel_head"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "iridynamics:block/forge"
+    },
+    "facing=east": {
+      "model": "iridynamics:block/forge",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "iridynamics:block/forge",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "iridynamics:block/forge",
+      "y": 270
+    }
+  }
+}

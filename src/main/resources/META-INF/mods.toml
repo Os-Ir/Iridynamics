@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="GNU General Public License v3.0"
+[[mods]]
+    modId="iridynamics"
+    version="1.1.1"
+    displayName="Iridynamics"
+    logoFile="iridynamics.png"
+    credits="Cuckoo Dev Team"
+    authors="Os-Ir"
+    description="Iridynamics"
+    [[dependencies.iridynamics]]
+        modId="forge"
+        mandatory=true
+        versionRange="[40,)"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.iridynamics]]
+        modId="minecraft"
+        mandatory=true
+        versionRange="[1.18.2,)"
+        ordering="NONE"
+        side="BOTH"
