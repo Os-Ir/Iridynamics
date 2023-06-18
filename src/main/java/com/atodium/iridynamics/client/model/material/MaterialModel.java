@@ -56,9 +56,7 @@ public class MaterialModel implements IModelGeometry<MaterialModel> {
     @Override
     public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState transform, ItemOverrides originalOverrides, ResourceLocation modelLocation) {
         ItemOverrides overrides = ItemOverrides.EMPTY;
-        if (this.material == null) {
-            overrides = new MaterialOverride(owner, Transformation.identity(), this.shape);
-        }
+        if (this.material == null) overrides = new MaterialOverride(owner, Transformation.identity(), this.shape);
         return bakeMaterialModel(owner, spriteGetter, Transformation.identity(), overrides, this.shape, this.material);
     }
 
@@ -70,13 +68,10 @@ public class MaterialModel implements IModelGeometry<MaterialModel> {
         Predicate<Material> adder = DynamicTextureLoader.INSTANCE.getTextureAdder(textures);
         if (this.material == null) {
             MaterialBase.REGISTRY.values().forEach((material) -> {
-                if (this.shape.generateMaterial(material)) {
+                if (this.shape.generateMaterial(material))
                     material.getRenderInfo().registerSpecialTexture(this.shape, adder);
-                }
             });
-        } else {
-            this.material.getRenderInfo().registerSpecialTexture(this.shape, adder);
-        }
+        } else this.material.getRenderInfo().registerSpecialTexture(this.shape, adder);
         return textures;
     }
 }

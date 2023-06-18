@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PlasticityMaterial extends DustMaterial {
     public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(Iridynamics.MODID, "plasticity");
-    public static final long DEFAULT_FLAGS = combineFlags(GENERATE_DUST, GENERATE_PLATE, GENERATE_ROD, GENERATE_GEAR, GENERATE_INGOT, GENERATE_FOIL, GENERATE_SCREW, GENERATE_SPRING, GENERATE_RING, GENERATE_WIRE, GENERATE_ROTOR, GENERATE_NUGGET);
+    public static final long DEFAULT_FLAGS = combineFlags(GENERATE_DUST, GENERATE_PLATE, GENERATE_ROD, GENERATE_GEAR, GENERATE_INGOT, GENERATE_FOIL, GENERATE_SCREW, GENERATE_SPRING, GENERATE_RING, GENERATE_WIRE, GENERATE_NUGGET);
 
     public PlasticityMaterial(String name) {
         super(name);

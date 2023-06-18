@@ -1,0 +1,8 @@
+{
+  "loader": "iridynamics:material",
+  "parent": "forge:item/default",
+  "shape": "long_rod",
+  "textures": {
+    "texture": "iridynamics:item/material/long_rod"
+  }
+}

@@ -24,7 +24,6 @@ public class ModSolidShapes {
     public static final SolidShape SPRING = new SolidShape("spring", null, 144, flag(MaterialBase.GENERATE_SPRING));
     public static final SolidShape RING = new SolidShape("ring", null, 36, flag(MaterialBase.GENERATE_RING));
     public static final SolidShape WIRE = new SolidShape("wire", null, 18, flag(MaterialBase.GENERATE_WIRE));
-    public static final SolidShape ROTOR = new SolidShape("rotor", null, 576, flag(MaterialBase.GENERATE_ROTOR));
     public static final SolidShape NUGGET = new SolidShape("nugget", new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 16, flag(MaterialBase.GENERATE_NUGGET));
 
     public static final SolidShape KNIFE_HEAD = new SolidShape("knife_head", null, 144, flag(MaterialBase.GENERATE_TOOL));

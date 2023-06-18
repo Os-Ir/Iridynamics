@@ -1,0 +1,8 @@
+{
+  "loader": "iridynamics:material",
+  "parent": "forge:item/default",
+  "shape": "short_rod",
+  "textures": {
+    "texture": "iridynamics:item/material/short_rod"
+  }
+}

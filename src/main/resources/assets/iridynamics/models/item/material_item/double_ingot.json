@@ -1,0 +1,8 @@
+{
+  "loader": "iridynamics:material",
+  "parent": "forge:item/default",
+  "shape": "double_ingot",
+  "textures": {
+    "texture": "iridynamics:item/material/double_ingot"
+  }
+}

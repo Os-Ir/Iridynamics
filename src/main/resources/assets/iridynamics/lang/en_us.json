@@ -48,7 +48,7 @@
 	"iridynamics.shape.screw": "%s Screw",
 	"iridynamics.shape.spring": "%s Spring",
     "iridynamics.shape.ring": "%s Ring",
-	"iridynamics.shape.wire": "% Wire",
+	"iridynamics.shape.wire": "%s Wire",
     "iridynamics.shape.rotor": "%s Rotor",
 	"iridynamics.shape.nugget": "%s Nugget",
 	"iridynamics.shape.knife_head": "%s Knife Head",

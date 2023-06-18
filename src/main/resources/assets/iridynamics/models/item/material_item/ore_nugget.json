@@ -1,0 +1,8 @@
+{
+  "loader": "iridynamics:material",
+  "parent": "forge:item/default",
+  "shape": "ore_nugget",
+  "textures": {
+    "texture": "iridynamics:item/material/ore_nugget"
+  }
+}

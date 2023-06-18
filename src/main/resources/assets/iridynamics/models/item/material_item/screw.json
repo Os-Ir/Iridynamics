@@ -1,0 +1,8 @@
+{
+  "loader": "iridynamics:material",
+  "parent": "forge:item/default",
+  "shape": "screw",
+  "textures": {
+    "texture": "iridynamics:item/material/screw"
+  }
+}
