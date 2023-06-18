@@ -20,10 +20,23 @@ public class SolidShape {
     private final String name;
     private final int[] forgeShape;
     private final int unit;
+    private final SolidShape weldingResult;
     private final Predicate<MaterialBase> materialPredicate;
     private final Set<MaterialBase> ignoredMaterials;
 
+    public SolidShape(String name, int unit, Predicate<MaterialBase> materialPredicate) {
+        this(name, null, unit, materialPredicate, null);
+    }
+
     public SolidShape(String name, int[] forgeShape, int unit, Predicate<MaterialBase> materialPredicate) {
+        this(name, forgeShape, unit, materialPredicate, null);
+    }
+
+    public SolidShape(String name, int unit, Predicate<MaterialBase> materialPredicate, SolidShape weldingResult) {
+        this(name, null, unit, materialPredicate, weldingResult);
+    }
+
+    public SolidShape(String name, int[] forgeShape, int unit, Predicate<MaterialBase> materialPredicate, SolidShape weldingResult) {
         if (REGISTRY.containsKey(name)) {
             throw new IllegalStateException("Solid shape [ " + name + " ] has registered");
         }
@@ -37,6 +50,7 @@ public class SolidShape {
             this.forgeShape = null;
         }
         this.unit = unit;
+        this.weldingResult = weldingResult;
         this.materialPredicate = materialPredicate;
         this.ignoredMaterials = new HashSet<>();
         this.register();
@@ -97,6 +111,14 @@ public class SolidShape {
 
     public int getUnit() {
         return this.unit;
+    }
+
+    public boolean hasWeldingResult() {
+        return this.weldingResult != null;
+    }
+
+    public SolidShape getWeldingResult() {
+        return this.weldingResult;
     }
 
     public void addIgnoredMaterial(MaterialBase... material) {

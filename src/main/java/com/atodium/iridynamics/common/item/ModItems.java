@@ -27,7 +27,6 @@ public class ModItems {
     public static final RegistryObject<Item> DRIED_GRASS = Iridynamics.REGISTRY.item("dried_grass", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> MOLD = Iridynamics.REGISTRY.item("mold", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> MOLD_TOOL = Iridynamics.REGISTRY.item("mold_tool", MoldToolItem::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
-    public static final RegistryObject<Item> MOLD_WELDING = Iridynamics.REGISTRY.item("mold_welding", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> SMALL_CRUCIBLE = Iridynamics.REGISTRY.item("small_crucible", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
 
     public static final RegistryObject<Item> IGNITER = Iridynamics.REGISTRY.item("igniter", (properties) -> new ToolItem(properties, ToolIgniter.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.ITEM).register();

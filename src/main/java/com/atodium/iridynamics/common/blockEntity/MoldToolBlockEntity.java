@@ -6,7 +6,6 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.SolidShape;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.common.item.ModItems;
@@ -55,9 +54,7 @@ public class MoldToolBlockEntity extends SyncedBlockEntity implements ITickable 
     }
 
     public boolean pour(LiquidContainerCapability source) {
-//        double temperature = source.getTemperature();
-        source.addMaterial(ModMaterials.STEEL, 144);
-        double temperature = 1610.0;
+        double temperature = source.getTemperature();
         if (this.container.isEmpty()) {
             ImmutableSet<Map.Entry<MaterialBase, Integer>> materials = source.getAllMaterials().entrySet();
             for (Map.Entry<MaterialBase, Integer> entry : materials) {

@@ -47,7 +47,17 @@ public class ClientForgeEventHandler {
     public static void addItemTooltip(ItemTooltipEvent e) {
         ItemStack stack = e.getItemStack();
         List<Component> tooltip = e.getToolTip();
-        stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> tooltip.add(new TextComponent(ChatFormatting.WHITE + String.format("%.1f", heat.getTemperature() - HeatUtil.CELSIUS_ZERO) + "℃")));
+        stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> {
+            if (MaterialEntry.containsMaterialEntry(stack)) {
+                MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
+                if (entry.shape().hasWeldingResult() && entry.material().hasHeatInfo()) {
+                    double point = entry.material().getHeatInfo().getMeltingPoint() * 0.9;
+                    if (heat.getTemperature() >= point)
+                        tooltip.add(new TextComponent(ChatFormatting.GREEN + I18n.get("iridynamics.info.heat.weldable")));
+                }
+            }
+            tooltip.add(new TextComponent(ChatFormatting.WHITE + String.format("%.1f", heat.getTemperature() - HeatUtil.CELSIUS_ZERO) + "℃"));
+        });
         stack.getCapability(ForgingCapability.FORGING).ifPresent((forging) -> {
             if (forging.processed())
                 tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.forging.processed")));

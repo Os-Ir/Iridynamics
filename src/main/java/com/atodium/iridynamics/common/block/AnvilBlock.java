@@ -94,9 +94,9 @@ public class AnvilBlock extends Block implements EntityBlock {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         level.getBlockEntity(pos, ModBlockEntities.ANVIL.get()).ifPresent((anvil) -> {
             Vec3 location = MathUtil.transformPosition(MathUtil.minus(result.getLocation(), pos), state.getValue(DIRECTION));
+            ItemStack stack = player.getItemInHand(hand);
+            Item item = stack.getItem();
             if (result.getDirection() == Direction.UP && location.x > 0.125) {
-                ItemStack stack = player.getItemInHand(hand);
-                Item item = stack.getItem();
                 int slot = location.x > 0.5625 ? 1 : 0;
                 if (item instanceof MaterialToolItem toolItem && MathUtil.between(location.x, 0.125, 1.0) && MathUtil.between(location.z, 0.3125, 0.75)) {
                     IToolInfo info = toolItem.getToolInfo();
@@ -111,6 +111,13 @@ public class AnvilBlock extends Block implements EntityBlock {
                     ItemStack take = anvil.takeItem(slot);
                     if (take.isEmpty()) player.setItemInHand(hand, anvil.putItem(slot, stack));
                     else ItemHandlerHelper.giveItemToPlayer(player, take);
+                }
+            }
+            if (result.getDirection().get2DDataValue() >= 0 && item instanceof MaterialToolItem toolItem && toolItem.getToolInfo() == ToolHammer.INSTANCE) {
+                ItemStack take = anvil.weld();
+                if (!take.isEmpty()) {
+                    toolItem.damageItem(stack, ToolHammer.INSTANCE.getInteractionDamage());
+                    ItemHandlerHelper.giveItemToPlayer(player, take);
                 }
             }
         });

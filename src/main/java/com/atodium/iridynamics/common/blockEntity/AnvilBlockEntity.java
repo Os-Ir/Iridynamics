@@ -3,14 +3,16 @@ package com.atodium.iridynamics.common.blockEntity;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.capability.ForgingCapability;
+import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.IForging;
+import com.atodium.iridynamics.api.capability.IHeat;
+import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.common.block.AnvilBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
@@ -78,6 +80,25 @@ public class AnvilBlockEntity extends SyncedBlockEntity implements ITickable {
             return true;
         }
         return false;
+    }
+
+    public ItemStack weld() {
+        ItemStack left = this.inventory.left();
+        ItemStack right = this.inventory.right();
+        if (left.isEmpty() || right.isEmpty() || !left.getCapability(HeatCapability.HEAT).isPresent() || !right.getCapability(HeatCapability.HEAT).isPresent())
+            return ItemStack.EMPTY;
+        MaterialEntry entryLeft = MaterialEntry.getItemMaterialEntry(left);
+        MaterialEntry entryRight = MaterialEntry.getItemMaterialEntry(right);
+        if (!entryLeft.equals(entryRight) || !entryLeft.shape().hasWeldingResult()) return ItemStack.EMPTY;
+        IHeat heatLeft = left.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new);
+        IHeat heatRight = right.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new);
+        double point = entryLeft.material().getHeatInfo().getMeltingPoint() * 0.9;
+        if (point > heatLeft.getTemperature() || point > heatRight.getTemperature()) return ItemStack.EMPTY;
+        this.inventory.takeLeft();
+        this.inventory.takeRight();
+        ItemStack result = MaterialEntry.getMaterialItemStack(entryLeft.shape().getWeldingResult(), entryLeft.material());
+        result.getCapability(HeatCapability.HEAT).ifPresent((heat) -> heat.setTemperature((heatLeft.getTemperature() + heatRight.getTemperature()) / 2.0));
+        return result;
     }
 
     public void updateBlockState() {
