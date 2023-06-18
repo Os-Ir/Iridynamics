@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 public class ModSolidShapes {
     public static final SolidShape DUST = new SolidShape("dust", 144, flag(MaterialBase.GENERATE_DUST));
     public static final SolidShape DOUBLE_PLATE = new SolidShape("double_plate", 288, flag(MaterialBase.GENERATE_PLATE));
-    public static final SolidShape PLATE = new SolidShape("plate", new int[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, 144, flag(MaterialBase.GENERATE_PLATE), DOUBLE_PLATE);
+    public static final SolidShape PLATE = new SolidShape("plate", new int[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, 144, flag(MaterialBase.GENERATE_PLATE));
     public static final SolidShape CURVED_PLATE = new SolidShape("curved_plate", 144, flag(MaterialBase.GENERATE_PLATE));
     public static final SolidShape ROD = new SolidShape("rod", 72, flag(MaterialBase.GENERATE_ROD));
     public static final SolidShape SHORT_ROD = new SolidShape("short_rod", 36, flag(MaterialBase.GENERATE_ROD));
@@ -18,7 +18,7 @@ public class ModSolidShapes {
     public static final SolidShape SMALL_GEAR = new SolidShape("small_gear", 144, flag(MaterialBase.GENERATE_GEAR));
     public static final SolidShape CRYSTAL = new SolidShape("crystal", 144, flag(MaterialBase.GENERATE_CRYSTAL));
     public static final SolidShape DOUBLE_INGOT = new SolidShape("double_ingot", new int[]{0, 6, 6, 6, 6, 6, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 6, 6, 6, 6, 0, 0, 6, 6, 6, 6, 6, 0}, 288, flag(MaterialBase.GENERATE_INGOT));
-    public static final SolidShape INGOT = new SolidShape("ingot", new int[]{0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0}, 144, flag(MaterialBase.GENERATE_INGOT), DOUBLE_INGOT);
+    public static final SolidShape INGOT = new SolidShape("ingot", new int[]{0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 0}, 144, flag(MaterialBase.GENERATE_INGOT));
     public static final SolidShape FOIL = new SolidShape("foil", 36, flag(MaterialBase.GENERATE_FOIL));
     public static final SolidShape SCREW = new SolidShape("screw", 18, flag(MaterialBase.GENERATE_SCREW));
     public static final SolidShape SPRING = new SolidShape("spring", 144, flag(MaterialBase.GENERATE_SPRING));
@@ -53,5 +53,10 @@ public class ModSolidShapes {
         MaterialEntry.register(CRYSTAL, ModMaterials.DIAMOND, Items.DIAMOND);
         MaterialEntry.register(ROD, ModMaterials.WOOD, Items.STICK);
         MaterialEntry.register(CRYSTAL, ModMaterials.EMERALD, Items.EMERALD);
+        PLATE.setWeldingResult(DOUBLE_PLATE);
+        INGOT.setWeldingResult(DOUBLE_INGOT);
+        PLATE.setBendingResult(CURVED_PLATE);
+        SHORT_ROD.setBendingResult(RING);
+        LONG_ROD.setBendingResult(SPRING);
     }
 }
