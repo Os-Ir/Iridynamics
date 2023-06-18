@@ -16,8 +16,8 @@ import org.apache.commons.compress.utils.Lists;
 import java.util.List;
 
 public class MaterialItem extends Item {
-    protected final SolidShape shape;
-    protected final List<MaterialBase> generatedMaterials;
+    private final SolidShape shape;
+    private final List<MaterialBase> generatedMaterials;
 
     public MaterialItem(Item.Properties properties, SolidShape shape) {
         super(properties);
@@ -78,14 +78,6 @@ public class MaterialItem extends Item {
         if (this.allowdedIn(tab)) {
             this.generatedMaterials.forEach((material) -> list.add(MaterialEntry.getMaterialItemStack(this.shape, material, 1)));
         }
-    }
-
-    public int getItemColor(ItemStack stack, int tintIndex) {
-        MaterialBase material = getItemMaterial(stack);
-        if (material != null) {
-            return material.getRenderInfo().color();
-        }
-        return 0xffffff;
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.atodium.iridynamics.client;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.capability.*;
+import com.atodium.iridynamics.api.capability.ForgingCapability;
+import com.atodium.iridynamics.api.capability.HeatCapability;
+import com.atodium.iridynamics.api.capability.InventoryCapability;
+import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.util.math.MathUtil;
@@ -46,8 +49,9 @@ public class ClientForgeEventHandler {
         List<Component> tooltip = e.getToolTip();
         stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> tooltip.add(new TextComponent(ChatFormatting.WHITE + String.format("%.1f", heat.getTemperature() - HeatUtil.CELSIUS_ZERO) + "℃")));
         stack.getCapability(ForgingCapability.FORGING).ifPresent((forging) -> {
-            if (!forging.processed())
-                tooltip.add(new TextComponent(ChatFormatting.GRAY + I18n.get("iridynamics.info.forging.unprocessed")));
+            if (forging.processed())
+                tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.forging.processed")));
+            else tooltip.add(new TextComponent(ChatFormatting.GRAY + I18n.get("iridynamics.info.forging.unprocessed")));
         });
         stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).ifPresent((container) -> {
             LiquidContainerCapability cap = (LiquidContainerCapability) container;

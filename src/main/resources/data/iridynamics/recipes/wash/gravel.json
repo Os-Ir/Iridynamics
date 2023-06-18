@@ -32,6 +32,41 @@
         "material": "iron"
       },
       "weights": 1.0
+    },
+    {
+      "material_base": {
+        "shape": "ore_nugget",
+        "material": "tin"
+      },
+      "weights": 0.5
+    },
+    {
+      "material_base": {
+        "shape": "ore_nugget",
+        "material": "lead"
+      },
+      "weights": 0.3
+    },
+    {
+      "material_base": {
+        "shape": "ore_nugget",
+        "material": "bismuth"
+      },
+      "weights": 0.3
+    },
+    {
+      "material_base": {
+        "shape": "ore_nugget",
+        "material": "zinc"
+      },
+      "weights": 0.3
+    },
+    {
+      "material_base": {
+        "shape": "ore_nugget",
+        "material": "antimony"
+      },
+      "weights": 0.3
     }
   ],
   "output_count": 2

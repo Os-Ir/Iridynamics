@@ -12,10 +12,12 @@
 	"block.iridynamics.forge": "锻造炉",
 	"block.iridynamics.anvil": "砧",
 	"block.iridynamics.mold": "模具",
+	"block.iridynamics.mold_tool": "模具",
 	"block.iridynamics.small_crucible": "小型坩埚",
 	"block.iridynamics.basin": "盆",
 
 	"item.iridynamics.mold": "模具",
+	"item.iridynamics.mold_tool": "模具",
 	"item.iridynamics.wood_brick": "木块",
 	"item.iridynamics.crushed_stone": "碎石块",
 	"item.iridynamics.grass": "草",
@@ -27,6 +29,8 @@
 	"item.iridynamics.tool.knife": "刀",
 
 	"iridynamics.info.forging.unprocessed": "未被加工",
+	"iridynamics.info.forging.processed": "已被加工",
+	"iridynamics.info.mold_tool.disposable": "一次性的",
 	"iridynamics.info.liquid_container.title": "液体容器",
 	"iridynamics.info.liquid_container.solid": "固态",
 	"iridynamics.info.liquid_container.liquid": "液态",

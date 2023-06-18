@@ -111,6 +111,10 @@ public class SolidShape {
         return Iridynamics.MODID + ".shape." + this.name;
     }
 
+    public String getLocalizedName() {
+        return I18n.get(this.getUnlocalizedName(), "");
+    }
+
     public String getLocalizedName(MaterialBase material) {
         return I18n.get(this.getUnlocalizedName(), material.getLocalizedName());
     }

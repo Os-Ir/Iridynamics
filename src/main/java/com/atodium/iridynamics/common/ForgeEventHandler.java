@@ -2,7 +2,10 @@ package com.atodium.iridynamics.common;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
-import com.atodium.iridynamics.api.capability.*;
+import com.atodium.iridynamics.api.capability.ForgingCapability;
+import com.atodium.iridynamics.api.capability.HeatCapability;
+import com.atodium.iridynamics.api.capability.InventoryCapability;
+import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.impl.MaterialPhasePortrait;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
@@ -15,10 +18,7 @@ import com.atodium.iridynamics.api.recipe.impl.DryingRecipe;
 import com.atodium.iridynamics.api.recipe.impl.PileHeatRecipe;
 import com.atodium.iridynamics.api.recipe.impl.WashingRecipe;
 import com.atodium.iridynamics.common.block.ModBlocks;
-import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
-import com.atodium.iridynamics.common.blockEntity.MoldBlockEntity;
-import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
-import com.atodium.iridynamics.common.blockEntity.SmallCrucibleBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.*;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.atodium.iridynamics.common.tool.ToolIgniter;
 import net.minecraft.core.BlockPos;
@@ -72,6 +72,8 @@ public class ForgeEventHandler {
             event.addCapability(InventoryCapability.KEY, new InventoryCapability(4));
         } else if (item == ModItems.MOLD.get()) {
             event.addCapability(LiquidContainerCapability.KEY, new LiquidContainerCapability(MoldBlockEntity.CAPACITY));
+        } else if (item == ModItems.MOLD_TOOL.get()) {
+            event.addCapability(LiquidContainerCapability.KEY, new LiquidContainerCapability(MoldBlockEntity.CAPACITY));
         } else if (MaterialEntry.containsMaterialEntry(stack)) {
             MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
             MaterialBase material = entry.material();
@@ -93,12 +95,19 @@ public class ForgeEventHandler {
                 if (item == ModItems.SMALL_CRUCIBLE.get())
                     SmallCrucibleBlockEntity.updateSmallCrucible(stack.getCapability(InventoryCapability.INVENTORY).orElseThrow(NullPointerException::new), (LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new), (HeatCapability) stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new));
                 else if (item == ModItems.MOLD.get())
-                    MoldBlockEntity.updateMole((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
+                    MoldBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
+                else if (item == ModItems.MOLD_TOOL.get())
+                    MoldToolBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
             });
             inventory.offhand.forEach((stack) -> {
                 stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> HeatUtil.heatExchange(heat, HeatUtil.AMBIENT_TEMPERATURE, heat.getResistance(Direction.UP) + HeatUtil.RESISTANCE_AIR_FLOW));
-                if (stack.getItem() == ModItems.SMALL_CRUCIBLE.get())
+                Item item = stack.getItem();
+                if (item == ModItems.SMALL_CRUCIBLE.get())
                     SmallCrucibleBlockEntity.updateSmallCrucible(stack.getCapability(InventoryCapability.INVENTORY).orElseThrow(NullPointerException::new), (LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new), (HeatCapability) stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new));
+                else if (item == ModItems.MOLD.get())
+                    MoldBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
+                else if (item == ModItems.MOLD_TOOL.get())
+                    MoldToolBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
             });
         }
     }
@@ -129,6 +138,11 @@ public class ForgeEventHandler {
         } else if (item == ModItems.MOLD.get() && state.isFaceSturdy(level, pos, Direction.UP)) {
             if (level.setBlockAndUpdate(posAbove, ModBlocks.MOLD.get().defaultBlockState()))
                 level.getBlockEntity(posAbove, ModBlockEntities.MOLD.get()).ifPresent((mold) -> {
+                    if (mold.setup(stack)) stack.shrink(1);
+                });
+        } else if (item == ModItems.MOLD_TOOL.get() && state.isFaceSturdy(level, pos, Direction.UP)) {
+            if (level.setBlockAndUpdate(posAbove, ModBlocks.MOLD_TOOL.get().defaultBlockState()))
+                level.getBlockEntity(posAbove, ModBlockEntities.MOLD_TOOL.get()).ifPresent((mold) -> {
                     if (mold.setup(stack)) stack.shrink(1);
                 });
         }

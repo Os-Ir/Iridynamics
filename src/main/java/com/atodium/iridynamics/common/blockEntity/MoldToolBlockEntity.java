@@ -6,9 +6,11 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.api.material.ModSolidShapes;
+import com.atodium.iridynamics.api.material.ModMaterials;
+import com.atodium.iridynamics.api.material.SolidShape;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.common.item.ModItems;
+import com.atodium.iridynamics.common.item.MoldToolItem;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,15 +23,15 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Map;
 
-public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
+public class MoldToolBlockEntity extends SyncedBlockEntity implements ITickable {
     public static final double RESISTANCE = 0.02;
-    public static final int CAPACITY = 144;
 
+    private SolidShape shape;
     private final LiquidContainerCapability container;
 
-    public MoldBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MOLD.get(), pos, state);
-        this.container = new LiquidContainerCapability(CAPACITY);
+    public MoldToolBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.MOLD_TOOL.get(), pos, state);
+        this.container = new LiquidContainerCapability(0);
     }
 
     public static void updateMold(LiquidContainerCapability container) {
@@ -44,7 +46,8 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
     }
 
     public boolean setup(ItemStack stack) {
-        if (stack.getItem() == ModItems.MOLD.get()) {
+        if (stack.getItem() == ModItems.MOLD_TOOL.get()) {
+            this.shape = MoldToolItem.getMoldShape(stack);
             this.container.deserializeNBT(((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new)).serializeNBT());
             return true;
         }
@@ -52,13 +55,15 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
     }
 
     public boolean pour(LiquidContainerCapability source) {
-        double temperature = source.getTemperature();
+//        double temperature = source.getTemperature();
+        source.addMaterial(ModMaterials.STEEL, 144);
+        double temperature = 1610.0;
         if (this.container.isEmpty()) {
             ImmutableSet<Map.Entry<MaterialBase, Integer>> materials = source.getAllMaterials().entrySet();
             for (Map.Entry<MaterialBase, Integer> entry : materials) {
                 MaterialBase material = entry.getKey();
                 if (material.getHeatInfo().getMeltingPoint() > temperature) continue;
-                int add = Math.min(entry.getValue(), CAPACITY);
+                int add = Math.min(entry.getValue(), this.shape.getUnit());
                 this.container.addMaterial(material, add);
                 this.container.setTemperature(temperature);
                 source.addMaterial(material, -add);
@@ -70,8 +75,8 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
         }
         MaterialBase material = this.container.getAllMaterials().keySet().stream().toList().get(0);
         int c = this.container.getMaterialUnit(material);
-        if (c == CAPACITY || !source.hasMaterial(material)) return false;
-        int add = Math.min(source.getMaterialUnit(material), CAPACITY - c);
+        if (c == this.shape.getUnit() || !source.hasMaterial(material)) return false;
+        int add = Math.min(source.getMaterialUnit(material), this.shape.getUnit() - c);
         this.container.addMaterial(material, add);
         this.container.increaseEnergy(material.getHeatInfo().getMoleEnergy(HeatUtil.ATMOSPHERIC_PRESSURE, temperature) * add / 144.0);
         source.addMaterial(material, -add);
@@ -83,12 +88,16 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
         if (this.container.isEmpty()) return ItemStack.EMPTY;
         MaterialBase material = this.container.getAllMaterials().keySet().stream().toList().get(0);
         double temperature = this.container.getTemperature();
-        if (this.container.getMaterialUnit(material) < CAPACITY || temperature >= material.getHeatInfo().getMeltingPoint())
+        if (this.container.getMaterialUnit(material) < this.shape.getUnit() || temperature >= material.getHeatInfo().getMeltingPoint())
             return ItemStack.EMPTY;
-        ItemStack r = MaterialEntry.getMaterialItemStack(ModSolidShapes.INGOT, material);
+        ItemStack r = MaterialEntry.getMaterialItemStack(this.shape, material);
         r.getCapability(HeatCapability.HEAT).ifPresent((heat) -> heat.setTemperature(temperature));
         this.container.clear();
         return r;
+    }
+
+    public SolidShape getShape() {
+        return this.shape;
     }
 
     public LiquidContainerCapability getLiquidContainer() {
@@ -104,22 +113,26 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
 
     @Override
     protected CompoundTag writeSyncData(CompoundTag tag) {
+        tag.putString("shape", this.shape.getName());
         tag.put("container", this.container.serializeNBT());
         return tag;
     }
 
     @Override
     protected void readSyncData(CompoundTag tag) {
+        this.shape = SolidShape.getShapeByName(tag.getString("shape"));
         this.container.deserializeNBT(tag.getCompound("container"));
     }
 
     @Override
     protected void saveToTag(CompoundTag tag) {
+        tag.putString("shape", this.shape.getName());
         tag.put("container", this.container.serializeNBT());
     }
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
+        this.shape = SolidShape.getShapeByName(tag.getString("shape"));
         this.container.deserializeNBT(tag.getCompound("container"));
     }
 }

@@ -5,6 +5,7 @@ import com.atodium.iridynamics.api.ModCreativeTabs;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.material.MaterialPhysicalInfo;
 import com.atodium.iridynamics.api.material.ModMaterials;
+import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.material.SolidShape;
 import com.atodium.iridynamics.api.tool.MaterialToolBase;
 import com.atodium.iridynamics.api.tool.MaterialToolItem;
@@ -25,6 +26,8 @@ public class ModItems {
     public static final RegistryObject<Item> GRASS = Iridynamics.REGISTRY.item("grass", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> DRIED_GRASS = Iridynamics.REGISTRY.item("dried_grass", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> MOLD = Iridynamics.REGISTRY.item("mold", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
+    public static final RegistryObject<Item> MOLD_TOOL = Iridynamics.REGISTRY.item("mold_tool", MoldToolItem::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
+    public static final RegistryObject<Item> MOLD_WELDING = Iridynamics.REGISTRY.item("mold_welding", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> SMALL_CRUCIBLE = Iridynamics.REGISTRY.item("small_crucible", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
 
     public static final RegistryObject<Item> IGNITER = Iridynamics.REGISTRY.item("igniter", (properties) -> new ToolItem(properties, ToolIgniter.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
@@ -37,6 +40,9 @@ public class ModItems {
         MaterialToolBase.register(ToolHammer.INSTANCE);
         MaterialToolBase.register(ToolChisel.INSTANCE);
         MaterialToolBase.register(ToolKnife.INSTANCE);
+        MoldToolItem.GENERATED_MOLDS.add(ModSolidShapes.HAMMER_HEAD);
+        MoldToolItem.GENERATED_MOLDS.add(ModSolidShapes.CHISEL_HEAD);
+        MoldToolItem.GENERATED_MOLDS.add(ModSolidShapes.KNIFE_HEAD);
     }
 
     public static void onSetup() {

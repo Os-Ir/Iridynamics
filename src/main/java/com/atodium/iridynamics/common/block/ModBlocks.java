@@ -15,6 +15,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> FORGE = Iridynamics.REGISTRY.block("forge", ForgeBlock::new, Material.STONE).strength(2.0f, 1.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> ANVIL = Iridynamics.REGISTRY.block("anvil", AnvilBlock::new, Material.METAL).strength(6.0f, 3.0f).sound(SoundType.METAL).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> MOLD = Iridynamics.REGISTRY.block("mold", MoldBlock::new, Material.STONE).strength(2.0f, 1.0f).sound(SoundType.STONE).noOcclusion().register();
+    public static final RegistryObject<Block> MOLD_TOOL = Iridynamics.REGISTRY.block("mold_tool", MoldToolBlock::new, Material.STONE).strength(2.0f, 1.0f).sound(SoundType.STONE).noOcclusion().register();
     public static final RegistryObject<Block> SMALL_CRUCIBLE = Iridynamics.REGISTRY.block("small_crucible", SmallCrucibleBlock::new, Material.STONE).strength(2.0f, 1.0f).sound(SoundType.STONE).noOcclusion().register();
     public static final RegistryObject<Block> BASIN = Iridynamics.REGISTRY.block("basin", BasinBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
 
