@@ -8,6 +8,7 @@ import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.common.block.ChuteBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -16,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -23,7 +25,10 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
     public static final BlockEntityCodec<ChuteBlockEntity> CODEC = BlockEntityCodec.createCodec(new ResourceLocation(Iridynamics.MODID, "chute_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.chute.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/chute_background.png"));
+    public static final int COOLING_TIME = 20;
+
     private final Inventory inventory;
+    private int remainCoolingTime;
 
     public ChuteBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CHUTE.get(), pos, state);
@@ -33,8 +38,29 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide) {
+            BlockPos targetPos = pos.relative(state.getValue(ChuteBlock.DIRECTION));
+            BlockEntity targetEntity = level.getBlockEntity(targetPos);
+            if (targetEntity instanceof PileBlockEntity pile && this.isCooled()) {
+                for (int i = 0; i < this.inventory.getSlots(); i++) {
+                    ItemStack stack = this.inventory.getStackInSlot(i);
+                    if (pile.addContent(stack)) this.resetCoolingTime();
+                }
+            } else if (targetEntity instanceof FuelBlockEntity fuel && this.isCooled()) {
+                for (int i = 0; i < this.inventory.getSlots(); i++) {
+                    ItemStack stack = this.inventory.getStackInSlot(i);
+                    if (fuel.addFuel(stack)) this.resetCoolingTime();
+                }
+            } else this.remainCoolingTime = Math.max(this.remainCoolingTime - 1, 0);
             this.markDirty();
         }
+    }
+
+    public boolean isCooled() {
+        return this.remainCoolingTime == 0;
+    }
+
+    public void resetCoolingTime() {
+        this.remainCoolingTime = COOLING_TIME;
     }
 
     public Inventory getInventory() {
@@ -64,22 +90,26 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
     @Override
     protected CompoundTag writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
+        tag.putInt("remainCoolingTime", this.remainCoolingTime);
         return tag;
     }
 
     @Override
     protected void readSyncData(CompoundTag tag) {
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
+        this.remainCoolingTime = tag.getInt("remainCoolingTime");
     }
 
     @Override
     protected void saveToTag(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
+        tag.putInt("remainCoolingTime", this.remainCoolingTime);
     }
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
+        this.remainCoolingTime = tag.getInt("remainCoolingTime");
     }
 
     public static class Inventory extends ItemStackHandler {

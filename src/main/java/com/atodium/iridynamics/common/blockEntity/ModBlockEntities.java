@@ -14,6 +14,7 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<AnvilBlockEntity>> ANVIL = Iridynamics.REGISTRY.blockEntity("anvil", () -> BlockEntityType.Builder.of(AnvilBlockEntity::new, ModBlocks.ANVIL.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<MoldBlockEntity>> MOLD = Iridynamics.REGISTRY.blockEntity("mold", () -> BlockEntityType.Builder.of(MoldBlockEntity::new, ModBlocks.MOLD.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<SmallCrucibleBlockEntity>> SMALL_CRUCIBLE = Iridynamics.REGISTRY.blockEntity("small_crucible", () -> BlockEntityType.Builder.of(SmallCrucibleBlockEntity::new, ModBlocks.SMALL_CRUCIBLE.get()).build(null)).register();
+    public static final RegistryObject<BlockEntityType<BasinBlockEntity>> BASIN = Iridynamics.REGISTRY.blockEntity("basin", () -> BlockEntityType.Builder.of(BasinBlockEntity::new, ModBlocks.BASIN.get()).build(null)).register();
 
     public static void init() {
 

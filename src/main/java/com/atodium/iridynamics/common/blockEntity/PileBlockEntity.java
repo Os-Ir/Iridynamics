@@ -143,10 +143,16 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         return true;
     }
 
-    public boolean addContent(Item item) {
-        if (!PILE_ITEM.containsKey(item) || this.height >= 16) {
-            return false;
+    public boolean addContent(ItemStack stack) {
+        if (this.addContent(stack.getItem())) {
+            stack.shrink(1);
+            return true;
         }
+        return false;
+    }
+
+    public boolean addContent(Item item) {
+        if (!PILE_ITEM.containsKey(item) || this.height >= 16) return false;
         this.content[this.height] = item;
         this.height++;
         this.markPileBlockChange();
