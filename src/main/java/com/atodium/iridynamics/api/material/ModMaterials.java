@@ -127,7 +127,8 @@ public class ModMaterials {
     public static final DustMaterial WOOD = new DustMaterial("wood").color(0x8c5a28).cast();
 
     public static void register() {
-        MaterialBase.GENERATE_TOOL.setFlagForMaterial(COPPER, IRON, WROUGHT_IRON, PIG_IRON, STEEL, BRONZE, BLACK_BRONZE, BISMUTH_BRONZE, FLINT, STONE);
+        MaterialBase.GENERATE_ORE.setFlagForMaterial(IRON, COBALT, NICKEL, COPPER, ZINC, SILVER, TIN, ANTIMONY, GOLD, LEAD, BISMUTH, NETHERITE, REDSTONE, BLUESTONE, DIAMOND, EMERALD, COAL);
+        MaterialBase.GENERATE_TOOL.setFlagForMaterial(IRON, COPPER, WROUGHT_IRON, PIG_IRON, STEEL, BRONZE, BLACK_BRONZE, BISMUTH_BRONZE, FLINT, STONE);
         registerSolidInfo(GOLD, 19300.0, 318.0, 129.0, 1337.0);
         registerSolidInfo(SILVER, 10490.0, 420.0, 235.0, 1235.0);
         registerSolidInfo(TIN, 7310.0, 67.0, 228.0, 505.0);

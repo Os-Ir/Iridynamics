@@ -1,0 +1,38 @@
+{
+  "type": "iridynamics:washing",
+  "input": {
+    "type": 0,
+    "ingredient": {
+      "item": "minecraft:gravel"
+    }
+  },
+  "output": [
+    {
+      "base": {
+        "item": "iridynamics:crushed_stone"
+      },
+      "weights": 8.0
+    },
+    {
+      "base": {
+        "item": "minecraft:flint"
+      },
+      "weights": 4.0
+    },
+    {
+      "material_base": {
+        "shape": "ore_nugget",
+        "material": "copper"
+      },
+      "weights": 1.0
+    },
+    {
+      "material_base": {
+        "shape": "ore_nugget",
+        "material": "iron"
+      },
+      "weights": 1.0
+    }
+  ],
+  "output_count": 2
+}

@@ -13,9 +13,13 @@
 	"block.iridynamics.anvil": "Anvil",
 	"block.iridynamics.mold": "Mold",
 	"block.iridynamics.small_crucible": "Small Crucible",
+	"block.iridynamics.basin": "Basin",
 
 	"item.iridynamics.mold": "Mold",
 	"item.iridynamics.wood_brick": "Wood Brick",
+	"item.iridynamics.crushed_stone": "Crushed Stone",
+	"item.iridynamics.grass": "Grass",
+	"item.iridynamics.dried_grass": "Dried Grass",
 	"item.iridynamics.small_crucible": "Small Crucible",
 	"item.iridynamics.igniter": "Igniter",
 	"item.iridynamics.tool.hammer": "Hammer",

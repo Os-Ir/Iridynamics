@@ -1,10 +1,13 @@
 package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.common.blockEntity.BasinBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
+import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -41,6 +44,10 @@ public class BasinBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
+        level.getBlockEntity(pos, ModBlockEntities.BASIN.get()).ifPresent((basin) -> {
+            for (ItemStack stack : basin.wash(player.getItemInHand(hand)))
+                ItemHandlerHelper.giveItemToPlayer(player, stack);
+        });
         return InteractionResult.CONSUME;
     }
 

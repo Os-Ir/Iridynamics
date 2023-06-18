@@ -35,7 +35,6 @@ public class MaterialInfoLoader extends SimpleJsonLoader {
         for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
             JsonObject json = entry.getValue().getAsJsonObject();
             MaterialBase material = MaterialBase.getMaterialByName(json.get("type").getAsString());
-            System.out.println(material.getName());
             Iridynamics.LOGGER.debug("Applying material info {} for Material {}", entry.getKey(), material.getName());
             if (json.has("tool_property")) {
                 JsonObject toolPropertyJson = json.getAsJsonObject("tool_property");

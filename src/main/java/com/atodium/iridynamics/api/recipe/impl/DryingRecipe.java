@@ -34,14 +34,6 @@ public record DryingRecipe(ResourceLocation id, IngredientIndex input, OutputPro
         return null;
     }
 
-    public IngredientIndex getInput() {
-        return this.input;
-    }
-
-    public OutputProvider getOutput() {
-        return this.output;
-    }
-
     @Override
     public boolean matches(ItemStackContainer container, Level level) {
         ItemStack stack = container.getItemStack();

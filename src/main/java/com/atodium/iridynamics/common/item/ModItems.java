@@ -21,6 +21,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems {
     public static final RegistryObject<Item> GUN = Iridynamics.REGISTRY.item("gun", GunItem::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> WOOD_BRICK = Iridynamics.REGISTRY.item("wood_brick", Item::new).tab(ModCreativeTabs.ITEM).register();
+    public static final RegistryObject<Item> CRUSHED_STONE = Iridynamics.REGISTRY.item("crushed_stone", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> GRASS = Iridynamics.REGISTRY.item("grass", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> DRIED_GRASS = Iridynamics.REGISTRY.item("dried_grass", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> MOLD = Iridynamics.REGISTRY.item("mold", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();

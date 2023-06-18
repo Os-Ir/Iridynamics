@@ -9,6 +9,18 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class MathUtil {
+    public static int getWeightedRandom(double[] weightsArray) {
+        double total = 0.0;
+        for (double weights : weightsArray) total += weights;
+        double rand = Math.random() * total;
+        total = 0.0;
+        for (int i = 0; i < weightsArray.length; i++) {
+            total += weightsArray[i];
+            if (rand < total) return i;
+        }
+        return 0;
+    }
+
     public static double positiveGaussian(Random random, double stddev) {
         return Math.abs(random.nextGaussian(0.0, stddev));
     }
