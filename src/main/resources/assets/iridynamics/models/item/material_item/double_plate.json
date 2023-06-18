@@ -1,0 +1,8 @@
+{
+  "loader": "iridynamics:material",
+  "parent": "forge:item/default",
+  "shape": "double_plate",
+  "textures": {
+    "texture": "iridynamics:item/material/double_plate"
+  }
+}

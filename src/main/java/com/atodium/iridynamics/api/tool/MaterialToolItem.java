@@ -35,9 +35,8 @@ public class MaterialToolItem extends ToolItem {
 
     public static MaterialBase getToolMaterial(ItemStack stack, int index) {
         CompoundTag tag = getToolBaseTag(stack);
-        if (tag.contains("material")) {
+        if (tag.contains("material"))
             return MaterialBase.getMaterialByName(((CompoundTag) tag.getList("material", Tag.TAG_COMPOUND).get(index)).getString("material"));
-        }
         return null;
     }
 
@@ -47,9 +46,8 @@ public class MaterialToolItem extends ToolItem {
             ListTag list = nbt.getList("material", Tag.TAG_COMPOUND);
             for (Tag tag : list) {
                 CompoundTag compound = (CompoundTag) tag;
-                if (compound.getString("part").equals(part)) {
+                if (compound.getString("part").equals(part))
                     return MaterialBase.getMaterialByName(compound.getString("material"));
-                }
             }
         }
         return null;
@@ -57,9 +55,7 @@ public class MaterialToolItem extends ToolItem {
 
     public static ItemStack setToolMaterial(ItemStack stack, int index, String part, MaterialBase material) {
         CompoundTag tag = getToolBaseTag(stack);
-        if (!tag.contains("material", Tag.TAG_LIST)) {
-            tag.put("material", new ListTag());
-        }
+        if (!tag.contains("material", Tag.TAG_LIST)) tag.put("material", new ListTag());
         ListTag list = tag.getList("material", Tag.TAG_COMPOUND);
         CompoundTag compound = new CompoundTag();
         compound.putInt("index", index);
@@ -74,9 +70,8 @@ public class MaterialToolItem extends ToolItem {
         ItemStack stack = new ItemStack(this);
         this.toolInfo.getDefaultMaterial().forEach((index, pair) -> {
             MaterialBase material = pair.getRight();
-            if (!this.validateToolMaterial(index, material)) {
+            if (!this.validateToolMaterial(index, material))
                 throw new IllegalArgumentException("Tool material [ " + material.getName() + " ] for index [ " + index + " ] is invalid");
-            }
             setToolMaterial(stack, index, pair.getLeft(), material);
         });
         return stack;
@@ -86,9 +81,8 @@ public class MaterialToolItem extends ToolItem {
         ItemStack stack = new ItemStack(this);
         materials.forEach((index, pair) -> {
             MaterialBase material = pair.getRight();
-            if (!this.validateToolMaterial(index, material)) {
+            if (!this.validateToolMaterial(index, material))
                 throw new IllegalArgumentException("Tool material [ " + material.getName() + " ] for index [ " + index + " ] is invalid");
-            }
             setToolMaterial(stack, index, pair.getLeft(), material);
         });
         return stack;

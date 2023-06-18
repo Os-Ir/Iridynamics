@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "iridynamics:block/white",
-		"particle": "iridynamics:block/white"
+		"1": "iridynamics:block/anvil",
+		"particle": "iridynamics:block/anvil"
 	},
 	"elements": [
 		{
