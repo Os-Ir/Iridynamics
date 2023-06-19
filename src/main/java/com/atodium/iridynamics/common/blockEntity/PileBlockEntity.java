@@ -28,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -187,8 +186,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         this.level.setBlock(pos, ModBlocks.FUEL.get().defaultBlockState(), Block.UPDATE_ALL);
         FuelBlockEntity fuel = (FuelBlockEntity) this.level.getBlockEntity(pos);
         fuel.setup(this.content[0], pileItemInfo.capacity * 16, 1.0 / pileItemInfo.conductivity, this.heat.getTemperature(), 16.0);
-        fuel.ignite(direction, temperature);
-        return true;
+        return fuel.ignite(direction, temperature);
     }
 
     @Override

@@ -7,6 +7,9 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
+import com.atodium.iridynamics.api.material.MaterialEntry;
+import com.atodium.iridynamics.api.material.ModMaterials;
+import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.FuelBlock;
@@ -18,7 +21,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -31,7 +33,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     private Item fuelItem;
     private FuelInfo fuelInfo;
     private boolean updateFlag, ignite;
-    private double remainItems;
+    private double remainItems, starterTemperature, starterFlashPoint;
     private int blowVolume;
     private SolidPhasePortrait portrait;
     private HeatCapability heat;
@@ -40,6 +42,22 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         super(ModBlockEntities.FUEL.get(), pos, state);
         this.portrait = new SolidPhasePortrait(0.0);
         this.heat = new HeatCapability(this.portrait);
+    }
+
+    public boolean isIgniteStarter(ItemStack stack) {
+        return MaterialEntry.containsMaterialEntry(stack) && MaterialEntry.getItemMaterialEntry(stack).equals(new MaterialEntry(ModSolidShapes.DUST, ModMaterials.WOOD));
+    }
+
+    public double getStarterFlashPoint(ItemStack stack) {
+        if (MaterialEntry.containsMaterialEntry(stack) && MaterialEntry.getItemMaterialEntry(stack).equals(new MaterialEntry(ModSolidShapes.DUST, ModMaterials.WOOD)))
+            return 400.0;
+        return 0.0;
+    }
+
+    public double getStarterTemperature(ItemStack stack) {
+        if (MaterialEntry.containsMaterialEntry(stack) && MaterialEntry.getItemMaterialEntry(stack).equals(new MaterialEntry(ModSolidShapes.DUST, ModMaterials.WOOD)))
+            return 1000.0;
+        return 0.0;
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
@@ -75,6 +93,16 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
             this.heat.setTemperature(temperature);
             this.markDirty();
         }
+    }
+
+    public boolean addIgniteStarter(ItemStack stack) {
+        if (this.isIgniteStarter(stack)) {
+            this.starterTemperature = this.getStarterTemperature(stack);
+            this.starterFlashPoint = this.getStarterFlashPoint(stack);
+            stack.shrink(1);
+            return true;
+        }
+        return false;
     }
 
     public boolean addFuel(ItemStack stack) {
@@ -127,8 +155,9 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     @Override
     public boolean ignite(Direction direction, double temperature) {
-        if (!this.ignite && this.remainItems > 0.0 && temperature >= this.fuelInfo.flashPoint()) {
+        if (!this.ignite && this.remainItems > 0.0 && (temperature >= this.fuelInfo.flashPoint() || (temperature >= this.starterFlashPoint && this.starterTemperature >= this.fuelInfo.flashPoint()))) {
             this.ignite = true;
+            this.starterTemperature = this.starterFlashPoint = 0.0;
             this.updateBlockState();
             return true;
         }

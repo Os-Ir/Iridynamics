@@ -71,6 +71,7 @@ public class FuelBlock extends Block implements EntityBlock {
         level.getBlockEntity(pos, ModBlockEntities.FUEL.get()).ifPresent((fuel) -> {
             ItemStack stack = player.getItemInHand(hand);
             if (FuelInfo.hasFuelInfo(stack)) fuel.addFuel(stack);
+            else if (!state.getValue(IGNITE)) fuel.addIgniteStarter(stack);
             System.out.println("Fuel: " + (fuel.getTemperature() - HeatUtil.AMBIENT_TEMPERATURE) + "K           remain: " + fuel.getRemainItems());
         });
         return InteractionResult.CONSUME;

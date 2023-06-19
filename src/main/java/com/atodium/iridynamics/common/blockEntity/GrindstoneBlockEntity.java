@@ -34,7 +34,6 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements IBlockEn
     }
 
     public void updateRecipe() {
-        System.out.println("update recipe");
         ToolInventoryContainer container = new ToolInventoryContainer(6, 4);
         for (int i = 0; i < 6; i++) container.setItem(i, this.inventory.getStackInSlot(i + 4));
         for (int i = 0; i < 4; i++)

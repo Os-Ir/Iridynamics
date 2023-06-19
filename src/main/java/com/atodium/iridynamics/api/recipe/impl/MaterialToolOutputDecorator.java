@@ -33,7 +33,6 @@ public class MaterialToolOutputDecorator implements OutputDecorator {
 
     @Override
     public ItemStack apply(ItemStack stack, ItemStack[] input) {
-        System.out.println(stack);
         if (stack.getItem() instanceof MaterialToolItem toolItem) {
             for (Map.Entry<Integer, Pair<String, Integer>> entry : this.function.entrySet()) {
                 ItemStack part = input[entry.getValue().getRight()];

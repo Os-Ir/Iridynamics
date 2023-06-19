@@ -53,8 +53,7 @@ public class ModItems {
         PileBlockEntity.PILE_ITEM.register(Items.CHARCOAL, new PileBlockEntity.PileItemInfo("charcoal", charcoal.moleHeatCapacity(), charcoal.thermalConductivity()));
         PileBlockEntity.PILE_ITEM.register(Items.COAL, new PileBlockEntity.PileItemInfo("coal", coal.moleHeatCapacity(), coal.thermalConductivity()));
         FuelInfo.of("wood_brick", wood.moleCalorificValue(), 550.0, 1100.0).registerForItem(WOOD_BRICK.get());
-        // TODO: 添加引火机制，将木炭、煤炭闪点改回900K
-        FuelInfo.of("charcoal", charcoal.moleCalorificValue(), 550.0, 1400.0).registerForItem(Items.CHARCOAL);
-        FuelInfo.of("coal", coal.moleCalorificValue(), 550.0, 1400.0).registerForItem(Items.COAL);
+        FuelInfo.of("charcoal", charcoal.moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.CHARCOAL);
+        FuelInfo.of("coal", coal.moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.COAL);
     }
 }
