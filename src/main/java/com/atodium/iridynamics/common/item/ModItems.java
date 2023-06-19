@@ -7,7 +7,7 @@ import com.atodium.iridynamics.api.material.MaterialPhysicalInfo;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.material.SolidShape;
-import com.atodium.iridynamics.api.tool.MaterialToolBase;
+import com.atodium.iridynamics.api.tool.IToolInfo;
 import com.atodium.iridynamics.api.tool.MaterialToolItem;
 import com.atodium.iridynamics.api.tool.ToolItem;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
@@ -36,9 +36,10 @@ public class ModItems {
 
     public static void init() {
         SolidShape.REGISTRY.values().forEach((shape) -> Iridynamics.REGISTRY.item("material_item/" + shape.getName(), (properties) -> new MaterialItem(properties, shape)).tab(ModCreativeTabs.MATERIAL).register());
-        MaterialToolBase.register(ToolHammer.INSTANCE);
-        MaterialToolBase.register(ToolChisel.INSTANCE);
-        MaterialToolBase.register(ToolKnife.INSTANCE);
+        IToolInfo.register(ToolHammer.INSTANCE);
+        IToolInfo.register(ToolChisel.INSTANCE);
+        IToolInfo.register(ToolKnife.INSTANCE);
+        IToolInfo.register(ToolIgniter.INSTANCE);
         MoldToolItem.GENERATED_MOLDS.add(ModSolidShapes.HAMMER_HEAD);
         MoldToolItem.GENERATED_MOLDS.add(ModSolidShapes.CHISEL_HEAD);
         MoldToolItem.GENERATED_MOLDS.add(ModSolidShapes.KNIFE_HEAD);

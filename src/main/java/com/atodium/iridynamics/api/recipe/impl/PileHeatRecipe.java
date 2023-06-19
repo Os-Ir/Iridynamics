@@ -45,7 +45,7 @@ public record PileHeatRecipe(ResourceLocation id, IngredientIndex input,
 
     @Override
     public boolean matches(ItemStackContainer container, Level level) {
-        return this.input.test(container.getItemStack());
+        return this.input.test(container.getItem());
     }
 
     @Override
@@ -55,7 +55,7 @@ public record PileHeatRecipe(ResourceLocation id, IngredientIndex input,
 
     @Override
     public ItemStack assemble(ItemStackContainer inventory) {
-        return this.output.apply(inventory.getItemStack());
+        return this.output.apply(inventory.getItem());
     }
 
     @Override
@@ -76,16 +76,12 @@ public record PileHeatRecipe(ResourceLocation id, IngredientIndex input,
     public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, PileHeatRecipe> {
         @Override
         public PileHeatRecipe fromJson(ResourceLocation id, JsonObject json) {
-            IngredientIndex input = IngredientIndex.fromJson(json.getAsJsonObject("input"));
-            OutputProvider output = OutputProvider.fromJson(json.getAsJsonObject("output"));
-            return new PileHeatRecipe(id, input, output, json.get("temperature").getAsDouble(), json.get("energy").getAsDouble());
+            return new PileHeatRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("temperature").getAsDouble(), json.get("energy").getAsDouble());
         }
 
         @Override
         public PileHeatRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-            IngredientIndex input = IngredientIndex.fromNetwork(buf);
-            OutputProvider output = OutputProvider.fromNetwork(buf);
-            return new PileHeatRecipe(id, input, output, buf.readDouble(), buf.readDouble());
+            return new PileHeatRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readDouble(), buf.readDouble());
         }
 
         @Override

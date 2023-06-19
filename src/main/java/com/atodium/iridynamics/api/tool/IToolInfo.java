@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.tool;
 
 import com.atodium.iridynamics.api.material.type.MaterialBase;
+import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface IToolInfo {
+    UnorderedRegistry<ResourceLocation, IToolInfo> TOOL_INFO = new UnorderedRegistry<>();
+
+    static void register(IToolInfo info) {
+        TOOL_INFO.register(info.getRegistryName(), info);
+    }
+
     ResourceLocation getRegistryName();
 
     boolean validateMaterial(int index, MaterialBase material);

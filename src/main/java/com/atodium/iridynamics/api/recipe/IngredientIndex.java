@@ -9,6 +9,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class IngredientIndex {
+    public static final IngredientIndex EMPTY = new IngredientIndex(Ingredient.EMPTY, 0);
+
     private final Ingredient ingredient;
     private final int count, type;
 
@@ -23,19 +25,23 @@ public class IngredientIndex {
     }
 
     public static IngredientIndex from(Ingredient ingredient, int count) {
-        return new IngredientIndex(ingredient, count);
+        IngredientIndex result = new IngredientIndex(ingredient, count);
+        return result.isEmpty() ? EMPTY : result;
     }
 
     public static IngredientIndex from(Ingredient ingredient, int count, int type) {
-        return new IngredientIndex(ingredient, count, type);
+        IngredientIndex result = new IngredientIndex(ingredient, count, type);
+        return result.isEmpty() ? EMPTY : result;
     }
 
     public static IngredientIndex from(ItemStack stack) {
-        return new IngredientIndex(Ingredient.of(stack), stack.getCount(), 0);
+        IngredientIndex result = new IngredientIndex(Ingredient.of(stack), stack.getCount(), 0);
+        return result.isEmpty() ? EMPTY : result;
     }
 
     public static IngredientIndex from(ItemStack stack, int count) {
-        return new IngredientIndex(Ingredient.of(stack), count, 0);
+        IngredientIndex result = new IngredientIndex(Ingredient.of(stack), count, 0);
+        return result.isEmpty() ? EMPTY : result;
     }
 
     public static IngredientIndex from(SolidShape shape, MaterialBase material) {
@@ -43,7 +49,8 @@ public class IngredientIndex {
     }
 
     public static IngredientIndex from(SolidShape shape, MaterialBase material, int count) {
-        return new IngredientIndex(MaterialItemIngredient.of(shape, material), count, 1);
+        IngredientIndex result = new IngredientIndex(MaterialItemIngredient.of(shape, material), count, 1);
+        return result.isEmpty() ? EMPTY : result;
     }
 
     public static IngredientIndex from(MaterialEntry entry) {
@@ -51,7 +58,8 @@ public class IngredientIndex {
     }
 
     public static IngredientIndex from(MaterialEntry entry, int count) {
-        return new IngredientIndex(MaterialItemIngredient.of(entry), count, 1);
+        IngredientIndex result = new IngredientIndex(MaterialItemIngredient.of(entry), count, 1);
+        return result.isEmpty() ? EMPTY : result;
     }
 
     public static IngredientIndex fromNetwork(FriendlyByteBuf buf) {
@@ -66,6 +74,10 @@ public class IngredientIndex {
         if (type == 1)
             return from(MaterialItemIngredient.SERIALIZER.parse(json.get("ingredient").getAsJsonObject()), count);
         return from(Ingredient.fromJson(json.get("ingredient")), count);
+    }
+
+    public boolean isEmpty() {
+        return this == EMPTY || this.count == 0 || this.ingredient.isEmpty();
     }
 
     public boolean testItem(ItemStack stack) {

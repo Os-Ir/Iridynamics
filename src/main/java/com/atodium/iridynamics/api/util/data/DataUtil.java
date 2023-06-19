@@ -5,6 +5,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
+import java.util.Objects;
+import java.util.function.Predicate;
+
 public class DataUtil {
     public static final Gson GSON = new Gson();
 
@@ -20,5 +23,42 @@ public class DataUtil {
     @SuppressWarnings("deprecation")
     public static Item readItemFromLocation(ResourceLocation location) {
         return Registry.ITEM.get(location);
+    }
+
+    public static int height(Object[][] grid) {
+        return grid.length;
+    }
+
+    public static int width(Object[][] grid) {
+        return grid[0].length;
+    }
+
+    public static <T> void align(T[][] origin, T[][] align) {
+        align(origin, align, Objects::nonNull, null);
+    }
+
+    public static <T> void align(T[][] origin, T[][] align, Predicate<T> nonNull, T nullValue) {
+        int height = height(origin), width = width(origin);
+        if (height == 0 || width == 0)
+            throw new IllegalArgumentException("Can not align a grid with non positive side length");
+        int moveX = 0, moveY = 0;
+        outer:
+        for (int x = 0; x < width; x++)
+            for (T[] ts : origin)
+                if (nonNull.test(ts[x])) {
+                    moveX = x;
+                    break outer;
+                }
+        outer:
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+                if (nonNull.test(origin[y][x])) {
+                    moveY = y;
+                    break outer;
+                }
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+                if (x + moveX >= width || y + moveY >= height) align[y][x] = nullValue;
+                else align[y][x] = origin[y + moveY][x + moveX];
     }
 }

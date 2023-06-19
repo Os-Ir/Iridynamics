@@ -1,0 +1,28 @@
+{
+  "type": "iridynamics:tool_crafting",
+  "pattern": [
+    "aaa  ",
+    "a a  ",
+    "a a  ",
+    "     ",
+    "     "
+  ],
+  "key": {
+    "a": {
+      "type": 0,
+      "ingredient": {
+        "item": "iridynamics:wood_brick"
+      }
+    }
+  },
+  "output": {
+    "base": {
+      "item": "minecraft:charcoal",
+      "count": "7"
+    }
+  },
+  "tool": [
+    "iridynamics:hammer",
+    "iridynamics:chisel"
+  ]
+}

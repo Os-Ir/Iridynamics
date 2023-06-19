@@ -16,6 +16,7 @@ import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.impl.DryingRecipe;
 import com.atodium.iridynamics.api.recipe.impl.PileHeatRecipe;
+import com.atodium.iridynamics.api.recipe.impl.ToolCraftingRecipe;
 import com.atodium.iridynamics.api.recipe.impl.WashingRecipe;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.*;
@@ -46,6 +47,7 @@ public class ForgeEventHandler {
         PileHeatRecipe.resetCache();
         DryingRecipe.resetCache();
         WashingRecipe.resetCache();
+        ToolCraftingRecipe.resetCache();
     }
 
     @SubscribeEvent

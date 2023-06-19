@@ -36,7 +36,7 @@ public record DryingRecipe(ResourceLocation id, IngredientIndex input, OutputPro
 
     @Override
     public boolean matches(ItemStackContainer container, Level level) {
-        ItemStack stack = container.getItemStack();
+        ItemStack stack = container.getItem();
         return this.input.testItem(stack) && this.input.getCount() == stack.getCount();
     }
 
@@ -47,7 +47,7 @@ public record DryingRecipe(ResourceLocation id, IngredientIndex input, OutputPro
 
     @Override
     public ItemStack assemble(ItemStackContainer inventory) {
-        return this.output.apply(inventory.getItemStack());
+        return this.output.apply(inventory.getItem());
     }
 
     @Override
@@ -68,16 +68,12 @@ public record DryingRecipe(ResourceLocation id, IngredientIndex input, OutputPro
     public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, DryingRecipe> {
         @Override
         public DryingRecipe fromJson(ResourceLocation id, JsonObject json) {
-            IngredientIndex input = IngredientIndex.fromJson(json.getAsJsonObject("input"));
-            OutputProvider output = OutputProvider.fromJson(json.getAsJsonObject("output"));
-            return new DryingRecipe(id, input, output, json.get("tick").getAsInt());
+            return new DryingRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("tick").getAsInt());
         }
 
         @Override
         public DryingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-            IngredientIndex input = IngredientIndex.fromNetwork(buf);
-            OutputProvider output = OutputProvider.fromNetwork(buf);
-            return new DryingRecipe(id, input, output, buf.readInt());
+            return new DryingRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readInt());
         }
 
         @Override

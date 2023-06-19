@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.client.model.tool;
 
+import com.atodium.iridynamics.api.tool.IToolInfo;
 import com.atodium.iridynamics.api.tool.MaterialToolBase;
 import com.atodium.iridynamics.common.tool.ToolHammer;
 import com.google.gson.JsonDeserializationContext;
@@ -16,7 +17,7 @@ public class MaterialToolModelLoader implements IModelLoader<MaterialToolModel> 
     public MaterialToolModel read(JsonDeserializationContext context, JsonObject obj) {
         MaterialToolBase tool = null;
         if (obj.has("tool"))
-            tool = MaterialToolBase.MATERIAL_TOOL.get(new ResourceLocation(GsonHelper.getAsString(obj, "tool")));
+            tool = (MaterialToolBase) IToolInfo.TOOL_INFO.get(new ResourceLocation(GsonHelper.getAsString(obj, "tool")));
         if (tool == null) tool = ToolHammer.INSTANCE;
         return new MaterialToolModel(tool, null);
     }

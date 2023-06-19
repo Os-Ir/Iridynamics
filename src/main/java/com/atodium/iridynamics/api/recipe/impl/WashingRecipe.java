@@ -14,7 +14,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.Arrays;
 import java.util.List;
 
 public record WashingRecipe(ResourceLocation id, IngredientIndex input, WeightedOutputProvider[] output,
@@ -42,7 +41,7 @@ public record WashingRecipe(ResourceLocation id, IngredientIndex input, Weighted
 
     @Override
     public boolean matches(ItemStackContainer container, Level level) {
-        ItemStack stack = container.getItemStack();
+        ItemStack stack = container.getItem();
         return this.input.test(stack);
     }
 
@@ -58,7 +57,7 @@ public record WashingRecipe(ResourceLocation id, IngredientIndex input, Weighted
     public ItemStack assemble(ItemStackContainer inventory) {
         double[] weightsArray = new double[this.output.length];
         for (int i = 0; i < weightsArray.length; i++) weightsArray[i] = this.output[i].weights();
-        return this.output[MathUtil.getWeightedRandom(weightsArray)].apply(inventory.getItemStack());
+        return this.output[MathUtil.getWeightedRandom(weightsArray)].apply(inventory.getItem());
     }
 
     @Override
@@ -79,12 +78,11 @@ public record WashingRecipe(ResourceLocation id, IngredientIndex input, Weighted
     public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, WashingRecipe> {
         @Override
         public WashingRecipe fromJson(ResourceLocation id, JsonObject json) {
-            IngredientIndex input = IngredientIndex.fromJson(json.getAsJsonObject("input"));
             JsonArray outputJson = json.getAsJsonArray("output");
             WeightedOutputProvider[] output = new WeightedOutputProvider[outputJson.size()];
             for (int i = 0; i < output.length; i++)
                 output[i] = WeightedOutputProvider.fromJson(outputJson.get(i).getAsJsonObject());
-            return new WashingRecipe(id, input, output, json.get("output_count").getAsInt());
+            return new WashingRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), output, json.get("output_count").getAsInt());
         }
 
         @Override

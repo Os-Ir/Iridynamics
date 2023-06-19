@@ -2,12 +2,10 @@ package com.atodium.iridynamics.api.tool;
 
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.util.data.GreekAlphabet;
-import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -18,12 +16,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 
 public abstract class MaterialToolBase implements IToolInfo {
-    public static final UnorderedRegistry<ResourceLocation, MaterialToolBase> MATERIAL_TOOL = new UnorderedRegistry<>();
-
-    public static void register(MaterialToolBase tool) {
-        MATERIAL_TOOL.register(tool.getRegistryName(), tool);
-    }
-
     public abstract ToolRenderInfo getRenderInfo();
 
     public abstract boolean validateMaterial(int index, MaterialBase material);

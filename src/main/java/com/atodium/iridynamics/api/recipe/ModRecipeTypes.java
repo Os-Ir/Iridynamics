@@ -3,6 +3,7 @@ package com.atodium.iridynamics.api.recipe;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.recipe.impl.DryingRecipe;
 import com.atodium.iridynamics.api.recipe.impl.PileHeatRecipe;
+import com.atodium.iridynamics.api.recipe.impl.ToolCraftingRecipe;
 import com.atodium.iridynamics.api.recipe.impl.WashingRecipe;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
@@ -13,6 +14,7 @@ public class ModRecipeTypes {
     public static final RegistryObject<RecipeType<PileHeatRecipe>> PILE_HEAT = register("pile_heat");
     public static final RegistryObject<RecipeType<DryingRecipe>> DRYING = register("drying");
     public static final RegistryObject<RecipeType<WashingRecipe>> WASHING = register("washing");
+    public static final RegistryObject<RecipeType<ToolCraftingRecipe>> TOOL_CRAFTING = register("tool_crafting");
 
     public static void init() {
 

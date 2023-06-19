@@ -35,7 +35,7 @@ public class BendingAnvil extends Block {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
-        if (player.isShiftKeyDown() && MaterialEntry.containsMaterialEntry(stack)) {
+        if (MaterialEntry.containsMaterialEntry(stack)) {
             MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
             if (entry.shape().hasBendingResult()) {
                 stack.shrink(1);
