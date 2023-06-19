@@ -1,0 +1,48 @@
+{
+  "type": "iridynamics:grindstone",
+  "input": [
+    {
+      "type": 1,
+      "ingredient": {
+        "shape": "hammer_head"
+      }
+    },
+    {
+      "type": 1,
+      "ingredient": {
+        "shape": "short_rod"
+      }
+    },
+    {
+      "type": 1,
+      "ingredient": {
+        "shape": "rod"
+      }
+    }
+  ],
+  "output": {
+    "base": {
+      "item": "iridynamics:tool/hammer"
+    },
+    "decorators": [
+      {
+        "serializer": "iridynamics:material_tool",
+        "map": [
+          {
+            "tool_part_index": 0,
+            "tool_part_name": "head",
+            "source_index": 0
+          },
+          {
+            "tool_part_index": 1,
+            "tool_part_name": "handle",
+            "source_index": 2
+          }
+        ]
+      }
+    ]
+  },
+  "tool": [
+    "iridynamics:hammer"
+  ]
+}

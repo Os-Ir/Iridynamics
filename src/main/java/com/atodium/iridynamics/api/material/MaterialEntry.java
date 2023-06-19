@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.Validate;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public record MaterialEntry(SolidShape shape, MaterialBase material) {
@@ -32,8 +33,8 @@ public record MaterialEntry(SolidShape shape, MaterialBase material) {
     }
 
     public static MaterialEntry fromByteBuf(FriendlyByteBuf buf) {
-        SolidShape shape = SolidShape.getShapeByName(new String(buf.readByteArray()));
-        MaterialBase material = MaterialBase.getMaterialByName(new String(buf.readByteArray()));
+        SolidShape shape = SolidShape.getShapeByName(buf.readUtf());
+        MaterialBase material = MaterialBase.getMaterialByName(buf.readUtf());
         return of(shape, material);
     }
 
@@ -88,9 +89,22 @@ public record MaterialEntry(SolidShape shape, MaterialBase material) {
         return ItemStack.EMPTY;
     }
 
-    public static void getAllMaterialItemStacks(List<ItemStack> list, MaterialEntry entry) {
-        if (MATERIAL_ITEM.containsKey(entry)) list.add(new ItemStack(MATERIAL_ITEM.get(entry)));
-        if (MATERIAL_ITEM_SUPPLIER.containsKey(entry)) list.add(MATERIAL_ITEM_SUPPLIER.get(entry).apply(1));
+    public static void getAllMaterialItemStacks(List<ItemStack> list, SolidShape shape, MaterialBase material) {
+        if (shape != null && material != null) {
+            MaterialEntry entry = new MaterialEntry(shape, material);
+            if (MATERIAL_ITEM.containsKey(entry)) list.add(new ItemStack(MATERIAL_ITEM.get(entry)));
+            if (MATERIAL_ITEM_SUPPLIER.containsKey(entry)) list.add(MATERIAL_ITEM_SUPPLIER.get(entry).apply(1));
+        } else if (shape != null) {
+            for (Map.Entry<MaterialEntry, Item> en : MATERIAL_ITEM.entrySet())
+                if (en.getKey().shape == shape) list.add(new ItemStack(en.getValue()));
+            for (Map.Entry<MaterialEntry, Function<Integer, ItemStack>> en : MATERIAL_ITEM_SUPPLIER.entrySet())
+                if (en.getKey().shape == shape) list.add(en.getValue().apply(1));
+        } else if (material != null) {
+            for (Map.Entry<MaterialEntry, Item> en : MATERIAL_ITEM.entrySet())
+                if (en.getKey().material == material) list.add(new ItemStack(en.getValue()));
+            for (Map.Entry<MaterialEntry, Function<Integer, ItemStack>> en : MATERIAL_ITEM_SUPPLIER.entrySet())
+                if (en.getKey().material == material) list.add(en.getValue().apply(1));
+        }
     }
 
     public JsonObject toJson() {
@@ -101,8 +115,8 @@ public record MaterialEntry(SolidShape shape, MaterialBase material) {
     }
 
     public void toByteBuf(FriendlyByteBuf buf) {
-        buf.writeByteArray(this.shape.getName().getBytes());
-        buf.writeByteArray(this.material.getName().getBytes());
+        buf.writeUtf(this.shape.getName());
+        buf.writeUtf(this.material.getName());
     }
 
     @Override

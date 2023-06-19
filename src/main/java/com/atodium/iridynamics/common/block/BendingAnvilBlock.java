@@ -17,10 +17,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class BendingAnvil extends Block {
+public class BendingAnvilBlock extends Block {
     public static final VoxelShape SHAPE = box(0.0, 0.0, 0.0, 16.0, 13.0, 16.0);
 
-    public BendingAnvil(BlockBehaviour.Properties properties) {
+    public BendingAnvilBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 

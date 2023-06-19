@@ -17,8 +17,8 @@ public interface OutputDecorator {
     interface Serializer {
         OutputDecorator fromJson(JsonObject json);
 
-        OutputDecorator fromNetwork(FriendlyByteBuf buffer);
+        OutputDecorator fromNetwork(FriendlyByteBuf buf);
 
-        void toNetwork(OutputDecorator decorator, FriendlyByteBuf buffer);
+        void toNetwork(OutputDecorator decorator, FriendlyByteBuf buf);
     }
 }

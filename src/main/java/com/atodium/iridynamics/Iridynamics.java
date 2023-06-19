@@ -2,6 +2,7 @@ package com.atodium.iridynamics;
 
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
+import com.atodium.iridynamics.api.recipe.ModOutputDecorators;
 import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.registry.ModRegistry;
@@ -41,6 +42,7 @@ public class Iridynamics {
         ModBlockEntities.init();
         ModRecipeTypes.init();
         ModRecipeSerializers.init();
+        ModOutputDecorators.init();
         ModFeatures.init();
         ModNetworkHandler.init();
     }

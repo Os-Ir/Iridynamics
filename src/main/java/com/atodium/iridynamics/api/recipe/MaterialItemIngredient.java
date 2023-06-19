@@ -19,19 +19,23 @@ import java.util.stream.Stream;
 public class MaterialItemIngredient extends Ingredient {
     public static final Serializer SERIALIZER = new Serializer();
 
-    private final MaterialEntry entry;
+    private final SolidShape shape;
+    private final MaterialBase material;
 
-    private MaterialItemIngredient(MaterialEntry entry) {
+    private MaterialItemIngredient(SolidShape shape, MaterialBase material) {
         super(Stream.empty());
-        this.entry = entry;
+        if (shape == null && material == null)
+            throw new IllegalArgumentException("Shape and material of MaterialItemIngredient can not be null at the same time");
+        this.shape = shape;
+        this.material = material;
     }
 
     public static MaterialItemIngredient of(SolidShape shape, MaterialBase material) {
-        return of(MaterialEntry.of(shape, material));
+        return new MaterialItemIngredient(shape, material);
     }
 
     public static MaterialItemIngredient of(MaterialEntry entry) {
-        return new MaterialItemIngredient(entry);
+        return of(entry.shape(), entry.material());
     }
 
     private Field getItemStacksField() {
@@ -50,7 +54,7 @@ public class MaterialItemIngredient extends Ingredient {
     public ItemStack[] getItems() {
         Field field = this.getItemStacksField();
         List<ItemStack> list = Lists.newArrayList();
-        MaterialEntry.getAllMaterialItemStacks(list, this.entry);
+        MaterialEntry.getAllMaterialItemStacks(list, this.shape, this.material);
         try {
             field.set(this, list.toArray());
         } catch (IllegalAccessException e) {
@@ -62,12 +66,17 @@ public class MaterialItemIngredient extends Ingredient {
     @Override
     public boolean test(ItemStack stack) {
         if (stack == null) return false;
-        return this.entry.equals(MaterialEntry.getItemMaterialEntry(stack));
+        if (!MaterialEntry.containsMaterialEntry(stack)) return false;
+        MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
+        return (this.shape == null || this.shape == entry.shape()) && (this.material == null || this.material == entry.material());
     }
 
     @Override
     public JsonElement toJson() {
-        return this.entry.toJson();
+        JsonObject json = new JsonObject();
+        if (this.shape != null) json.addProperty("shape", this.shape.getName());
+        if (this.material != null) json.addProperty("material", this.material.getName());
+        return json;
     }
 
     @Override
@@ -87,18 +96,29 @@ public class MaterialItemIngredient extends Ingredient {
 
     public static class Serializer implements IIngredientSerializer<MaterialItemIngredient> {
         @Override
-        public MaterialItemIngredient parse(FriendlyByteBuf buffer) {
-            return new MaterialItemIngredient(MaterialEntry.fromByteBuf(buffer));
+        public MaterialItemIngredient parse(FriendlyByteBuf buf) {
+            SolidShape shape = null;
+            MaterialBase material = null;
+            if (buf.readBoolean()) shape = SolidShape.getShapeByName(buf.readUtf());
+            if (buf.readBoolean()) material = MaterialBase.getMaterialByName(buf.readUtf());
+            return new MaterialItemIngredient(shape, material);
         }
 
         @Override
         public MaterialItemIngredient parse(JsonObject json) {
-            return new MaterialItemIngredient(MaterialEntry.fromJson(json));
+            SolidShape shape = null;
+            MaterialBase material = null;
+            if (json.has("shape")) shape = SolidShape.getShapeByName(json.get("shape").getAsString());
+            if (json.has("material")) material = MaterialBase.getMaterialByName(json.get("material").getAsString());
+            return new MaterialItemIngredient(shape, material);
         }
 
         @Override
-        public void write(FriendlyByteBuf buffer, MaterialItemIngredient ingredient) {
-            ingredient.entry.toByteBuf(buffer);
+        public void write(FriendlyByteBuf buf, MaterialItemIngredient ingredient) {
+            buf.writeBoolean(ingredient.shape != null);
+            if (ingredient.shape != null) buf.writeUtf(ingredient.shape.getName());
+            buf.writeBoolean(ingredient.material != null);
+            if (ingredient.material != null) buf.writeUtf(ingredient.material.getName());
         }
     }
 }

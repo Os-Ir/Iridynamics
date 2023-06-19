@@ -88,6 +88,10 @@ public class IngredientIndex {
         return this.ingredient.test(stack) && stack.getCount() >= this.count;
     }
 
+    public boolean testEqual(ItemStack stack) {
+        return this.ingredient.test(stack) && stack.getCount() == this.count;
+    }
+
     public Ingredient getIngredient() {
         return this.ingredient;
     }

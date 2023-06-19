@@ -1,5 +1,7 @@
 package com.atodium.iridynamics.api.recipe;
 
+import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.recipe.impl.MaterialToolOutputDecorator;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
@@ -7,6 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ModOutputDecorators {
     public static final UnorderedRegistry<ResourceLocation, OutputDecorator.Serializer> SERIALIZERS = new UnorderedRegistry<>();
+
+    public static void init() {
+        SERIALIZERS.register(new ResourceLocation(Iridynamics.MODID, "material_tool"), MaterialToolOutputDecorator.SERIALIZER);
+    }
 
     public static void register(ResourceLocation id, OutputDecorator.Serializer serializer) {
         SERIALIZERS.register(id, serializer);

@@ -5,6 +5,7 @@
 
 	"gui.iridynamics.chute.title": "料斗",
 	"gui.iridynamics.small_crucible.title": "小型坩埚",
+	"gui.iridynamics.grindstone.title": "磨石",
 
     "block.iridynamics.pile": "物料堆",
 	"block.iridynamics.fuel": "燃料",
@@ -16,6 +17,7 @@
 	"block.iridynamics.small_crucible": "小型坩埚",
 	"block.iridynamics.basin": "盆",
 	"block.iridynamics.bending_anvil": "弯曲用砧",
+	"block.iridynamics.grindstone": "磨石",
 
 	"item.iridynamics.mold": "模具",
 	"item.iridynamics.mold_tool": "模具",

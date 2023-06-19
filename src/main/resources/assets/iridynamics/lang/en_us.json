@@ -5,6 +5,7 @@
 
 	"gui.iridynamics.chute.title": "Chute",
 	"gui.iridynamics.small_crucible.title": "Small Crucible",
+	"gui.iridynamics.grindstone.title": "Grindstone",
 
     "block.iridynamics.pile": "Pile",
 	"block.iridynamics.fuel": "Fuel",
@@ -16,6 +17,7 @@
 	"block.iridynamics.small_crucible": "Small Crucible",
 	"block.iridynamics.basin": "Basin",
 	"block.iridynamics.bending_anvil": "Bending Anvil",
+	"block.iridynamics.grindstone": "Grindstone",
 
 	"item.iridynamics.mold": "Mold",
 	"item.iridynamics.mold_tool": "Mold",

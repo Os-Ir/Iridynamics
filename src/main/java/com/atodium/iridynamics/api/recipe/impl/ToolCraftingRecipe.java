@@ -4,7 +4,7 @@ import com.atodium.iridynamics.api.recipe.IngredientIndex;
 import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.OutputProvider;
-import com.atodium.iridynamics.api.recipe.container.InventoryContainer;
+import com.atodium.iridynamics.api.recipe.container.ToolInventoryContainer;
 import com.atodium.iridynamics.api.tool.IToolInfo;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.google.common.collect.Maps;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input, OutputProvider output,
-                                 IToolInfo[] tools) implements ISpecialRecipe<InventoryContainer> {
+                                 IToolInfo[] tools) implements ISpecialRecipe<ToolInventoryContainer> {
     public static final int SIDE_LENGTH = 5;
 
     private static List<ToolCraftingRecipe> cache = null;
@@ -49,7 +49,7 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
     }
 
     @Override
-    public boolean matches(InventoryContainer container, Level level) {
+    public boolean matches(ToolInventoryContainer container, Level level) {
         ItemStack[][] origin = container.toGrid(SIDE_LENGTH);
         ItemStack[][] align = new ItemStack[SIDE_LENGTH][SIDE_LENGTH];
         DataUtil.align(origin, align, (stack) -> !stack.isEmpty(), ItemStack.EMPTY);
@@ -65,7 +65,7 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
     }
 
     @Override
-    public ItemStack assemble(InventoryContainer inventory) {
+    public ItemStack assemble(ToolInventoryContainer inventory) {
         return this.output.apply(inventory.getAllItemStacks());
     }
 
@@ -84,7 +84,7 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
         return ModRecipeTypes.TOOL_CRAFTING.get();
     }
 
-    public static class Serializer extends RecipeSerializerImpl<InventoryContainer, ToolCraftingRecipe> {
+    public static class Serializer extends RecipeSerializerImpl<ToolInventoryContainer, ToolCraftingRecipe> {
         @Override
         public ToolCraftingRecipe fromJson(ResourceLocation id, JsonObject json) {
             JsonObject key = json.getAsJsonObject("key");
@@ -108,11 +108,11 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
                     input[i][j] = ingredient;
                 }
             }
-            JsonArray tool = json.getAsJsonArray("tool");
-            IToolInfo[] toolInfos = new IToolInfo[tool.size()];
-            for (int i = 0; i < toolInfos.length; i++)
-                toolInfos[i] = IToolInfo.TOOL_INFO.get(new ResourceLocation(tool.get(i).getAsString()));
-            return new ToolCraftingRecipe(id, input, OutputProvider.fromJson(json.getAsJsonObject("output")), toolInfos);
+            JsonArray toolJson = json.getAsJsonArray("tool");
+            IToolInfo[] tools = new IToolInfo[toolJson.size()];
+            for (int i = 0; i < tools.length; i++)
+                tools[i] = IToolInfo.TOOL_INFO.get(new ResourceLocation(toolJson.get(i).getAsString()));
+            return new ToolCraftingRecipe(id, input, OutputProvider.fromJson(json.getAsJsonObject("output")), tools);
         }
 
         @Override
