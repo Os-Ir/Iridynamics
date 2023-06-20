@@ -21,6 +21,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> BENDING_ANVIL = Iridynamics.REGISTRY.block("bending_anvil", BendingAnvilBlock::new, Material.METAL).strength(6.0f, 3.0f).sound(SoundType.METAL).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> GRINDSTONE = Iridynamics.REGISTRY.block("grindstone", GrindstoneBlock::new, Material.STONE).strength(2.0f, 2.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> BLOWER = Iridynamics.REGISTRY.block("blower", BlowerBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
+    public static final RegistryObject<Block> ARTISAN_CRAFTING_TABLE = Iridynamics.REGISTRY.block("artisan_crafting_table", ArtisanCraftingTableBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
 
     public static void init() {
 

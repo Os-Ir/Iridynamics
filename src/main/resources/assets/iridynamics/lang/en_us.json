@@ -6,6 +6,7 @@
 	"gui.iridynamics.chute.title": "Chute",
 	"gui.iridynamics.small_crucible.title": "Small Crucible",
 	"gui.iridynamics.grindstone.title": "Grindstone",
+  "gui.iridynamics.artisan_crafting_table.title": "Artisan Crafting Table",
 
     "block.iridynamics.pile": "Pile",
 	"block.iridynamics.fuel": "Fuel",
@@ -19,6 +20,7 @@
 	"block.iridynamics.bending_anvil": "Bending Anvil",
 	"block.iridynamics.grindstone": "Grindstone",
 	"block.iridynamics.blower": "Blower",
+	"block.iridynamics.artisan_crafting_table": "Artisan Crafting Table",
 
 	"item.iridynamics.mold": "Mold",
 	"item.iridynamics.mold_tool": "Mold",

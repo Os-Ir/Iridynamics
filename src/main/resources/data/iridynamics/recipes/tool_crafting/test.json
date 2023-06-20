@@ -18,7 +18,7 @@
   "output": {
     "base": {
       "item": "minecraft:charcoal",
-      "count": "7"
+      "count": 7
     }
   },
   "tool": [
