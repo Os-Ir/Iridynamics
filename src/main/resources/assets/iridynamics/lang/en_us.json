@@ -18,6 +18,7 @@
 	"block.iridynamics.basin": "Basin",
 	"block.iridynamics.bending_anvil": "Bending Anvil",
 	"block.iridynamics.grindstone": "Grindstone",
+	"block.iridynamics.blower": "Blower",
 
 	"item.iridynamics.mold": "Mold",
 	"item.iridynamics.mold_tool": "Mold",

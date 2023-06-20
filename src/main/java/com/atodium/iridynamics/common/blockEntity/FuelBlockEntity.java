@@ -167,6 +167,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     @Override
     public void blow(Direction direction, int volume) {
         this.blowVolume = Math.min(this.blowVolume + volume, MAX_BLOW_VOLUME);
+        System.out.println("Max temp:  " + this.getMaxTemperature());
     }
 
     public void updateBlockState() {
