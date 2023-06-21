@@ -56,7 +56,7 @@ public class ClientForgeEventHandler {
                         tooltip.add(new TextComponent(ChatFormatting.GREEN + I18n.get("iridynamics.info.heat.weldable")));
                 }
             }
-            tooltip.add(new TextComponent(ChatFormatting.WHITE + String.format("%.1f", heat.getTemperature() - HeatUtil.CELSIUS_ZERO) + "℃"));
+            tooltip.add(new TextComponent(ChatFormatting.DARK_RED + I18n.get("iridynamics.info.heat.heatable") + ChatFormatting.WHITE + " - " + String.format("%.1f", heat.getTemperature() - HeatUtil.CELSIUS_ZERO) + "℃"));
         });
         stack.getCapability(ForgingCapability.FORGING).ifPresent((forging) -> {
             if (forging.processed())

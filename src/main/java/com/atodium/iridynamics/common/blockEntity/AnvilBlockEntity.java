@@ -61,7 +61,7 @@ public class AnvilBlockEntity extends SyncedBlockEntity implements ITickable {
     }
 
     public boolean hit(int slot, int x, int y, boolean heavy) {
-        LazyOptional<IForging> optional = this.inventory.get(slot).getCapability(ForgingCapability.FORGING);
+        LazyOptional<IForging> optional = this.inventory.getStackInSlot(slot).getCapability(ForgingCapability.FORGING);
         if (!optional.isPresent()) return false;
         IForging forging = optional.orElseThrow(NullPointerException::new);
         if (forging.hit(x, y, 0.1, heavy ? 1 : 0)) {
@@ -72,7 +72,7 @@ public class AnvilBlockEntity extends SyncedBlockEntity implements ITickable {
     }
 
     public boolean carve(int slot, int x, int y) {
-        LazyOptional<IForging> optional = this.inventory.get(slot).getCapability(ForgingCapability.FORGING);
+        LazyOptional<IForging> optional = this.inventory.getStackInSlot(slot).getCapability(ForgingCapability.FORGING);
         if (!optional.isPresent()) return false;
         IForging forging = optional.orElseThrow(NullPointerException::new);
         if (forging.carve(x, y)) {
@@ -140,10 +140,6 @@ public class AnvilBlockEntity extends SyncedBlockEntity implements ITickable {
     public static class Inventory extends ItemStackHandler {
         public Inventory() {
             super(2);
-        }
-
-        public ItemStack get(int slot) {
-            return this.getStackInSlot(slot);
         }
 
         public ItemStack left() {

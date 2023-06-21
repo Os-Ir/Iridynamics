@@ -83,10 +83,6 @@ public class ForgeBlockEntity extends SyncedBlockEntity implements ITickable {
             super(2);
         }
 
-        public ItemStack get(int slot) {
-            return this.getStackInSlot(slot);
-        }
-
         public ItemStack left() {
             return this.getStackInSlot(0);
         }

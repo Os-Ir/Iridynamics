@@ -63,8 +63,13 @@ public class ToolIgniter extends ToolHarvestDisable implements IToolUsable {
     }
 
     @Override
-    public int getEntityHitDamage() {
-        return 0;
+    public float getAttackDamage() {
+        return 0.0f;
+    }
+
+    @Override
+    public float getAttackSpeed() {
+        return -3.0f;
     }
 
     @Override

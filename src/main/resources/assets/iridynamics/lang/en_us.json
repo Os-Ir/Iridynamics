@@ -36,6 +36,7 @@
 	"item.iridynamics.tool.chisel": "Chisel",
 	"item.iridynamics.tool.knife": "Knife",
 
+	"iridynamics.info.heat.heatable": "Heatable",
 	"iridynamics.info.heat.weldable": "Weldable",
 	"iridynamics.info.forging.unprocessed": "Unprocessed",
 	"iridynamics.info.forging.processed": "Processed",

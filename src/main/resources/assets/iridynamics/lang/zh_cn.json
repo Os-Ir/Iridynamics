@@ -36,6 +36,7 @@
 	"item.iridynamics.tool.chisel": "凿子",
 	"item.iridynamics.tool.knife": "刀",
 
+	"iridynamics.info.heat.heatable": "可加热",
 	"iridynamics.info.heat.weldable": "可焊接",
 	"iridynamics.info.forging.unprocessed": "未被加工",
 	"iridynamics.info.forging.processed": "已被加工",

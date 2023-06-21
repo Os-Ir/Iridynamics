@@ -14,9 +14,9 @@ public class HeatUtil {
     public static final double CELSIUS_ZERO = 273.15;
     public static final double AMBIENT_TEMPERATURE = CELSIUS_ZERO + 25.0;
 
-    public static final double RESISTANCE_BLOCK_DEFAULT = 10.0;
-    public static final double RESISTANCE_AIR_FLOW = 0.3;
-    public static final double RESISTANCE_AIR_STATIC = 30.0;
+    public static final double RESISTANCE_BLOCK_DEFAULT = 3.0;
+    public static final double RESISTANCE_AIR_FLOW = 0.1;
+    public static final double RESISTANCE_AIR_STATIC = 10.0;
 
     public static void heatExchange(IHeat cap, double temperature, double resistance) {
         if (cap == null) return;

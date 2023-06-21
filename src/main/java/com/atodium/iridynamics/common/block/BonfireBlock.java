@@ -1,8 +1,10 @@
 package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
+import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.common.blockEntity.BonfireBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
+import com.atodium.iridynamics.common.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -53,7 +55,10 @@ public class BonfireBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
-        level.getBlockEntity(pos, ModBlockEntities.BONFIRE.get()).ifPresent((fuel) -> fuel.openGui(player));
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem() == ModItems.IGNITER.get())
+            level.getBlockEntity(pos, ModBlockEntities.BONFIRE.get()).ifPresent((bonfire) -> bonfire.ignite(result.getDirection(), stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new).getTemperature()));
+        else level.getBlockEntity(pos, ModBlockEntities.BONFIRE.get()).ifPresent((bonfire) -> bonfire.openGui(player));
         return InteractionResult.CONSUME;
     }
 
@@ -63,6 +68,10 @@ public class BonfireBlock extends Block implements EntityBlock {
         boolean harvest = state.canHarvestBlock(level, pos, player);
         if (!player.isCreative() && harvest)
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.BONFIRE.get()));
+        level.getBlockEntity(pos, ModBlockEntities.BONFIRE.get()).ifPresent((bonfire) -> {
+            for (int i = 0; i <= 2; i++)
+                ItemHandlerHelper.giveItemToPlayer(player, bonfire.getInventory().getStackInSlot(i));
+        });
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 

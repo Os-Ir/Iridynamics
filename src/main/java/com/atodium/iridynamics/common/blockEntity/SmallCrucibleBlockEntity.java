@@ -165,10 +165,6 @@ public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITick
             super(4);
         }
 
-        public ItemStack get(int slot) {
-            return this.getStackInSlot(slot);
-        }
-
         public ItemStack take(int slot) {
             this.validateSlotIndex(slot);
             ItemStack stack = this.getStackInSlot(slot);

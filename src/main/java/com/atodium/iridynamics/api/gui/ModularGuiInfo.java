@@ -26,6 +26,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 public class ModularGuiInfo {
@@ -278,6 +279,14 @@ public class ModularGuiInfo {
 
         public Builder renderer(int id, int x, int y, int width, int height, RendererWidget.IContainerRenderer renderer) {
             RendererWidget widget = new RendererWidget(x, y, width, height, renderer);
+            this.widgets.put(id, widget);
+            widget.setWidgetId(id);
+            return this;
+        }
+
+        public Builder progress(int id, int x, int y, int width, int height, MoveType moveType, Supplier<Float> supplier, TextureArea texture) {
+            ProgressWidget widget = new ProgressWidget(x, y, width, height, supplier, moveType);
+            widget.setTexture(texture);
             this.widgets.put(id, widget);
             widget.setWidgetId(id);
             return this;

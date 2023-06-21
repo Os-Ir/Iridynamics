@@ -1,5 +1,7 @@
 package com.atodium.iridynamics.api.tool;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -7,7 +9,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
@@ -22,10 +28,15 @@ import java.util.List;
 
 public class ToolItem extends Item {
     protected final IToolInfo toolInfo;
+    protected Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public ToolItem(Item.Properties properties, IToolInfo toolInfo) {
         super(properties);
         this.toolInfo = toolInfo;
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", toolInfo.getAttackDamage(), AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", toolInfo.getAttackSpeed(), AttributeModifier.Operation.ADDITION));
+        this.defaultModifiers = builder.build();
     }
 
     public IToolInfo getToolInfo() {
@@ -43,6 +54,12 @@ public class ToolItem extends Item {
     @Override
     public int getItemStackLimit(ItemStack stack) {
         return 1;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+        return slot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(slot);
     }
 
     @Override

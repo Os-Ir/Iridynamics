@@ -29,6 +29,11 @@ public class ToolChisel extends MaterialToolBase {
     }
 
     @Override
+    public float getAttackDamage() {
+        return 2.0f;
+    }
+
+    @Override
     public boolean validateMaterial(int index, MaterialBase material) {
         switch (index) {
             case 0 -> {

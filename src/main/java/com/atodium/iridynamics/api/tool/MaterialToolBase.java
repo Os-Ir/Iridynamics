@@ -42,8 +42,13 @@ public abstract class MaterialToolBase implements IToolInfo {
     }
 
     @Override
-    public int getEntityHitDamage() {
-        return 100;
+    public float getAttackDamage() {
+        return 4;
+    }
+
+    @Override
+    public float getAttackSpeed() {
+        return -3.0f;
     }
 
     @Override

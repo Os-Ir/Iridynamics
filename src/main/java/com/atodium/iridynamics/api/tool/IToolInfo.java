@@ -46,7 +46,9 @@ public interface IToolInfo {
 
     int getContainerCraftDamage();
 
-    int getEntityHitDamage();
+    float getAttackDamage();
+
+    float getAttackSpeed();
 
     boolean isCorrectToolForDrops(ItemStack stack, BlockState state);
 
