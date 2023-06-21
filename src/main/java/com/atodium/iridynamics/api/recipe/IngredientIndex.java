@@ -92,6 +92,10 @@ public class IngredientIndex {
         return this.ingredient.test(stack) && stack.getCount() == this.count;
     }
 
+    public void consume(ItemStack stack) {
+        if (this.test(stack)) stack.shrink(this.count);
+    }
+
     public Ingredient getIngredient() {
         return this.ingredient;
     }

@@ -23,6 +23,17 @@ public interface IToolInfo {
         TOOL_INFO.register(info.getRegistryName(), info);
     }
 
+    static boolean isToolNonnullEquals(IToolInfo a, IToolInfo b) {
+        if (a == null || b == null) return false;
+        return a.getRegistryName().equals(b.getRegistryName());
+    }
+
+    static boolean isToolEquals(IToolInfo a, IToolInfo b) {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        return a.getRegistryName().equals(b.getRegistryName());
+    }
+
     ResourceLocation getRegistryName();
 
     boolean validateMaterial(int index, MaterialBase material);

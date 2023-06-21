@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.common.blockEntity;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.gui.IGuiHolderCodec;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
@@ -9,7 +10,6 @@ import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
 import com.atodium.iridynamics.api.recipe.container.ToolInventoryContainer;
 import com.atodium.iridynamics.api.recipe.impl.GrindstoneRecipe;
-import com.atodium.iridynamics.api.tool.ToolItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -17,14 +17,16 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class GrindstoneBlockEntity extends SyncedBlockEntity implements IBlockEntityHolder<GrindstoneBlockEntity> {
+public class GrindstoneBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<GrindstoneBlockEntity> {
     public static final BlockEntityCodec<GrindstoneBlockEntity> CODEC = BlockEntityCodec.createCodec(new ResourceLocation(Iridynamics.MODID, "grindstone_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.grindstone.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/grindstone_background.png"));
 
+    private boolean recipeUpdateFlag;
     private GrindstoneRecipe recipe;
     private final Inventory inventory;
 
@@ -33,14 +35,34 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements IBlockEn
         this.inventory = new Inventory();
     }
 
+    @Override
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (this.recipeUpdateFlag) {
+            this.updateRecipe();
+            this.recipeUpdateFlag = false;
+        }
+    }
+
+    public void markRecipeUpdate() {
+        this.recipeUpdateFlag = true;
+    }
+
     public void updateRecipe() {
         ToolInventoryContainer container = new ToolInventoryContainer(6, 4);
         for (int i = 0; i < 6; i++) container.setItem(i, this.inventory.getStackInSlot(i + 4));
-        for (int i = 0; i < 4; i++)
-            container.setTool(i, this.inventory.getStackInSlot(i).getItem() instanceof ToolItem toolItem ? toolItem.getToolInfo() : null);
+        for (int i = 0; i < 4; i++) container.setTool(i, this.inventory.getStackInSlot(i));
         this.recipe = GrindstoneRecipe.getRecipe(container, this.level);
         if (this.recipe != null) this.inventory.putOutputItem(this.recipe.assemble(container));
         else this.inventory.putOutputItem(ItemStack.EMPTY);
+    }
+
+    public void consumeRecipeItem() {
+        if (this.recipe != null) {
+            ToolInventoryContainer container = new ToolInventoryContainer(6, 4);
+            for (int i = 0; i < 6; i++) container.setItem(i, this.inventory.getStackInSlot(i + 4));
+            for (int i = 0; i < 4; i++) container.setTool(i, this.inventory.getStackInSlot(i));
+            this.recipe.consume(container);
+        }
     }
 
     @Override
@@ -79,7 +101,7 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements IBlockEn
     @Override
     protected void readSyncData(CompoundTag tag) {
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
-        this.updateRecipe();
+        this.markRecipeUpdate();
     }
 
     @Override
@@ -90,7 +112,7 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements IBlockEn
     @Override
     protected void loadFromTag(CompoundTag tag) {
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
-        this.updateRecipe();
+        this.markRecipeUpdate();
     }
 
     public class Inventory extends ItemStackHandler {
@@ -105,15 +127,11 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements IBlockEn
         @Override
         protected void onContentsChanged(int slot) {
             if (slot == 10 && GrindstoneBlockEntity.this.recipe != null && this.getStackInSlot(10).isEmpty()) {
-                for (int i = 4; i <= 9; i++) this.stacks.set(i, ItemStack.EMPTY);
-                for (int i = 0; i <= 3; i++) {
-                    ItemStack stack = this.getStackInSlot(i);
-                    if (stack.getItem() instanceof ToolItem toolItem)
-                        toolItem.damageItem(stack, toolItem.getToolInfo().getContainerCraftDamage());
-                }
+                GrindstoneBlockEntity.this.consumeRecipeItem();
                 GrindstoneBlockEntity.this.recipe = null;
             }
-            GrindstoneBlockEntity.this.updateRecipe();
+            GrindstoneBlockEntity.this.markRecipeUpdate();
+            GrindstoneBlockEntity.this.markDirty();
         }
     }
 }

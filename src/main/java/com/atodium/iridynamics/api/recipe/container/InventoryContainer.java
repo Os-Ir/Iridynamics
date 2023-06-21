@@ -11,18 +11,19 @@ public class InventoryContainer implements Container {
 
     public InventoryContainer(int size) {
         this.stacks = new ItemStack[size];
+        Arrays.fill(this.stacks, ItemStack.EMPTY);
     }
 
     public ItemStack[][] toGrid(int side) {
         if (this.stacks.length != side * side)
             throw new IllegalArgumentException("Can not transform InventoryContainer with size [ " + this.stacks.length + " ] to a grid with side length [ " + side + " ]");
         ItemStack[][] grid = new ItemStack[side][side];
-        for (int i = 0; i < side; i++) for (int j = 0; j < side; j++) grid[i][j] = this.stacks[i * side + j].copy();
+        for (int i = 0; i < side; i++) System.arraycopy(this.stacks, i * side, grid[i], 0, side);
         return grid;
     }
 
     public ItemStack[] getAllItemStacks() {
-        return Arrays.copyOf(this.stacks, this.stacks.length);
+        return this.stacks;
     }
 
     public boolean validateSlot(int slot) {
@@ -41,7 +42,7 @@ public class InventoryContainer implements Container {
 
     @Override
     public ItemStack getItem(int slot) {
-        if (this.validateSlot(slot)) return this.stacks[slot].copy();
+        if (this.validateSlot(slot)) return this.stacks[slot];
         return ItemStack.EMPTY;
     }
 
@@ -65,7 +66,7 @@ public class InventoryContainer implements Container {
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        if (this.validateSlot(slot)) this.stacks[slot] = stack.copy();
+        if (this.validateSlot(slot)) this.stacks[slot] = stack.isEmpty() ? ItemStack.EMPTY : stack;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class InventoryContainer implements Container {
     }
 
     @Override
-    public boolean stillValid(Player p_18946_) {
+    public boolean stillValid(Player player) {
         return true;
     }
 

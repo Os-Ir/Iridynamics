@@ -12,7 +12,7 @@ public class ItemStackContainer implements Container {
     }
 
     public ItemStackContainer(ItemStack stack) {
-        this.stack = stack;
+        this.stack = stack.isEmpty() ? ItemStack.EMPTY : stack;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class ItemStackContainer implements Container {
     }
 
     public ItemStack getItem() {
-        return this.stack.copy();
+        return this.stack;
     }
 
     @Override
     public ItemStack getItem(int slot) {
-        return slot == 0 ? this.stack.copy() : ItemStack.EMPTY;
+        return slot == 0 ? this.stack : ItemStack.EMPTY;
     }
 
     @Override
@@ -53,12 +53,12 @@ public class ItemStackContainer implements Container {
     }
 
     public void setItemStack(ItemStack stack) {
-        this.stack = stack.copy();
+        this.stack = stack;
     }
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        if (slot == 1) this.stack = stack.copy();
+        if (slot == 1) this.stack = stack;
     }
 
     @Override

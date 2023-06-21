@@ -35,16 +35,24 @@ public record GrindstoneRecipe(ResourceLocation id, IngredientIndex[] input, Out
         return null;
     }
 
+    public void consume(ToolInventoryContainer container) {
+        for (int i = 0; i < this.input.length; i++)
+            if (!this.input[i].isEmpty() && this.input[i].testEqual(container.getItem(i)))
+                this.input[i].consume(container.getItem(i));
+        for (int i = 0; i < this.tools.length; i++)
+            if (IToolInfo.isToolNonnullEquals(this.tools[i], container.getTool(i)))
+                container.getToolItem(i).damageItem(container.getToolItemStack(i), this.tools[i].getContainerCraftDamage());
+    }
+
     @Override
     public boolean matches(ToolInventoryContainer container, Level level) {
         for (int i = 0; i < this.input.length; i++)
-            if ((!this.input[i].isEmpty() && !this.input[i].testEqual(container.getItem(i))) || (this.input[i].isEmpty() && container.getItem(i).isEmpty()))
+            if ((!this.input[i].isEmpty() && !this.input[i].testEqual(container.getItem(i))) || (this.input[i].isEmpty() && !container.getItem(i).isEmpty()))
                 return false;
         for (int i = this.input.length; i < container.getContainerSize(); i++)
             if (!container.getItem(i).isEmpty()) return false;
         for (int i = 0; i < this.tools.length; i++)
-            if ((this.tools[i] != null && !this.tools[i].getRegistryName().equals(container.getTool(i).getRegistryName())) || (this.tools[i] == null && container.getTool(i) == null))
-                return false;
+            if (!IToolInfo.isToolEquals(this.tools[i], container.getTool(i))) return false;
         for (int i = this.tools.length; i < container.getToolCount(); i++)
             if (container.getTool(i) != null) return false;
         return true;

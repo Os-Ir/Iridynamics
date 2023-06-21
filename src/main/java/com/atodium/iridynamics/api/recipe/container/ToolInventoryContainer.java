@@ -1,33 +1,48 @@
 package com.atodium.iridynamics.api.recipe.container;
 
 import com.atodium.iridynamics.api.tool.IToolInfo;
+import com.atodium.iridynamics.api.tool.ToolItem;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.Arrays;
 
 public class ToolInventoryContainer extends InventoryContainer {
-    private final IToolInfo[] tools;
+    private final ItemStack[] tools;
 
     public ToolInventoryContainer(int size, int toolSize) {
         super(size);
-        this.tools = new IToolInfo[toolSize];
+        this.tools = new ItemStack[toolSize];
+        Arrays.fill(this.tools, ItemStack.EMPTY);
     }
 
     public boolean validateToolIndex(int index) {
         return 0 <= index && index < this.tools.length;
     }
 
-    public void setTool(int index, IToolInfo info) {
-        if (this.validateToolIndex(index)) this.tools[index] = info;
+    public void setTool(int index, ItemStack tool) {
+        if (this.validateToolIndex(index) && tool.getItem() instanceof ToolItem) this.tools[index] = tool;
     }
 
     public int getToolCount() {
         return this.tools.length;
     }
 
-    public IToolInfo[] getAllTools() {
+    public ItemStack[] getAllToolItemStacks() {
         return this.tools;
     }
 
-    public IToolInfo getTool(int index) {
+    public ItemStack getToolItemStack(int index) {
         if (this.validateToolIndex(index)) return this.tools[index];
+        return ItemStack.EMPTY;
+    }
+
+    public ToolItem getToolItem(int index) {
+        if (this.validateToolIndex(index) && this.tools[index].getItem() instanceof ToolItem toolItem) return toolItem;
         return null;
+    }
+
+    public IToolInfo getTool(int index) {
+        ToolItem toolItem = this.getToolItem(index);
+        return toolItem == null ? null : toolItem.getToolInfo();
     }
 }

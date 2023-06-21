@@ -35,17 +35,22 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
         return cache;
     }
 
-    public static ToolCraftingRecipe getRecipe(ItemStack[][] stacks, Level level) {
-        ItemStack[][] align = new ItemStack[SIDE_LENGTH][SIDE_LENGTH];
-        DataUtil.align(stacks, align, (stack) -> !stack.isEmpty(), ItemStack.EMPTY);
-        outer:
-        for (ToolCraftingRecipe recipe : getAllRecipes(level)) {
-            for (int x = 0; x < SIDE_LENGTH; x++)
-                for (int y = 0; y < SIDE_LENGTH; y++)
-                    if (!recipe.input[y][x].isEmpty() && !recipe.input[y][x].test(align[y][x])) continue outer;
-            return recipe;
-        }
+    public static ToolCraftingRecipe getRecipe(ToolInventoryContainer container, Level level) {
+        for (ToolCraftingRecipe recipe : getAllRecipes(level)) if (recipe.matches(container, level)) return recipe;
         return null;
+    }
+
+    public void consume(ToolInventoryContainer container) {
+        ItemStack[][] origin = container.toGrid(SIDE_LENGTH);
+        ItemStack[][] align = new ItemStack[SIDE_LENGTH][SIDE_LENGTH];
+        DataUtil.align(origin, align, (stack) -> !stack.isEmpty(), ItemStack.EMPTY);
+        for (int x = 0; x < SIDE_LENGTH; x++)
+            for (int y = 0; y < SIDE_LENGTH; y++)
+                if (!this.input[y][x].isEmpty() && this.input[y][x].test(align[y][x]))
+                    this.input[y][x].consume(align[y][x]);
+        for (int i = 0; i < this.tools.length; i++)
+            if (IToolInfo.isToolNonnullEquals(this.tools[i], container.getTool(i)))
+                container.getToolItem(i).damageItem(container.getToolItemStack(i), container.getTool(i).getContainerCraftDamage());
     }
 
     @Override
@@ -55,7 +60,12 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
         DataUtil.align(origin, align, (stack) -> !stack.isEmpty(), ItemStack.EMPTY);
         for (int x = 0; x < SIDE_LENGTH; x++)
             for (int y = 0; y < SIDE_LENGTH; y++)
-                if (!this.input[y][x].isEmpty() && !this.input[y][x].test(align[y][x])) return false;
+                if ((!this.input[y][x].isEmpty() && !this.input[y][x].test(align[y][x])) || (this.input[y][x].isEmpty() && !align[y][x].isEmpty()))
+                    return false;
+        for (int i = 0; i < this.tools.length; i++)
+            if (!IToolInfo.isToolEquals(this.tools[i], container.getTool(i))) return false;
+        for (int i = this.tools.length; i < container.getToolCount(); i++)
+            if (container.getTool(i) != null) return false;
         return true;
     }
 
