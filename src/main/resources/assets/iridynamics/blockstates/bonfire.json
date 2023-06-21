@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "ignite=true": {
+      "model": "iridynamics:block/bonfire_ignite"
+    },
+    "ignite=false": {
+      "model": "iridynamics:block/bonfire"
+    }
+  }
+}

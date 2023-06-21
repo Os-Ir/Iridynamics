@@ -97,10 +97,13 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     public boolean addIgniteStarter(ItemStack stack) {
         if (this.isIgniteStarter(stack)) {
-            this.starterTemperature = this.getStarterTemperature(stack);
-            this.starterFlashPoint = this.getStarterFlashPoint(stack);
-            stack.shrink(1);
-            return true;
+            double t = this.getStarterTemperature(stack);
+            if (!MathUtil.isEquals(t, this.starterTemperature)) {
+                this.starterTemperature = t;
+                this.starterFlashPoint = this.getStarterFlashPoint(stack);
+                stack.shrink(1);
+                return true;
+            }
         }
         return false;
     }
