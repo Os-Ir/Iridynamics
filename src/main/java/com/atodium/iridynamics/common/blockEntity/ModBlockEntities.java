@@ -19,6 +19,7 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<GrindstoneBlockEntity>> GRINDSTONE = Iridynamics.REGISTRY.blockEntity("grindstone", () -> BlockEntityType.Builder.of(GrindstoneBlockEntity::new, ModBlocks.GRINDSTONE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<BlowerBlockEntity>> BLOWER = Iridynamics.REGISTRY.blockEntity("blower", () -> BlockEntityType.Builder.of(BlowerBlockEntity::new, ModBlocks.BLOWER.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<ArtisanCraftingTableBlockEntity>> ARTISAN_CRAFTING_TABLE = Iridynamics.REGISTRY.blockEntity("artisan_crafting_table", () -> BlockEntityType.Builder.of(ArtisanCraftingTableBlockEntity::new, ModBlocks.ARTISAN_CRAFTING_TABLE.get()).build(null)).register();
+    public static final RegistryObject<BlockEntityType<BonfireBlockEntity>> BONFIRE = Iridynamics.REGISTRY.blockEntity("bonfire", () -> BlockEntityType.Builder.of(BonfireBlockEntity::new, ModBlocks.BONFIRE.get()).build(null)).register();
 
     public static void init() {
 

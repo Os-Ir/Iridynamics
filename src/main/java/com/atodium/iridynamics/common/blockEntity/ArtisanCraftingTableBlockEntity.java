@@ -65,6 +65,10 @@ public class ArtisanCraftingTableBlockEntity extends SyncedBlockEntity implement
         }
     }
 
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+
     @Override
     public IGuiHolderCodec<IBlockEntityHolder<ArtisanCraftingTableBlockEntity>> getCodec() {
         return CODEC;

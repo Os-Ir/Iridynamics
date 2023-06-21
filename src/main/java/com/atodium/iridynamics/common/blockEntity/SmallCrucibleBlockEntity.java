@@ -76,6 +76,7 @@ public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITick
             HeatUtil.blockHeatExchange(level, pos, state, this, false);
             updateSmallCrucible(this.inventory, this.container, this.heat);
             this.markDirty();
+            this.markForSync();
         }
     }
 

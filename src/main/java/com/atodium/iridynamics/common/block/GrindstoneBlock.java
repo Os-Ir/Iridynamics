@@ -55,6 +55,10 @@ public class GrindstoneBlock extends Block implements EntityBlock {
         boolean harvest = state.canHarvestBlock(level, pos, player);
         if (!player.isCreative() && harvest)
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.GRINDSTONE.get()));
+        level.getBlockEntity(pos, ModBlockEntities.GRINDSTONE.get()).ifPresent((grindstone) -> {
+            for (int i = 0; i <= 9; i++)
+                ItemHandlerHelper.giveItemToPlayer(player, grindstone.getInventory().getStackInSlot(i));
+        });
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 

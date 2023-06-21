@@ -65,6 +65,10 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements ITickabl
         }
     }
 
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+
     @Override
     public IGuiHolderCodec<IBlockEntityHolder<GrindstoneBlockEntity>> getCodec() {
         return CODEC;

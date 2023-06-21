@@ -64,6 +64,7 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
                 source.addMaterial(material, -add);
                 if (source.isEmpty()) source.setEnergy(0);
                 else source.setTemperature(temperature);
+                this.markForSync();
                 return true;
             }
             return false;
@@ -76,6 +77,7 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
         this.container.increaseEnergy(material.getHeatInfo().getMoleEnergy(HeatUtil.ATMOSPHERIC_PRESSURE, temperature) * add / 144.0);
         source.addMaterial(material, -add);
         if (!source.isEmpty()) source.setTemperature(temperature);
+        this.markForSync();
         return true;
     }
 
@@ -88,6 +90,8 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
         ItemStack r = MaterialEntry.getMaterialItemStack(ModSolidShapes.INGOT, material);
         r.getCapability(HeatCapability.HEAT).ifPresent((heat) -> heat.setTemperature(temperature));
         this.container.clear();
+        System.out.println("sync");
+        this.markForSync();
         return r;
     }
 
@@ -110,7 +114,9 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
 
     @Override
     protected void readSyncData(CompoundTag tag) {
+        System.out.println("Reading sync data");
         this.container.deserializeNBT(tag.getCompound("container"));
+
     }
 
     @Override

@@ -17,7 +17,7 @@
   },
   "output": {
     "base": {
-      "item": "minecraft:charcoal",
+      "item": "iridynamics:wood_brick",
       "count": 7
     }
   },

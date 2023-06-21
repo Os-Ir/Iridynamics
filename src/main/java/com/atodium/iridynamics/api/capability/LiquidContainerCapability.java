@@ -175,6 +175,7 @@ public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapa
         this.liquidCapacity = tag.getInt("liquid_capacity");
         this.energy = tag.getDouble("energy");
         ListTag materials = tag.getList("materials", Tag.TAG_COMPOUND);
+        this.materials.clear();
         for (int i = 0; i < materials.size(); i++) {
             CompoundTag t = materials.getCompound(i);
             this.materials.put(MaterialBase.getMaterialByName(t.getString("material")), t.getInt("unit"));
