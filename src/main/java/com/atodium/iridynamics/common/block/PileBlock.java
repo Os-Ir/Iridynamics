@@ -62,7 +62,6 @@ public class PileBlock extends Block implements EntityBlock {
         return type == ModBlockEntities.PILE.get() ? ITickable.ticker() : null;
     }
 
-
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {

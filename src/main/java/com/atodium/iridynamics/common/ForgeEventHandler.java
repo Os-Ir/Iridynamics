@@ -18,9 +18,12 @@ import com.atodium.iridynamics.api.recipe.impl.*;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.*;
 import com.atodium.iridynamics.common.item.ModItems;
+import com.atodium.iridynamics.common.levelgen.feature.ModFeatures;
 import com.atodium.iridynamics.common.tool.ToolIgniter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -40,11 +44,15 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Map;
+
 @Mod.EventBusSubscriber(modid = Iridynamics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeEventHandler {
     @SubscribeEvent
-    public void onBiomeLoad(BiomeLoadingEvent event) {
+    public static void onBiomeLoad(BiomeLoadingEvent event) {
         BiomeGenerationSettingsBuilder generation = event.getGeneration();
+        for (Map.Entry<ResourceLocation, Holder<PlacedFeature>> entry : ModFeatures.PLACED_FEATURE.entrySet())
+            generation.addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, entry.getValue());
     }
 
     @SubscribeEvent

@@ -45,7 +45,7 @@ public class ModItems {
         MoldToolItem.GENERATED_MOLDS.add(ModSolidShapes.KNIFE_HEAD);
     }
 
-    public static void onSetup() {
+    public static void setup() {
         MaterialPhysicalInfo wood = ModMaterials.WOOD.getPhysicalInfo();
         MaterialPhysicalInfo charcoal = ModMaterials.CHARCOAL.getPhysicalInfo();
         MaterialPhysicalInfo coal = ModMaterials.COAL.getPhysicalInfo();

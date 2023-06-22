@@ -30,7 +30,7 @@ public class ModSolidShapes {
     public static final SolidShape HAMMER_HEAD = new SolidShape("hammer_head", 144, flag(MaterialBase.GENERATE_TOOL));
     public static final SolidShape CHISEL_HEAD = new SolidShape("chisel_head", 144, flag(MaterialBase.GENERATE_TOOL));
 
-    public static final SolidShape ORE_NUGGET = new SolidShape("ore_nugget", null, 16, flag(MaterialBase.GENERATE_ORE));
+    public static final SolidShape ORE_NUGGET = new SolidShape("ore_nugget", null, 36, flag(MaterialBase.GENERATE_ORE));
 
     public static Predicate<MaterialBase> flag(IMaterialFlag flag) {
         return (material) -> material.hasFlag(flag);

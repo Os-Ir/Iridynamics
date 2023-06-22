@@ -8,6 +8,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlocks {
+    public static final RegistryObject<Block> PLACED_STICK = Iridynamics.REGISTRY.block("placed_stick", PlacedStickBlock::new, Material.WOOD).strength(0.0f, 0.0f).sound(SoundType.WOOD).noOcclusion().register();
+    public static final RegistryObject<Block> PLACED_STONE = Iridynamics.REGISTRY.block("placed_stone", PlacedStoneBlock::new, Material.STONE).strength(0.0f, 0.0f).sound(SoundType.STONE).noOcclusion().register();
     public static final RegistryObject<Block> PILE = Iridynamics.REGISTRY.block("pile", PileBlock::new, Material.WOOD).strength(5.0f, 3.0f).sound(SoundType.WOOD).noOcclusion().register();
     public static final RegistryObject<Block> HEAT_PROCESS = Iridynamics.REGISTRY.block("heat_process", HeatProcessBlock::new, Material.WOOD).strength(5.0f, 3.0f).sound(SoundType.WOOD).noOcclusion().register();
     public static final RegistryObject<Block> FUEL = Iridynamics.REGISTRY.block("fuel", FuelBlock::new, Material.WOOD).strength(5.0f, 3.0f).sound(SoundType.WOOD).noOcclusion().noDrops().register();

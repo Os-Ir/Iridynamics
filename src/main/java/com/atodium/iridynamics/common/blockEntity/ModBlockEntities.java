@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockEntities {
+    public static final RegistryObject<BlockEntityType<PlacedStoneBlockEntity>> PLACED_STONE = Iridynamics.REGISTRY.blockEntity("placed_stone", () -> BlockEntityType.Builder.of(PlacedStoneBlockEntity::new, ModBlocks.PLACED_STONE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<PileBlockEntity>> PILE = Iridynamics.REGISTRY.blockEntity("pile", () -> BlockEntityType.Builder.of(PileBlockEntity::new, ModBlocks.PILE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<HeatProcessBlockEntity>> HEAT_PROCESS = Iridynamics.REGISTRY.blockEntity("heat_process", () -> BlockEntityType.Builder.of(HeatProcessBlockEntity::new, ModBlocks.HEAT_PROCESS.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<FuelBlockEntity>> FUEL = Iridynamics.REGISTRY.blockEntity("fuel", () -> BlockEntityType.Builder.of(FuelBlockEntity::new, ModBlocks.FUEL.get()).build(null)).register();

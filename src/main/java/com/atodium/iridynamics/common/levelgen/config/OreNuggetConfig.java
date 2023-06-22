@@ -6,11 +6,5 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 
 public class OreNuggetConfig implements FeatureConfiguration {
     public static final OreNuggetConfig INSTANCE = new OreNuggetConfig();
-    public static final Codec<OreNuggetConfig> CODEC = Codec.INT.comapFlatMap((n) -> {
-        System.out.println("Data to config");
-        return DataResult.success(INSTANCE);
-    }, (config) -> {
-        System.out.println("Config to zero data");
-        return 0;
-    });
+    public static final Codec<OreNuggetConfig> CODEC = Codec.INT.comapFlatMap((n) -> DataResult.success(INSTANCE), (config) -> 0);
 }

@@ -17,6 +17,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -35,6 +37,7 @@ public final class ModRegistry {
     private final DeferredRegister<RecipeSerializer<?>> recipeSerializerRegistry;
     private final DeferredRegister<Feature<?>> featureRegistry;
     private final DeferredRegister<ConfiguredFeature<?, ?>> configuredFeatureRegistry;
+    private final DeferredRegister<PlacementModifierType<?>> placementModifierRegister;
 
     public ModRegistry(String modid) {
         this.modid = modid;
@@ -46,6 +49,7 @@ public final class ModRegistry {
         this.recipeSerializerRegistry = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Iridynamics.MODID);
         this.featureRegistry = DeferredRegister.create(ForgeRegistries.FEATURES, Iridynamics.MODID);
         this.configuredFeatureRegistry = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, Iridynamics.MODID);
+        this.placementModifierRegister = DeferredRegister.create(Registry.PLACEMENT_MODIFIER_REGISTRY, Iridynamics.MODID);
     }
 
     public void init(IEventBus bus) {
@@ -57,6 +61,7 @@ public final class ModRegistry {
         this.recipeSerializerRegistry.register(bus);
         this.featureRegistry.register(bus);
         this.configuredFeatureRegistry.register(bus);
+        this.placementModifierRegister.register(bus);
     }
 
     public String getModid() {
@@ -95,6 +100,10 @@ public final class ModRegistry {
         return this.configuredFeatureRegistry;
     }
 
+    public DeferredRegister<PlacementModifierType<?>> getPlacementModifierRegister() {
+        return this.placementModifierRegister;
+    }
+
     public ItemBuilder item(String name, Function<Item.Properties, Item> supplier) {
         return ItemBuilder.builder(this, name, supplier);
     }
@@ -129,5 +138,9 @@ public final class ModRegistry {
 
     public <H extends FeatureConfiguration, F extends Feature<H>> ConfiguredFeatureBuilder<H, F> configuredFeature(String name, Supplier<ConfiguredFeature<H, F>> supplier) {
         return ConfiguredFeatureBuilder.builder(this, name, supplier);
+    }
+
+    public <T extends PlacementModifier> PlacementModifierBuilder<T> placementModifier(String name, Supplier<PlacementModifierType<T>> supplier) {
+        return PlacementModifierBuilder.builder(this, name, supplier);
     }
 }

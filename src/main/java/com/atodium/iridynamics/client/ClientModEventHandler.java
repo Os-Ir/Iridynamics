@@ -31,6 +31,7 @@ public class ClientModEventHandler {
 
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.PLACED_STONE.get(), (context) -> PlacedStoneRenderer.INSTANCE);
         event.registerBlockEntityRenderer(ModBlockEntities.PILE.get(), (context) -> PileRenderer.INSTANCE);
         event.registerBlockEntityRenderer(ModBlockEntities.HEAT_PROCESS.get(), (context) -> HeatProcessRenderer.INSTANCE);
         event.registerBlockEntityRenderer(ModBlockEntities.FORGE.get(), (context) -> ForgeRenderer.INSTANCE);
