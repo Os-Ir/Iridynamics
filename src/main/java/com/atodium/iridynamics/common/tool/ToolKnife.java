@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ToolKnife extends MaterialToolBase {
-    public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(Iridynamics.MODID, "knife");
+    public static final ResourceLocation REGISTRY_NAME = Iridynamics.rl("knife");
     public static final ToolKnife INSTANCE = new ToolKnife();
     public static final ToolRenderInfo RENDER_INFO = new ToolRenderInfo(INSTANCE);
 

@@ -4,7 +4,7 @@ import com.atodium.iridynamics.Iridynamics;
 import net.minecraft.resources.ResourceLocation;
 
 public class GemMaterial extends DustMaterial {
-    public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(Iridynamics.MODID, "gem");
+    public static final ResourceLocation REGISTRY_NAME = Iridynamics.rl("gem");
     public static final long DEFAULT_FLAGS = combineFlags(GENERATE_DUST, GENERATE_PLATE, GENERATE_CRYSTAL, GENERATE_ROD, GENERATE_GEAR, GENERATE_SCREW, GENERATE_RING);
 
     public GemMaterial(String name) {

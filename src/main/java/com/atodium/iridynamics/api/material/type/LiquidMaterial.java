@@ -4,7 +4,7 @@ import com.atodium.iridynamics.Iridynamics;
 import net.minecraft.resources.ResourceLocation;
 
 public class LiquidMaterial extends MaterialBase {
-    public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(Iridynamics.MODID, "liquid");
+    public static final ResourceLocation REGISTRY_NAME = Iridynamics.rl("liquid");
     public static final long DEFAULT_FLAGS = 0L;
 
     public LiquidMaterial(String name) {

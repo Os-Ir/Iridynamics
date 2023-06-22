@@ -31,9 +31,9 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<SmallCrucibleBlockEntity> {
-    public static final BlockEntityCodec<SmallCrucibleBlockEntity> CODEC = BlockEntityCodec.createCodec(new ResourceLocation(Iridynamics.MODID, "small_crucible_block_entity"));
+    public static final BlockEntityCodec<SmallCrucibleBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("small_crucible_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.small_crucible.title");
-    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/small_crucible_background.png"));
+    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/small_crucible_background.png"));
     public static final double INVENTORY_RESISTANCE = 0.02;
     public static final int CAPACITY = 576;
 

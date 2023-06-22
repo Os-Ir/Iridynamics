@@ -4,7 +4,7 @@ import com.atodium.iridynamics.Iridynamics;
 import net.minecraft.resources.ResourceLocation;
 
 public class DustMaterial extends MaterialBase {
-    public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(Iridynamics.MODID, "dust");
+    public static final ResourceLocation REGISTRY_NAME = Iridynamics.rl("dust");
     public static final long DEFAULT_FLAGS = combineFlags(GENERATE_DUST);
 
     public DustMaterial(String name) {

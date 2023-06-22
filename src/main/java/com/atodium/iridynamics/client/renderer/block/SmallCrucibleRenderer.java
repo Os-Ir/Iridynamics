@@ -18,7 +18,7 @@ public class SmallCrucibleRenderer implements BlockEntityRenderer<SmallCrucibleB
 
     @Override
     public void render(SmallCrucibleBlockEntity crucible, float partialTick, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(new ResourceLocation(Iridynamics.MODID, "block/white"));
+        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(Iridynamics.rl("block/white"));
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         LiquidContainerCapability container = crucible.getLiquidContainer();
         if (container.isEmpty()) return;

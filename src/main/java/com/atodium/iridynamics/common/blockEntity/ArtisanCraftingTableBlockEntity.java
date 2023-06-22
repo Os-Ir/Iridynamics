@@ -22,9 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ArtisanCraftingTableBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<ArtisanCraftingTableBlockEntity> {
-    public static final BlockEntityCodec<ArtisanCraftingTableBlockEntity> CODEC = BlockEntityCodec.createCodec(new ResourceLocation(Iridynamics.MODID, "artisan_crafting_table_block_entity"));
+    public static final BlockEntityCodec<ArtisanCraftingTableBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("artisan_crafting_table_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.artisan_crafting_table.title");
-    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/artisan_crafting_table_background.png"));
+    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/artisan_crafting_table_background.png"));
 
     private boolean recipeUpdateFlag;
     private ToolCraftingRecipe recipe;

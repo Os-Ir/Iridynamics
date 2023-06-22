@@ -16,7 +16,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class ForgingCapability implements IForging, ICapabilitySerializable<CompoundTag> {
-    public static final ResourceLocation KEY = new ResourceLocation(Iridynamics.MODID, "forging");
+    public static final ResourceLocation KEY = Iridynamics.rl("forging");
     public static final Capability<IForging> FORGING = CapabilityManager.get(new CapabilityToken<>() {
     });
 

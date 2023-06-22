@@ -11,7 +11,7 @@ public class ModOutputDecorators {
     public static final UnorderedRegistry<ResourceLocation, OutputDecorator.Serializer> SERIALIZERS = new UnorderedRegistry<>();
 
     public static void init() {
-        SERIALIZERS.register(new ResourceLocation(Iridynamics.MODID, "material_tool"), MaterialToolOutputDecorator.SERIALIZER);
+        SERIALIZERS.register(Iridynamics.rl("material_tool"), MaterialToolOutputDecorator.SERIALIZER);
     }
 
     public static void register(ResourceLocation id, OutputDecorator.Serializer serializer) {

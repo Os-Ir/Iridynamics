@@ -10,7 +10,6 @@ import com.atodium.iridynamics.client.renderer.entity.BulletRenderer;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.entity.ModEntities;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -26,8 +25,8 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientModEventHandler {
     @SubscribeEvent
     public static void registerModelLoaders(ModelRegistryEvent event) {
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(Iridynamics.MODID, "material"), MaterialModelLoader.INSTANCE);
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(Iridynamics.MODID, "material_tool"), MaterialToolModelLoader.INSTANCE);
+        ModelLoaderRegistry.registerLoader(Iridynamics.rl("material"), MaterialModelLoader.INSTANCE);
+        ModelLoaderRegistry.registerLoader(Iridynamics.rl("material_tool"), MaterialToolModelLoader.INSTANCE);
     }
 
     @SubscribeEvent
@@ -45,7 +44,7 @@ public class ClientModEventHandler {
     public static void onTextureStitchPre(TextureStitchEvent.Pre event) {
         if (event.getAtlas().location().equals(RendererUtil.BLOCKS_ATLAS)) {
             PileBlockEntity.PILE_ITEM.values().forEach((info) -> event.addSprite(info.getTextureName()));
-            event.addSprite(new ResourceLocation(Iridynamics.MODID, "block/white"));
+            event.addSprite(Iridynamics.rl("block/white"));
         }
     }
 

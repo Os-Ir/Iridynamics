@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ToolChisel extends MaterialToolBase {
-    public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(Iridynamics.MODID, "chisel");
+    public static final ResourceLocation REGISTRY_NAME = Iridynamics.rl("chisel");
     public static final ToolChisel INSTANCE = new ToolChisel();
     public static final ToolRenderInfo RENDER_INFO = new ToolRenderInfo(INSTANCE);
 

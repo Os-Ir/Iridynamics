@@ -19,7 +19,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import java.util.Arrays;
 
 public class HeatCapability implements IHeat, ICapabilitySerializable<CompoundTag> {
-    public static final ResourceLocation KEY = new ResourceLocation(Iridynamics.MODID, "heat");
+    public static final ResourceLocation KEY = Iridynamics.rl("heat");
     public static final Capability<IHeat> HEAT = CapabilityManager.get(new CapabilityToken<>() {
     });
 

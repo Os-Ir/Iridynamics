@@ -22,9 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<ChuteBlockEntity> {
-    public static final BlockEntityCodec<ChuteBlockEntity> CODEC = BlockEntityCodec.createCodec(new ResourceLocation(Iridynamics.MODID, "chute_block_entity"));
+    public static final BlockEntityCodec<ChuteBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("chute_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.chute.title");
-    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/chute_background.png"));
+    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/chute_background.png"));
     public static final int COOLING_TIME = 20;
 
     private final Inventory inventory;

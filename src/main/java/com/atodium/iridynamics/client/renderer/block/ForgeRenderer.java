@@ -31,7 +31,7 @@ public class ForgeRenderer implements BlockEntityRenderer<ForgeBlockEntity> {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ForgeBlockEntity.Inventory inventory = forge.getInventory();
         Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS);
-        TextureAtlasSprite texture = atlas.apply(new ResourceLocation(Iridynamics.MODID, "block/white"));
+        TextureAtlasSprite texture = atlas.apply(Iridynamics.rl("block/white"));
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         ItemStack left = inventory.left();
         ItemStack right = inventory.right();

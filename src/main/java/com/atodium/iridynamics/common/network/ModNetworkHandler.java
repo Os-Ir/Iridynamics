@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class ModNetworkHandler {
     public static final String VERSION = Iridynamics.VERSION;
-    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(Iridynamics.MODID, "main"), () -> VERSION, VERSION::equals, VERSION::equals);
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(Iridynamics.rl("main"), () -> VERSION, VERSION::equals, VERSION::equals);
     private static int id = 0;
 
     public static void init() {

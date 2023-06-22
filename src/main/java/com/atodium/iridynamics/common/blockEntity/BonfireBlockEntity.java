@@ -32,10 +32,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, IIgnitable, IBlockEntityHolder<BonfireBlockEntity> {
-    public static final BlockEntityCodec<BonfireBlockEntity> CODEC = BlockEntityCodec.createCodec(new ResourceLocation(Iridynamics.MODID, "bonfire_block_entity"));
+    public static final BlockEntityCodec<BonfireBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("bonfire_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.bonfire.title");
-    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/bonfire_background.png"));
-    public static final TextureArea PROGRESS = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/overlay/fire.png"));
+    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/bonfire_background.png"));
+    public static final TextureArea PROGRESS = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/overlay/fire.png"));
     public static final double INVENTORY_RESISTANCE = 0.02;
     public static final double POWER = 5000.0;
     public static final int MAX_BLOW_VOLUME = 4000;

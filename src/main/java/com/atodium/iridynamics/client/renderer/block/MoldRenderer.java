@@ -18,7 +18,7 @@ public class MoldRenderer implements BlockEntityRenderer<MoldBlockEntity> {
 
     @Override
     public void render(MoldBlockEntity mold, float partialTick, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(new ResourceLocation(Iridynamics.MODID, "block/white"));
+        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(Iridynamics.rl("block/white"));
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         LiquidContainerCapability container = mold.getLiquidContainer();
         if (container.isEmpty()) return;

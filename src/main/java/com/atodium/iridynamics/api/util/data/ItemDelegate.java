@@ -60,12 +60,12 @@ public abstract class ItemDelegate {
 
         private MaterialItemDelegate(SolidShape shape, MaterialBase material) {
             this.entry = MaterialEntry.of(shape, material);
-            this.name = new ResourceLocation(Iridynamics.MODID, "material_item/" + shape.getName() + "/" + material.getName());
+            this.name = Iridynamics.rl("material_item/" + shape.getName() + "/" + material.getName());
         }
 
         public MaterialItemDelegate(MaterialEntry entry) {
             this.entry = entry;
-            this.name = new ResourceLocation(Iridynamics.MODID, "material_item/" + entry.shape().getName() + "/" + entry.material().getName());
+            this.name = Iridynamics.rl("material_item/" + entry.shape().getName() + "/" + entry.material().getName());
         }
 
         @Override

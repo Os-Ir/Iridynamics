@@ -22,9 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class GrindstoneBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<GrindstoneBlockEntity> {
-    public static final BlockEntityCodec<GrindstoneBlockEntity> CODEC = BlockEntityCodec.createCodec(new ResourceLocation(Iridynamics.MODID, "grindstone_block_entity"));
+    public static final BlockEntityCodec<GrindstoneBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("grindstone_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.grindstone.title");
-    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/grindstone_background.png"));
+    public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/grindstone_background.png"));
 
     private boolean recipeUpdateFlag;
     private GrindstoneRecipe recipe;

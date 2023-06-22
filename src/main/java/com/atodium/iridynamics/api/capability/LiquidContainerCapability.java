@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import java.util.Map;
 
 public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapabilitySerializable<CompoundTag> {
-    public static final ResourceLocation KEY = new ResourceLocation(Iridynamics.MODID, "liquid_container");
+    public static final ResourceLocation KEY = Iridynamics.rl("liquid_container");
     public static final Capability<ILiquidContainer> LIQUID_CONTAINER = CapabilityManager.get(new CapabilityToken<>() {
     });
 

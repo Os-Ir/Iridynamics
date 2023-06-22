@@ -14,7 +14,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class InventoryCapability implements IItemHandlerModifiable, ICapabilitySerializable<CompoundTag> {
-    public static final ResourceLocation KEY = new ResourceLocation(Iridynamics.MODID, "forging");
+    public static final ResourceLocation KEY = Iridynamics.rl("forging");
     public static final Capability<IItemHandlerModifiable> INVENTORY = CapabilityManager.get(new CapabilityToken<>() {
     });
 

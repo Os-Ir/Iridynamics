@@ -24,7 +24,7 @@ public class AnvilRenderer implements BlockEntityRenderer<AnvilBlockEntity> {
     @Override
     public void render(AnvilBlockEntity anvil, float partialTick, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         AnvilBlockEntity.Inventory inventory = anvil.getInventory();
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(new ResourceLocation(Iridynamics.MODID, "block/white"));
+        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(Iridynamics.rl("block/white"));
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         ItemStack left = inventory.left();
         ItemStack right = inventory.right();

@@ -357,7 +357,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     public record PileItemInfo(String name, double capacity, double conductivity) {
         public ResourceLocation getTextureName() {
-            return new ResourceLocation(Iridynamics.MODID, "block/pile/" + this.name);
+            return Iridynamics.rl("block/pile/" + this.name);
         }
     }
 }

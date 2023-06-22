@@ -12,6 +12,7 @@ import com.atodium.iridynamics.common.entity.ModEntities;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.atodium.iridynamics.common.levelgen.ModFeatures;
 import com.atodium.iridynamics.common.network.ModNetworkHandler;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -45,6 +46,10 @@ public class Iridynamics {
         ModOutputDecorators.init();
         ModFeatures.init();
         ModNetworkHandler.init();
+    }
+
+    public static ResourceLocation rl(String path) {
+        return new ResourceLocation(MODID, path);
     }
 
     public void setup(FMLCommonSetupEvent event) {

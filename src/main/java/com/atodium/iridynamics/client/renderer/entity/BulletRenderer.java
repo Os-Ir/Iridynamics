@@ -24,7 +24,7 @@ public class BulletRenderer extends EntityRenderer<BulletEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BulletEntity entity) {
-        return new ResourceLocation(Iridynamics.MODID, "textures/entity/bullet.png");
+        return Iridynamics.rl("textures/entity/bullet.png");
     }
 
     @Override

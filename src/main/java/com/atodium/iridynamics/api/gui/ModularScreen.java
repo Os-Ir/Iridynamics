@@ -12,9 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ModularScreen extends AbstractContainerScreen<ModularContainer> {
-    public static final TextureArea DEFAULT_BACKGROUND = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/default_background.png"));
-    public static final TextureArea BACK = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/back.png"));
-    public static final TextureArea REFRESH = TextureArea.createFullTexture(new ResourceLocation(Iridynamics.MODID, "textures/gui/refresh.png"));
+    public static final TextureArea DEFAULT_BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/default_background.png"));
+    public static final TextureArea BACK = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/back.png"));
+    public static final TextureArea REFRESH = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/refresh.png"));
     private final ModularGuiInfo info;
 
     public ModularScreen(int window, ModularGuiInfo info, IModularGuiHolder<?>[] parentGuiHolders, Inventory inventory, Component title) {
