@@ -1,6 +1,8 @@
 package com.atodium.iridynamics.common.blockEntity;
 
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
+import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
+import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
 import com.atodium.iridynamics.api.recipe.impl.WashingRecipe;
 import net.minecraft.core.BlockPos;
@@ -14,7 +16,7 @@ public class BasinBlockEntity extends SyncedBlockEntity {
     }
 
     public ItemStack[] wash(ItemStack stack) {
-        WashingRecipe recipe = WashingRecipe.getRecipe(stack, this.level);
+        WashingRecipe recipe = RecipeUtil.getRecipe(this.level, ModRecipeTypes.WASHING.get(), RecipeUtil.container(stack));
         if (recipe == null) return new ItemStack[0];
         ItemStack[] output = new ItemStack[recipe.outputCount()];
         ItemStackContainer container = new ItemStackContainer(stack);

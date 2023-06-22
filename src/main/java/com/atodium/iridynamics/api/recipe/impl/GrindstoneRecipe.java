@@ -15,26 +15,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
-
 public record GrindstoneRecipe(ResourceLocation id, IngredientIndex[] input, OutputProvider output,
                                IToolInfo[] tools) implements ISpecialRecipe<ToolInventoryContainer> {
-    private static List<GrindstoneRecipe> cache = null;
-
-    public static void resetCache() {
-        cache = null;
-    }
-
-    public static List<GrindstoneRecipe> getAllRecipes(Level level) {
-        if (cache == null) cache = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.GRINDSTONE.get());
-        return cache;
-    }
-
-    public static GrindstoneRecipe getRecipe(ToolInventoryContainer container, Level level) {
-        for (GrindstoneRecipe recipe : getAllRecipes(level)) if (recipe.matches(container, level)) return recipe;
-        return null;
-    }
-
     public void consume(ToolInventoryContainer container) {
         for (int i = 0; i < this.input.length; i++)
             if (!this.input[i].isEmpty() && this.input[i].testEqual(container.getItem(i)))

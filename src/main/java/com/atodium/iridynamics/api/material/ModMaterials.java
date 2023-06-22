@@ -144,7 +144,7 @@ public class ModMaterials {
         registerSolidInfo(BISMUTH_BRONZE, 8960.0, 401.0, 385.0, 1150.0);
         registerSolidInfo(COAL, 1350.0, 9950.0, 120.0, 3000.0, 3350000.0);
         registerSolidInfo(CHARCOAL, 1350.0, 9950.0, 120.0, 3000.0, 3350000.0);
-        registerSolidInfo(WOOD, 750.0, 4500.0, 60.0, 3000.0, 150000.0);
+        registerSolidInfo(WOOD, 750.0, 4500.0, 240.0, 3000.0, 150000.0);
     }
 
     public static void registerSolidInfo(MaterialBase material, double density, double thermalConductivity, double heatCapacity, double meltingPoint) {

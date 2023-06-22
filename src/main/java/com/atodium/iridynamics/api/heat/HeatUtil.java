@@ -1,13 +1,23 @@
 package com.atodium.iridynamics.api.heat;
 
-import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.capability.IHeat;
+import com.atodium.iridynamics.api.capability.*;
+import com.atodium.iridynamics.api.heat.impl.HeatProcessPhasePortrait;
+import com.atodium.iridynamics.api.heat.impl.MaterialPhasePortrait;
+import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
+import com.atodium.iridynamics.api.material.MaterialEntry;
+import com.atodium.iridynamics.api.material.SolidShape;
+import com.atodium.iridynamics.api.material.type.MaterialBase;
+import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
+import com.atodium.iridynamics.api.recipe.RecipeUtil;
+import com.atodium.iridynamics.api.recipe.impl.HeatRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 public class HeatUtil {
     public static final double ATMOSPHERIC_PRESSURE = 101300.0;
@@ -17,6 +27,35 @@ public class HeatUtil {
     public static final double RESISTANCE_BLOCK_DEFAULT = 3.0;
     public static final double RESISTANCE_AIR_FLOW = 0.1;
     public static final double RESISTANCE_AIR_STATIC = 10.0;
+
+    public static void addMaterialItemCapability(AttachCapabilitiesEvent<ItemStack> event, MaterialEntry entry) {
+        MaterialBase material = entry.material();
+        SolidShape shape = entry.shape();
+        if (material.hasHeatInfo()) {
+            event.addCapability(HeatCapability.KEY, new HeatCapability(new MaterialPhasePortrait(material.getHeatInfo(), shape.getUnit() / 144.0)));
+            if (shape.hasForgeShape()) event.addCapability(ForgingCapability.KEY, new ForgingCapability(shape));
+        }
+    }
+
+    public static void addItemInventory(AttachCapabilitiesEvent<ItemStack> event, int slots) {
+        event.addCapability(InventoryCapability.KEY, new InventoryCapability(slots));
+    }
+
+    public static void addItemLiquid(AttachCapabilitiesEvent<ItemStack> event, int capacity) {
+        event.addCapability(LiquidContainerCapability.KEY, new LiquidContainerCapability(capacity));
+    }
+
+    public static void addItemHeat(AttachCapabilitiesEvent<ItemStack> event, ItemStack stack, double capacity) {
+        addItemHeat(event, stack, capacity, 0.0);
+    }
+
+    public static void addItemHeat(AttachCapabilitiesEvent<ItemStack> event, ItemStack stack, double capacity, double resistance) {
+        HeatRecipe recipe = RecipeUtil.getRecipe(ModRecipeTypes.HEAT.get(), RecipeUtil.container(stack));
+        if (recipe != null) {
+            event.addCapability(HeatCapability.KEY, new HeatCapability(new HeatProcessPhasePortrait(capacity, recipe.temperature(), recipe.energy()), resistance));
+        } else
+            event.addCapability(HeatCapability.KEY, new HeatCapability(new SolidPhasePortrait(capacity), resistance));
+    }
 
     public static void heatExchange(IHeat cap, double temperature, double resistance) {
         if (cap == null) return;

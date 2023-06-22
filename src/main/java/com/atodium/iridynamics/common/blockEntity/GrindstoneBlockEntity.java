@@ -8,13 +8,14 @@ import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
+import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.container.ToolInventoryContainer;
 import com.atodium.iridynamics.api.recipe.impl.GrindstoneRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -51,7 +52,7 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements ITickabl
         ToolInventoryContainer container = new ToolInventoryContainer(6, 4);
         for (int i = 0; i < 6; i++) container.setItem(i, this.inventory.getStackInSlot(i + 4));
         for (int i = 0; i < 4; i++) container.setTool(i, this.inventory.getStackInSlot(i));
-        this.recipe = GrindstoneRecipe.getRecipe(container, this.level);
+        this.recipe = RecipeUtil.getRecipe(this.level, ModRecipeTypes.GRINDSTONE.get(), container);
         if (this.recipe != null) this.inventory.putOutputItem(this.recipe.assemble(container));
         else this.inventory.putOutputItem(ItemStack.EMPTY);
     }

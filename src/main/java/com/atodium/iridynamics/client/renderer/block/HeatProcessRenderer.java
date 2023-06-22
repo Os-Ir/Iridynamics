@@ -2,7 +2,6 @@ package com.atodium.iridynamics.client.renderer.block;
 
 import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.atodium.iridynamics.common.blockEntity.HeatProcessBlockEntity;
-import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

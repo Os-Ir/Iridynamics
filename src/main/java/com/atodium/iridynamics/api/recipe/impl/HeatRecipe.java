@@ -13,9 +13,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-public record PileHeatRecipe(ResourceLocation id, IngredientIndex input,
-                             OutputProvider output, double temperature,
-                             double energy) implements ISpecialRecipe<ItemStackContainer> {
+public record HeatRecipe(ResourceLocation id, IngredientIndex input, OutputProvider output, double temperature,
+                         double energy) implements ISpecialRecipe<ItemStackContainer> {
     public IngredientIndex getInput() {
         return this.input;
     }
@@ -45,28 +44,28 @@ public record PileHeatRecipe(ResourceLocation id, IngredientIndex input,
     }
 
     @Override
-    public RecipeSerializer<PileHeatRecipe> getSerializer() {
-        return ModRecipeSerializers.PILE_HEAT.get();
+    public RecipeSerializer<HeatRecipe> getSerializer() {
+        return ModRecipeSerializers.HEAT.get();
     }
 
     @Override
-    public RecipeType<PileHeatRecipe> getType() {
-        return ModRecipeTypes.PILE_HEAT.get();
+    public RecipeType<HeatRecipe> getType() {
+        return ModRecipeTypes.HEAT.get();
     }
 
-    public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, PileHeatRecipe> {
+    public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, HeatRecipe> {
         @Override
-        public PileHeatRecipe fromJson(ResourceLocation id, JsonObject json) {
-            return new PileHeatRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("temperature").getAsDouble(), json.get("energy").getAsDouble());
+        public HeatRecipe fromJson(ResourceLocation id, JsonObject json) {
+            return new HeatRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("temperature").getAsDouble(), json.get("energy").getAsDouble());
         }
 
         @Override
-        public PileHeatRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-            return new PileHeatRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readDouble(), buf.readDouble());
+        public HeatRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+            return new HeatRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readDouble(), buf.readDouble());
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buf, PileHeatRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf, HeatRecipe recipe) {
             recipe.input.toNetwork(buf);
             recipe.output.toNetwork(buf);
             buf.writeDouble(recipe.temperature);

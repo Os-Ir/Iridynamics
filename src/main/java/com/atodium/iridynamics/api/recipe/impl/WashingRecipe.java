@@ -14,27 +14,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
-
 public record WashingRecipe(ResourceLocation id, IngredientIndex input, WeightedOutputProvider[] output,
                             int outputCount) implements ISpecialRecipe<ItemStackContainer> {
-    private static List<WashingRecipe> cache = null;
-
-    public static void resetCache() {
-        cache = null;
-    }
-
-    public static List<WashingRecipe> getAllRecipes(Level level) {
-        if (cache == null) cache = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.WASHING.get());
-        return cache;
-    }
-
-    public static WashingRecipe getRecipe(ItemStack stack, Level level) {
-        ItemStackContainer container = new ItemStackContainer(stack);
-        for (WashingRecipe recipe : getAllRecipes(level)) if (recipe.matches(container, level)) return recipe;
-        return null;
-    }
-
     public void consume(ItemStack stack) {
         stack.shrink(this.input.getCount());
     }

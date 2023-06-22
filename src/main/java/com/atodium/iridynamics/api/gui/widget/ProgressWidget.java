@@ -12,9 +12,9 @@ import java.util.function.Supplier;
 
 public class ProgressWidget extends WidgetBase {
     protected TextureArea texture;
-    protected Supplier<Float> supplier;
+    protected final Supplier<Float> supplier;
     protected float progress;
-    protected MoveType moveType;
+    protected final MoveType moveType;
 
     public ProgressWidget(int x, int y, int width, int height, Supplier<Float> supplier, MoveType moveType) {
         super(x, y, width, height);

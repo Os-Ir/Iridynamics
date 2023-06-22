@@ -8,6 +8,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModRecipeTypes {
+    public static final RegistryObject<RecipeType<HeatRecipe>> HEAT = register("heat");
     public static final RegistryObject<RecipeType<PileHeatRecipe>> PILE_HEAT = register("pile_heat");
     public static final RegistryObject<RecipeType<DryingRecipe>> DRYING = register("drying");
     public static final RegistryObject<RecipeType<WashingRecipe>> WASHING = register("washing");

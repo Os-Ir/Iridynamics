@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ToolItem extends Item {
     protected final IToolInfo toolInfo;
-    protected Multimap<Attribute, AttributeModifier> defaultModifiers;
+    protected final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public ToolItem(Item.Properties properties, IToolInfo toolInfo) {
         super(properties);

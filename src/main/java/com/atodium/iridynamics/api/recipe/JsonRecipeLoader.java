@@ -2,20 +2,12 @@ package com.atodium.iridynamics.api.recipe;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.util.data.SimpleJsonLoader;
-import com.google.common.collect.Maps;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class JsonRecipeLoader extends SimpleJsonLoader {

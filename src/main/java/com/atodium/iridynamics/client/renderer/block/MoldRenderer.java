@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
 
 public class MoldRenderer implements BlockEntityRenderer<MoldBlockEntity> {
     public static final MoldRenderer INSTANCE = new MoldRenderer();

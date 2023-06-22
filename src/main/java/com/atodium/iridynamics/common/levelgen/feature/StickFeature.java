@@ -9,8 +9,6 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
-import java.util.Random;
-
 public class StickFeature extends Feature<StickConfig> {
     public StickFeature(Codec<StickConfig> codec) {
         super(codec);

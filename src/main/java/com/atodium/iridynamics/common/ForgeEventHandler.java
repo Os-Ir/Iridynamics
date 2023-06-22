@@ -2,19 +2,14 @@ package com.atodium.iridynamics.common;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
-import com.atodium.iridynamics.api.capability.ForgingCapability;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.InventoryCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
-import com.atodium.iridynamics.api.heat.impl.MaterialPhasePortrait;
-import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialInfoLoader;
-import com.atodium.iridynamics.api.material.SolidShape;
-import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
-import com.atodium.iridynamics.api.recipe.impl.*;
+import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.*;
 import com.atodium.iridynamics.common.item.ModItems;
@@ -28,6 +23,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,11 +53,7 @@ public class ForgeEventHandler {
 
     @SubscribeEvent
     public static void onTagsUpdated(TagsUpdatedEvent event) {
-        PileHeatRecipe.resetCache();
-        DryingRecipe.resetCache();
-        WashingRecipe.resetCache();
-        ToolCraftingRecipe.resetCache();
-        GrindstoneRecipe.resetCache();
+        RecipeUtil.clearCache();
     }
 
     @SubscribeEvent
@@ -80,25 +72,16 @@ public class ForgeEventHandler {
     public static void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack stack = event.getObject();
         Item item = stack.getItem();
-        if (item == ModItems.IGNITER.get())
-            event.addCapability(HeatCapability.KEY, new HeatCapability(new SolidPhasePortrait(800.0), 0.4));
+        if (item == ModItems.IGNITER.get()) HeatUtil.addItemHeat(event, stack, 800.0, 0.4);
+        else if (item == ModItems.MOLD.get()) HeatUtil.addItemLiquid(event, MoldBlockEntity.CAPACITY);
+        else if (item == ModItems.MOLD_TOOL.get()) HeatUtil.addItemLiquid(event, MoldBlockEntity.CAPACITY);
+        else if (item == Items.CHICKEN) HeatUtil.addItemHeat(event, stack, 16000.0, 0.2);
         else if (item == ModItems.SMALL_CRUCIBLE.get()) {
-            event.addCapability(LiquidContainerCapability.KEY, new LiquidContainerCapability(SmallCrucibleBlockEntity.CAPACITY));
-            event.addCapability(HeatCapability.KEY, new HeatCapability(new SolidPhasePortrait(16000.0), 0.2));
-            event.addCapability(InventoryCapability.KEY, new InventoryCapability(4));
-        } else if (item == ModItems.MOLD.get()) {
-            event.addCapability(LiquidContainerCapability.KEY, new LiquidContainerCapability(MoldBlockEntity.CAPACITY));
-        } else if (item == ModItems.MOLD_TOOL.get()) {
-            event.addCapability(LiquidContainerCapability.KEY, new LiquidContainerCapability(MoldBlockEntity.CAPACITY));
-        } else if (MaterialEntry.containsMaterialEntry(stack)) {
-            MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
-            MaterialBase material = entry.material();
-            SolidShape shape = entry.shape();
-            if (material.hasHeatInfo()) {
-                event.addCapability(HeatCapability.KEY, new HeatCapability(new MaterialPhasePortrait(material.getHeatInfo(), shape.getUnit() / 144.0)));
-                if (shape.hasForgeShape()) event.addCapability(ForgingCapability.KEY, new ForgingCapability(shape));
-            }
-        }
+            HeatUtil.addItemLiquid(event, SmallCrucibleBlockEntity.CAPACITY);
+            HeatUtil.addItemHeat(event, stack, 16000.0, 0.2);
+            HeatUtil.addItemInventory(event, 4);
+        } else if (MaterialEntry.containsMaterialEntry(stack))
+            HeatUtil.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
     }
 
     @SubscribeEvent

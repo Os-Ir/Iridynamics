@@ -1,13 +1,11 @@
 package com.atodium.iridynamics.api.material;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.MaterialHeatInfo;
 import com.atodium.iridynamics.api.heat.SubMaterialHeatInfo;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.util.data.MonotonicMap;
 import com.atodium.iridynamics.api.util.data.SimpleJsonLoader;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;

@@ -17,28 +17,11 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
 import java.util.Map;
 
 public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input, OutputProvider output,
                                  IToolInfo[] tools) implements ISpecialRecipe<ToolInventoryContainer> {
     public static final int SIDE_LENGTH = 5;
-
-    private static List<ToolCraftingRecipe> cache = null;
-
-    public static void resetCache() {
-        cache = null;
-    }
-
-    public static List<ToolCraftingRecipe> getAllRecipes(Level level) {
-        if (cache == null) cache = level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.TOOL_CRAFTING.get());
-        return cache;
-    }
-
-    public static ToolCraftingRecipe getRecipe(ToolInventoryContainer container, Level level) {
-        for (ToolCraftingRecipe recipe : getAllRecipes(level)) if (recipe.matches(container, level)) return recipe;
-        return null;
-    }
 
     public void consume(ToolInventoryContainer container) {
         ItemStack[][] origin = container.toGrid(SIDE_LENGTH);

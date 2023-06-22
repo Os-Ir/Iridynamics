@@ -18,7 +18,6 @@ public class MaterialToolOutputDecorator implements OutputDecorator {
     private final Map<Integer, Pair<String, Integer>> function;
 
     public MaterialToolOutputDecorator(Map<Integer, Pair<String, Integer>> function) {
-        System.out.println("Tool Decorator:  " + function);
         this.function = function;
     }
 

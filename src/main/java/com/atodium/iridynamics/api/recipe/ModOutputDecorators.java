@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.recipe;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.recipe.impl.ItemHeatOutputDecorator;
 import com.atodium.iridynamics.api.recipe.impl.MaterialToolOutputDecorator;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import com.google.gson.JsonObject;
@@ -12,6 +13,7 @@ public class ModOutputDecorators {
 
     public static void init() {
         SERIALIZERS.register(Iridynamics.rl("material_tool"), MaterialToolOutputDecorator.SERIALIZER);
+        SERIALIZERS.register(Iridynamics.rl("item_heat"), ItemHeatOutputDecorator.SERIALIZER);
     }
 
     public static void register(ResourceLocation id, OutputDecorator.Serializer serializer) {

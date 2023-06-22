@@ -8,6 +8,8 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
+import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
+import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.impl.DryingRecipe;
 import com.atodium.iridynamics.api.recipe.impl.PileHeatRecipe;
 import com.atodium.iridynamics.api.util.data.DataUtil;
@@ -218,7 +220,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
                 this.heatRecipe = null;
                 return;
             }
-        this.heatRecipe = PileHeatRecipe.getRecipe(new ItemStack(item, this.height), this.level);
+        this.heatRecipe = RecipeUtil.getRecipe(this.level, ModRecipeTypes.PILE_HEAT.get(), RecipeUtil.container(item, this.height));
     }
 
     public void updateDryingRecipe() {
@@ -228,7 +230,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
                 this.heatRecipe = null;
                 return;
             }
-        DryingRecipe t = DryingRecipe.getRecipe(new ItemStack(item, this.height), this.level);
+        DryingRecipe t = RecipeUtil.getRecipe(this.level, ModRecipeTypes.DRYING.get(), RecipeUtil.container(item, this.height));
         if (this.dryingRecipe != t) this.dryingTick = 0;
         this.dryingRecipe = t;
     }
