@@ -8,6 +8,8 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
+import com.atodium.iridynamics.api.module.BlockHeatModule;
+import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.impl.DryingRecipe;
@@ -63,7 +65,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         if (!level.isClientSide) {
             if (this.pileStateUpdateFlag) this.updatePileCondition();
             System.out.println("Pile: " + this.heat.getTemperature() + "K");
-            HeatUtil.blockHeatExchange(level, pos, state, this, false);
+            BlockHeatModule.blockHeatExchange(level, pos, state, this, false);
             if (this.heatRecipe != null && this.heat.getTemperature() >= this.heatRecipe.temperature()) {
                 this.level.setBlockAndUpdate(this.getBlockPos(), ModBlocks.HEAT_PROCESS.get().defaultBlockState().setValue(HeatProcessBlock.HEIGHT, this.height));
                 this.level.getBlockEntity(this.getBlockPos(), ModBlockEntities.HEAT_PROCESS.get()).ifPresent((process) -> {
@@ -140,7 +142,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         this.content[0] = item;
         this.height = 1;
         this.markPileBlockChange();
-        this.heat.setTemperature(HeatUtil.AMBIENT_TEMPERATURE);
+        this.heat.setTemperature(ItemHeatModule.AMBIENT_TEMPERATURE);
         return true;
     }
 
@@ -157,7 +159,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         this.content[this.height] = item;
         this.height++;
         this.markPileBlockChange();
-        this.heat.increaseEnergy(PILE_ITEM.get(item).capacity * HeatUtil.AMBIENT_TEMPERATURE);
+        this.heat.increaseEnergy(PILE_ITEM.get(item).capacity * ItemHeatModule.AMBIENT_TEMPERATURE);
         return true;
     }
 
@@ -205,7 +207,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         }
         average /= 16;
         this.portrait.setCapacity(capacity);
-        this.heat.updateResistance(Direction.UP, 1.0 / (PILE_ITEM.get(this.content[this.height - 1]).conductivity + HeatUtil.RESISTANCE_AIR_FLOW * (1.0 - this.height / 16.0)));
+        this.heat.updateResistance(Direction.UP, 1.0 / (PILE_ITEM.get(this.content[this.height - 1]).conductivity + ItemHeatModule.RESISTANCE_AIR_FLOW * (1.0 - this.height / 16.0)));
         this.heat.updateResistance(Direction.DOWN, 1.0 / PILE_ITEM.get(this.content[0]).conductivity);
         this.heat.updateResistance(Direction.EAST, 1.0 / average);
         this.heat.updateResistance(Direction.WEST, 1.0 / average);

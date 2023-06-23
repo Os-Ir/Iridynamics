@@ -3,23 +3,28 @@ package com.atodium.iridynamics.common;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.capability.InventoryCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialInfoLoader;
+import com.atodium.iridynamics.api.module.ItemHeatModule;
+import com.atodium.iridynamics.api.module.LiquidContainerModule;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
-import com.atodium.iridynamics.common.blockEntity.*;
+import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
+import com.atodium.iridynamics.common.blockEntity.MoldBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.MoldToolBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.atodium.iridynamics.common.levelgen.feature.ModFeatures;
+import com.atodium.iridynamics.common.module.SmallCrucibleModule;
 import com.atodium.iridynamics.common.tool.ToolIgniter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -72,37 +77,24 @@ public class ForgeEventHandler {
     public static void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack stack = event.getObject();
         Item item = stack.getItem();
-        if (item == ModItems.IGNITER.get()) HeatUtil.addItemHeat(event, stack, 800.0, 0.4);
-        else if (item == ModItems.MOLD.get()) HeatUtil.addItemLiquid(event, MoldBlockEntity.CAPACITY);
-        else if (item == ModItems.MOLD_TOOL.get()) HeatUtil.addItemLiquid(event, MoldBlockEntity.CAPACITY);
-        else if (item == Items.CHICKEN) HeatUtil.addItemHeat(event, stack, 16000.0, 0.2);
-        else if (item == ModItems.SMALL_CRUCIBLE.get()) {
-            HeatUtil.addItemLiquid(event, SmallCrucibleBlockEntity.CAPACITY);
-            HeatUtil.addItemHeat(event, stack, 16000.0, 0.2);
-            HeatUtil.addItemInventory(event, 4);
-        } else if (MaterialEntry.containsMaterialEntry(stack))
+        if (item == ModItems.IGNITER.get()) ItemHeatModule.addItemHeat(event, stack, 800.0, 0.4);
+        else if (item == ModItems.MOLD.get())
+            LiquidContainerModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
+        else if (item == ModItems.MOLD_TOOL.get())
+            LiquidContainerModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
+        else if (item == Items.CHICKEN) ItemHeatModule.addItemHeat(event, stack, 16000.0, 0.2);
+        else if (item == ModItems.SMALL_CRUCIBLE.get()) SmallCrucibleModule.initItem(event, stack);
+        else if (MaterialEntry.containsMaterialEntry(stack))
             HeatUtil.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
     }
 
     @SubscribeEvent
     public static void updateItemTemperature(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntityLiving() instanceof Player player) {
-            Inventory inventory = player.getInventory();
-            inventory.items.forEach((stack) -> {
-                stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> HeatUtil.heatExchange(heat, HeatUtil.AMBIENT_TEMPERATURE, heat.getResistance(Direction.UP) + HeatUtil.RESISTANCE_AIR_FLOW));
+            DataUtil.updateAllItems(player, (stack) -> {
+                stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> ItemHeatModule.heatExchange(heat, ItemHeatModule.AMBIENT_TEMPERATURE, heat.getResistance(Direction.UP) + ItemHeatModule.RESISTANCE_AIR_FLOW));
                 Item item = stack.getItem();
-                if (item == ModItems.SMALL_CRUCIBLE.get())
-                    SmallCrucibleBlockEntity.updateSmallCrucible(stack.getCapability(InventoryCapability.INVENTORY).orElseThrow(NullPointerException::new), (LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new), (HeatCapability) stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new));
-                else if (item == ModItems.MOLD.get())
-                    MoldBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
-                else if (item == ModItems.MOLD_TOOL.get())
-                    MoldToolBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
-            });
-            inventory.offhand.forEach((stack) -> {
-                stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> HeatUtil.heatExchange(heat, HeatUtil.AMBIENT_TEMPERATURE, heat.getResistance(Direction.UP) + HeatUtil.RESISTANCE_AIR_FLOW));
-                Item item = stack.getItem();
-                if (item == ModItems.SMALL_CRUCIBLE.get())
-                    SmallCrucibleBlockEntity.updateSmallCrucible(stack.getCapability(InventoryCapability.INVENTORY).orElseThrow(NullPointerException::new), (LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new), (HeatCapability) stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new));
+                if (item == ModItems.SMALL_CRUCIBLE.get()) SmallCrucibleModule.updateData(stack);
                 else if (item == ModItems.MOLD.get())
                     MoldBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
                 else if (item == ModItems.MOLD_TOOL.get())
@@ -132,7 +124,8 @@ public class ForgeEventHandler {
         } else if (item == ModItems.SMALL_CRUCIBLE.get() && state.isFaceSturdy(level, pos, Direction.UP)) {
             if (level.setBlockAndUpdate(posAbove, ModBlocks.SMALL_CRUCIBLE.get().defaultBlockState()))
                 level.getBlockEntity(posAbove, ModBlockEntities.SMALL_CRUCIBLE.get()).ifPresent((crucible) -> {
-                    if (crucible.setup(stack)) stack.shrink(1);
+                    SmallCrucibleModule.setupBlock(crucible, stack);
+                    stack.shrink(1);
                 });
         } else if (item == ModItems.MOLD.get() && state.isFaceSturdy(level, pos, Direction.UP)) {
             if (level.setBlockAndUpdate(posAbove, ModBlocks.MOLD.get().defaultBlockState()))

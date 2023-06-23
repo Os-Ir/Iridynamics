@@ -1,17 +1,13 @@
 package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
-import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.capability.InventoryCapability;
-import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.SmallCrucibleBlockEntity;
-import com.atodium.iridynamics.common.item.ModItems;
+import com.atodium.iridynamics.common.module.SmallCrucibleModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -59,13 +55,7 @@ public class SmallCrucibleBlock extends Block implements EntityBlock {
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-        level.getBlockEntity(pos, ModBlockEntities.SMALL_CRUCIBLE.get()).ifPresent((crucible) -> {
-            ItemStack stack = new ItemStack(ModItems.SMALL_CRUCIBLE.get());
-            ((InventoryCapability) stack.getCapability(InventoryCapability.INVENTORY).orElseThrow(NullPointerException::new)).deserializeNBT(crucible.getInventory().serializeNBT());
-            ((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new)).deserializeNBT(crucible.getLiquidContainer().serializeNBT());
-            ((HeatCapability) stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new)).deserializeNBT(crucible.getHeat().serializeNBT());
-            ItemHandlerHelper.giveItemToPlayer(player, stack);
-        });
+        level.getBlockEntity(pos, ModBlockEntities.SMALL_CRUCIBLE.get()).ifPresent((crucible) -> ItemHandlerHelper.giveItemToPlayer(player, SmallCrucibleModule.createItem(crucible)));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 

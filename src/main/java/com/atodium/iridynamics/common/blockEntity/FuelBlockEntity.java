@@ -10,6 +10,7 @@ import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
+import com.atodium.iridynamics.api.module.BlockHeatModule;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.FuelBlock;
@@ -63,7 +64,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide) {
             if (this.updateFlag) this.updateFuelCondition();
-            HeatUtil.blockHeatExchange(level, pos, state, this, false);
+            BlockHeatModule.blockHeatExchange(level, pos, state, this, false);
             if (this.ignite) {
                 double remainEnergy = this.remainItems * this.fuelInfo.calorificValue();
                 double maxConsume;

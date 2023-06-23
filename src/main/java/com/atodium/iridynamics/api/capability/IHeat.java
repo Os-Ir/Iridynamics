@@ -2,6 +2,7 @@ package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
+import com.atodium.iridynamics.api.module.ItemHeatModule;
 import net.minecraft.core.Direction;
 
 public interface IHeat {
@@ -26,7 +27,7 @@ public interface IHeat {
     void updateResistance(double[] resistances);
 
     default double getTemperature() {
-        return this.getTemperature(HeatUtil.ATMOSPHERIC_PRESSURE);
+        return this.getTemperature(ItemHeatModule.ATMOSPHERIC_PRESSURE);
     }
 
     default double getTemperature(double pressure) {
@@ -34,7 +35,7 @@ public interface IHeat {
     }
 
     default void setTemperature(double temperature) {
-        this.setTemperature(HeatUtil.ATMOSPHERIC_PRESSURE, temperature);
+        this.setTemperature(ItemHeatModule.ATMOSPHERIC_PRESSURE, temperature);
     }
 
     default void setTemperature(double pressure, double temperature) {
@@ -42,7 +43,7 @@ public interface IHeat {
     }
 
     default double increaseEnergy(double energy, double maxTemperature) {
-        return this.increaseEnergy(energy, HeatUtil.ATMOSPHERIC_PRESSURE, maxTemperature);
+        return this.increaseEnergy(energy, ItemHeatModule.ATMOSPHERIC_PRESSURE, maxTemperature);
     }
 
     default double increaseEnergy(double energy, double pressure, double maxTemperature) {

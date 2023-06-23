@@ -3,6 +3,7 @@ package com.atodium.iridynamics.common.block;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.heat.HeatUtil;
+import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.common.blockEntity.FuelBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -72,7 +73,7 @@ public class FuelBlock extends Block implements EntityBlock {
             ItemStack stack = player.getItemInHand(hand);
             if (FuelInfo.hasFuelInfo(stack)) fuel.addFuel(stack);
             else if (!state.getValue(IGNITE)) fuel.addIgniteStarter(stack);
-            System.out.println("Fuel: " + (fuel.getTemperature() - HeatUtil.AMBIENT_TEMPERATURE) + "K           remain: " + fuel.getRemainItems());
+            System.out.println("Fuel: " + (fuel.getTemperature() - ItemHeatModule.AMBIENT_TEMPERATURE) + "K           remain: " + fuel.getRemainItems());
         });
         return InteractionResult.CONSUME;
     }

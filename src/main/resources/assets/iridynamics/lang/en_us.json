@@ -1,6 +1,7 @@
 {
 	"itemGroup.iridynamics_block": "Iridynamics - Block",
     "itemGroup.iridynamics_item": "Iridynamics - Item",
+	"itemGroup.iridynamics_tool": "Iridynamics - Tool",
     "itemGroup.iridynamics_material": "Iridynamics - Material",
 
 	"gui.iridynamics.chute.title": "Chute",

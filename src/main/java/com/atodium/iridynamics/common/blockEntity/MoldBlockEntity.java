@@ -8,6 +8,7 @@ import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
+import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,7 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
     }
 
     public static void updateMold(LiquidContainerCapability container) {
-        if (!container.isEmpty()) HeatUtil.heatExchange(container, HeatUtil.AMBIENT_TEMPERATURE, RESISTANCE);
+        if (!container.isEmpty()) ItemHeatModule.heatExchange(container, ItemHeatModule.AMBIENT_TEMPERATURE, RESISTANCE);
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
@@ -74,7 +75,7 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
         if (c == CAPACITY || !source.hasMaterial(material)) return false;
         int add = Math.min(source.getMaterialUnit(material), CAPACITY - c);
         this.container.addMaterial(material, add);
-        this.container.increaseEnergy(material.getHeatInfo().getMoleEnergy(HeatUtil.ATMOSPHERIC_PRESSURE, temperature) * add / 144.0);
+        this.container.increaseEnergy(material.getHeatInfo().getMoleEnergy(ItemHeatModule.ATMOSPHERIC_PRESSURE, temperature) * add / 144.0);
         source.addMaterial(material, -add);
         if (!source.isEmpty()) source.setTemperature(temperature);
         this.markForSync();

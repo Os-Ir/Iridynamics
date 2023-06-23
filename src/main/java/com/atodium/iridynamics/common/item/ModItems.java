@@ -20,7 +20,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
-    public static final RegistryObject<Item> GUN = Iridynamics.REGISTRY.item("gun", GunItem::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> WOOD_BRICK = Iridynamics.REGISTRY.item("wood_brick", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> CRUSHED_STONE = Iridynamics.REGISTRY.item("crushed_stone", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> GRASS = Iridynamics.REGISTRY.item("grass", Item::new).tab(ModCreativeTabs.ITEM).register();
@@ -29,10 +28,11 @@ public class ModItems {
     public static final RegistryObject<Item> MOLD_TOOL = Iridynamics.REGISTRY.item("mold_tool", MoldToolItem::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> SMALL_CRUCIBLE = Iridynamics.REGISTRY.item("small_crucible", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
 
-    public static final RegistryObject<Item> IGNITER = Iridynamics.REGISTRY.item("igniter", (properties) -> new ToolItem(properties, ToolIgniter.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
-    public static final RegistryObject<Item> HAMMER = Iridynamics.REGISTRY.item("tool/hammer", (properties) -> new MaterialToolItem(properties, ToolHammer.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
-    public static final RegistryObject<Item> CHISEL = Iridynamics.REGISTRY.item("tool/chisel", (properties) -> new MaterialToolItem(properties, ToolChisel.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
-    public static final RegistryObject<Item> KNIFE = Iridynamics.REGISTRY.item("tool/knife", (properties) -> new MaterialToolItem(properties, ToolKnife.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
+    public static final RegistryObject<Item> GUN = Iridynamics.REGISTRY.item("gun", GunItem::new).tab(ModCreativeTabs.TOOL).register();
+    public static final RegistryObject<Item> IGNITER = Iridynamics.REGISTRY.item("igniter", (properties) -> new ToolItem(properties, ToolIgniter.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
+    public static final RegistryObject<Item> HAMMER = Iridynamics.REGISTRY.item("tool/hammer", (properties) -> new MaterialToolItem(properties, ToolHammer.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
+    public static final RegistryObject<Item> CHISEL = Iridynamics.REGISTRY.item("tool/chisel", (properties) -> new MaterialToolItem(properties, ToolChisel.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
+    public static final RegistryObject<Item> KNIFE = Iridynamics.REGISTRY.item("tool/knife", (properties) -> new MaterialToolItem(properties, ToolKnife.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
 
     public static void init() {
         SolidShape.REGISTRY.values().forEach((shape) -> Iridynamics.REGISTRY.item("material_item/" + shape.getName(), (properties) -> new MaterialItem(properties, shape)).tab(ModCreativeTabs.MATERIAL).register());

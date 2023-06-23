@@ -5,6 +5,7 @@ import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.material.Phase;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
+import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.util.data.MonotonicEntryMap;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -55,15 +56,15 @@ public class LiquidContainerPortrait implements IPhasePortrait {
     }
 
     private double getMeltPoint(MaterialBase material) {
-        return material.getHeatInfo().getCriticalPoints(HeatUtil.ATMOSPHERIC_PRESSURE).getCriticalPoint(Phase.LIQUID);
+        return material.getHeatInfo().getCriticalPoints(ItemHeatModule.ATMOSPHERIC_PRESSURE).getCriticalPoint(Phase.LIQUID);
     }
 
     private double getSolidCapacity(MaterialBase material) {
-        return material.getHeatInfo().getMoleCapacity(HeatUtil.ATMOSPHERIC_PRESSURE, Phase.SOLID);
+        return material.getHeatInfo().getMoleCapacity(ItemHeatModule.ATMOSPHERIC_PRESSURE, Phase.SOLID);
     }
 
     private double getLiquidCapacity(MaterialBase material) {
-        return material.getHeatInfo().getMoleCapacity(HeatUtil.ATMOSPHERIC_PRESSURE, Phase.LIQUID);
+        return material.getHeatInfo().getMoleCapacity(ItemHeatModule.ATMOSPHERIC_PRESSURE, Phase.LIQUID);
     }
 
     @Override

@@ -10,11 +10,9 @@ import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
-import com.atodium.iridynamics.api.heat.HeatUtil;
-import com.atodium.iridynamics.api.heat.MaterialHeatInfo;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
-import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.common.item.ModItems;
+import com.atodium.iridynamics.api.module.BlockHeatModule;
+import com.atodium.iridynamics.common.module.SmallCrucibleModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,15 +24,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<SmallCrucibleBlockEntity> {
     public static final BlockEntityCodec<SmallCrucibleBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("small_crucible_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.small_crucible.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/small_crucible_background.png"));
-    public static final double INVENTORY_RESISTANCE = 0.02;
-    public static final int CAPACITY = 576;
 
     private final Inventory inventory;
     private final LiquidContainerCapability container;
@@ -43,50 +38,17 @@ public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITick
     public SmallCrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.SMALL_CRUCIBLE.get(), pos, state);
         this.inventory = new Inventory();
-        this.container = new LiquidContainerCapability(CAPACITY);
-        this.heat = new HeatCapability(new SolidPhasePortrait(16000.0), new double[]{0.03, 0.3, 0.2, 0.2, 0.2, 0.2});
-    }
-
-    public static boolean validateItem(ItemStack stack) {
-        if (!stack.getCapability(HeatCapability.HEAT).isPresent() || !MaterialEntry.containsMaterialEntry(stack))
-            return false;
-        return MaterialEntry.getItemMaterialEntry(stack).material().hasHeatInfo();
-    }
-
-    public static void updateSmallCrucible(IItemHandlerModifiable inventory, LiquidContainerCapability container, HeatCapability heat) {
-        if (!container.isEmpty()) HeatUtil.heatExchange(heat, container, INVENTORY_RESISTANCE);
-        for (int i = 0; i < 4; i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
-            if (!validateItem(stack)) continue;
-            MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
-            MaterialHeatInfo info = MaterialEntry.getItemMaterialEntry(stack).material().getHeatInfo();
-            HeatCapability itemHeat = (HeatCapability) stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new);
-            HeatUtil.heatExchange(heat, itemHeat, INVENTORY_RESISTANCE + itemHeat.getResistance());
-            if (itemHeat.getTemperature() > info.getMeltingPoint()) {
-                container.addMaterial(entry.material(), entry.shape().getUnit());
-                container.increaseEnergy(itemHeat.getEnergy());
-                inventory.setStackInSlot(i, ItemStack.EMPTY);
-            }
-        }
+        this.container = new LiquidContainerCapability(SmallCrucibleModule.CAPACITY);
+        this.heat = new HeatCapability(new SolidPhasePortrait(SmallCrucibleModule.HEAT_CAPACITY), SmallCrucibleModule.RESISTANCE);
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide) {
-            HeatUtil.blockHeatExchange(level, pos, state, this, false);
-            updateSmallCrucible(this.inventory, this.container, this.heat);
+            BlockHeatModule.blockHeatExchange(level, pos, state, this, false);
+            SmallCrucibleModule.updateData(this.inventory, this.container, this.heat);
             this.markDirty();
             this.markForSync();
         }
-    }
-
-    public boolean setup(ItemStack stack) {
-        if (stack.getItem() == ModItems.SMALL_CRUCIBLE.get()) {
-            this.inventory.deserializeNBT(((InventoryCapability) stack.getCapability(InventoryCapability.INVENTORY).orElseThrow(NullPointerException::new)).serializeNBT());
-            this.container.deserializeNBT(((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new)).serializeNBT());
-            this.heat.setEnergy(stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new).getEnergy());
-            return true;
-        }
-        return false;
     }
 
     public Inventory getInventory() {
@@ -182,7 +144,7 @@ public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITick
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return validateItem(stack);
+            return SmallCrucibleModule.validateItem(stack);
         }
     }
 }

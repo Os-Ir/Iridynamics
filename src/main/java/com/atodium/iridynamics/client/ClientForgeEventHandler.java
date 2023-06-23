@@ -7,6 +7,7 @@ import com.atodium.iridynamics.api.capability.InventoryCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
+import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.atodium.iridynamics.common.block.AnvilBlock;
@@ -56,7 +57,7 @@ public class ClientForgeEventHandler {
                         tooltip.add(new TextComponent(ChatFormatting.GREEN + I18n.get("iridynamics.info.heat.weldable")));
                 }
             }
-            tooltip.add(new TextComponent(ChatFormatting.DARK_RED + I18n.get("iridynamics.info.heat.heatable") + ChatFormatting.WHITE + " - " + String.format("%.1f", heat.getTemperature() - HeatUtil.CELSIUS_ZERO) + "℃"));
+            tooltip.add(new TextComponent(ChatFormatting.DARK_RED + I18n.get("iridynamics.info.heat.heatable") + ChatFormatting.WHITE + " - " + String.format("%.1f", heat.getTemperature() - ItemHeatModule.CELSIUS_ZERO) + "℃"));
         });
         stack.getCapability(ForgingCapability.FORGING).ifPresent((forging) -> {
             if (forging.processed())
@@ -67,7 +68,7 @@ public class ClientForgeEventHandler {
             LiquidContainerCapability cap = (LiquidContainerCapability) container;
             double temperature = cap.getTemperature();
             int usedCapacity = cap.usedCapacity();
-            tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.liquid_container.title") + " - " + String.format("%.1f", temperature - HeatUtil.CELSIUS_ZERO) + "℃" + " - " + usedCapacity + "/" + cap.liquidCapacity()));
+            tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.liquid_container.title") + " - " + String.format("%.1f", temperature - ItemHeatModule.CELSIUS_ZERO) + "℃" + " - " + usedCapacity + "/" + cap.liquidCapacity()));
             cap.getAllMaterials().forEach((material, unit) -> tooltip.add(new TextComponent(ChatFormatting.GRAY + "---- " + material.getLocalizedName() + ChatFormatting.AQUA + " [" + (temperature >= material.getHeatInfo().getMeltingPoint() ? I18n.get("iridynamics.info.liquid_container.liquid") : I18n.get("iridynamics.info.liquid_container.solid")) + "]" + ChatFormatting.GRAY + " - " + unit + "/" + usedCapacity)));
         });
         stack.getCapability(InventoryCapability.INVENTORY).ifPresent((inventory) -> {
@@ -79,7 +80,7 @@ public class ClientForgeEventHandler {
                 ItemStack invStack = inventory.getStackInSlot(i);
                 if (invStack.isEmpty()) continue;
                 StringBuilder add = new StringBuilder();
-                invStack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> add.append(ChatFormatting.GRAY).append(" - ").append(String.format("%.1f", heat.getTemperature() - HeatUtil.CELSIUS_ZERO)).append("℃"));
+                invStack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> add.append(ChatFormatting.GRAY).append(" - ").append(String.format("%.1f", heat.getTemperature() - ItemHeatModule.CELSIUS_ZERO)).append("℃"));
                 if (MaterialEntry.containsMaterialEntry(invStack))
                     add.append(ChatFormatting.GRAY).append(" - ").append(ChatFormatting.GREEN).append(MaterialEntry.getItemMaterialEntry(invStack).shape().getUnit()).append(ChatFormatting.GRAY).append("L");
                 tooltip.add(new TextComponent(ChatFormatting.GRAY + "---- " + invStack.getDisplayName().getString() + ChatFormatting.AQUA + " [" + (i + 1) + "]" + add));

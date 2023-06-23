@@ -3,9 +3,13 @@ package com.atodium.iridynamics.api.util.data;
 import com.google.gson.Gson;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class DataUtil {
@@ -60,5 +64,12 @@ public class DataUtil {
             for (int y = 0; y < height; y++)
                 if (x + moveX >= width || y + moveY >= height) align[y][x] = nullValue;
                 else align[y][x] = origin[y + moveY][x + moveX];
+    }
+
+    public static void updateAllItems(Player player, Consumer<ItemStack> consumer) {
+        Inventory inventory = player.getInventory();
+        inventory.items.forEach(consumer);
+        inventory.armor.forEach(consumer);
+        inventory.offhand.forEach(consumer);
     }
 }

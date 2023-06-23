@@ -18,6 +18,13 @@ public class ModCreativeTabs {
     public static final CreativeModeTab ITEM = new CreativeModeTab(Iridynamics.MODID + "_item") {
         @Override
         public ItemStack makeIcon() {
+            return new ItemStack(ModItems.SMALL_CRUCIBLE.get());
+        }
+    };
+
+    public static final CreativeModeTab TOOL = new CreativeModeTab(Iridynamics.MODID + "_tool") {
+        @Override
+        public ItemStack makeIcon() {
             return new ItemStack(ModItems.IGNITER.get());
         }
     };

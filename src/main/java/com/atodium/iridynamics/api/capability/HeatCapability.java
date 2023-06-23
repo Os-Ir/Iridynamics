@@ -1,9 +1,9 @@
 package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
+import com.atodium.iridynamics.api.module.ItemHeatModule;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -32,15 +32,15 @@ public class HeatCapability implements IHeat, ICapabilitySerializable<CompoundTa
     }
 
     public HeatCapability(IPhasePortrait portrait) {
-        this(portrait, portrait.getEnergy(HeatUtil.ATMOSPHERIC_PRESSURE, HeatUtil.AMBIENT_TEMPERATURE), 0.0);
+        this(portrait, portrait.getEnergy(ItemHeatModule.ATMOSPHERIC_PRESSURE, ItemHeatModule.AMBIENT_TEMPERATURE), 0.0);
     }
 
     public HeatCapability(IPhasePortrait portrait, double resistance) {
-        this(portrait, portrait.getEnergy(HeatUtil.ATMOSPHERIC_PRESSURE, HeatUtil.AMBIENT_TEMPERATURE), resistance);
+        this(portrait, portrait.getEnergy(ItemHeatModule.ATMOSPHERIC_PRESSURE, ItemHeatModule.AMBIENT_TEMPERATURE), resistance);
     }
 
     public HeatCapability(IPhasePortrait portrait, double[] resistances) {
-        this(portrait, portrait.getEnergy(HeatUtil.ATMOSPHERIC_PRESSURE, HeatUtil.AMBIENT_TEMPERATURE), resistances);
+        this(portrait, portrait.getEnergy(ItemHeatModule.ATMOSPHERIC_PRESSURE, ItemHeatModule.AMBIENT_TEMPERATURE), resistances);
     }
 
     public HeatCapability(IPhasePortrait portrait, double energy, double resistance) {

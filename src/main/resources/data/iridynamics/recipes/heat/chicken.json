@@ -1,0 +1,17 @@
+{
+  "type": "iridynamics:heat",
+  "input": {
+    "type": 0,
+    "ingredient": {
+      "item": "minecraft:chicken"
+    },
+    "count": 1
+  },
+  "output": {
+    "base": {
+      "item": "minecraft:cooked_chicken"
+    }
+  },
+  "temperature": 400.0,
+  "energy": 30000000.0
+}
