@@ -1,7 +1,8 @@
-package com.atodium.iridynamics.common.block;
+package com.atodium.iridynamics.common.block.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
-import com.atodium.iridynamics.common.blockEntity.ArtisanCraftingTableBlockEntity;
+import com.atodium.iridynamics.common.block.ModBlocks;
+import com.atodium.iridynamics.common.blockEntity.equipment.ArtisanCraftingTableBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

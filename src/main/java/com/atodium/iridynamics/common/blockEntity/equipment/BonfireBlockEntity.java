@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.common.blockEntity;
+package com.atodium.iridynamics.common.blockEntity.equipment;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
@@ -12,13 +12,13 @@ import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
 import com.atodium.iridynamics.api.gui.widget.MoveType;
 import com.atodium.iridynamics.api.heat.FuelInfo;
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
 import com.atodium.iridynamics.api.module.BlockHeatModule;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.FuelBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
+import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

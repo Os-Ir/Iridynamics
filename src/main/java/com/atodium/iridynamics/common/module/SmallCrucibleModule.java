@@ -8,7 +8,7 @@ import com.atodium.iridynamics.api.heat.MaterialHeatInfo;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
-import com.atodium.iridynamics.common.blockEntity.SmallCrucibleBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.equipment.SmallCrucibleBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AttachCapabilitiesEvent;

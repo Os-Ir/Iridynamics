@@ -24,7 +24,6 @@ public class ForgingCapability implements IForging, ICapabilitySerializable<Comp
     private final double[][] thicknessMap;
 
     public ForgingCapability(SolidShape shape) {
-        this.flag = 0;
         this.thicknessMap = new double[7][7];
         int[] origin = shape.getForgeShape();
         for (int i = 0; i < 7; i++) for (int j = 0; j < 7; j++) this.thicknessMap[i][j] = origin[j * 7 + i];

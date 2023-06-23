@@ -1,6 +1,5 @@
 package com.atodium.iridynamics.api.capability;
 
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import net.minecraft.core.Direction;

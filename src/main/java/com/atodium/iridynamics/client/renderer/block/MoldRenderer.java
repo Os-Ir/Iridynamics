@@ -3,7 +3,7 @@ package com.atodium.iridynamics.client.renderer.block;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.client.renderer.RendererUtil;
-import com.atodium.iridynamics.common.blockEntity.MoldBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.equipment.MoldBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

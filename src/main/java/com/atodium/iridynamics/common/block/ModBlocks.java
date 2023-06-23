@@ -2,6 +2,7 @@ package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.ModCreativeTabs;
+import com.atodium.iridynamics.common.block.equipment.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
@@ -25,6 +26,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> BLOWER = Iridynamics.REGISTRY.block("blower", BlowerBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> ARTISAN_CRAFTING_TABLE = Iridynamics.REGISTRY.block("artisan_crafting_table", ArtisanCraftingTableBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> BONFIRE = Iridynamics.REGISTRY.block("bonfire", BonfireBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
+    public static final RegistryObject<Block> CARVING_TABLE = Iridynamics.REGISTRY.block("carving_table", CarvingTableBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
 
     public static void init() {
 

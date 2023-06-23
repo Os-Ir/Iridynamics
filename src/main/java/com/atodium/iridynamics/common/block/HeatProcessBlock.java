@@ -1,7 +1,6 @@
 package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.common.blockEntity.HeatProcessBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;

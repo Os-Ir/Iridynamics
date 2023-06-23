@@ -2,6 +2,7 @@ package com.atodium.iridynamics.common.blockEntity;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.common.block.ModBlocks;
+import com.atodium.iridynamics.common.blockEntity.equipment.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -21,6 +22,7 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<BlowerBlockEntity>> BLOWER = Iridynamics.REGISTRY.blockEntity("blower", () -> BlockEntityType.Builder.of(BlowerBlockEntity::new, ModBlocks.BLOWER.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<ArtisanCraftingTableBlockEntity>> ARTISAN_CRAFTING_TABLE = Iridynamics.REGISTRY.blockEntity("artisan_crafting_table", () -> BlockEntityType.Builder.of(ArtisanCraftingTableBlockEntity::new, ModBlocks.ARTISAN_CRAFTING_TABLE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<BonfireBlockEntity>> BONFIRE = Iridynamics.REGISTRY.blockEntity("bonfire", () -> BlockEntityType.Builder.of(BonfireBlockEntity::new, ModBlocks.BONFIRE.get()).build(null)).register();
+    public static final RegistryObject<BlockEntityType<CarvingTableBlockEntity>> CARVING_TABLE = Iridynamics.REGISTRY.blockEntity("carving_table", () -> BlockEntityType.Builder.of(CarvingTableBlockEntity::new, ModBlocks.CARVING_TABLE.get()).build(null)).register();
 
     public static void init() {
 

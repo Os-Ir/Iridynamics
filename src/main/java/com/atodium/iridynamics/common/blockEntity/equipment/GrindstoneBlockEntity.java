@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.common.blockEntity;
+package com.atodium.iridynamics.common.blockEntity.equipment;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
@@ -12,6 +12,7 @@ import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.container.ToolInventoryContainer;
 import com.atodium.iridynamics.api.recipe.impl.GrindstoneRecipe;
+import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.common.blockEntity;
+package com.atodium.iridynamics.common.blockEntity.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
@@ -7,8 +7,9 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.IForging;
 import com.atodium.iridynamics.api.capability.IHeat;
 import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.common.block.AnvilBlock;
+import com.atodium.iridynamics.common.block.equipment.AnvilBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
+import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -23,14 +24,11 @@ public class AnvilBlockEntity extends SyncedBlockEntity implements ITickable {
 
     public AnvilBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ANVIL.get(), pos, state);
-        this.itemUpdateFlag = false;
         this.inventory = new Inventory();
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide) {
-            if (this.itemUpdateFlag) this.updateBlockState();
-        }
+        if (!level.isClientSide && this.itemUpdateFlag) this.updateBlockState();
     }
 
     public void markItemUpdate() {

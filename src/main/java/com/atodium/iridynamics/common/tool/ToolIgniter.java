@@ -4,7 +4,6 @@ import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.IHeat;
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.tool.IToolUsable;

@@ -1,7 +1,6 @@
 package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.heat.impl.LiquidContainerPortrait;
 import com.atodium.iridynamics.api.material.type.MaterialBase;

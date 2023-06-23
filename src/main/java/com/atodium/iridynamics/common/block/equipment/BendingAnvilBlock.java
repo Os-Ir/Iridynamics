@@ -1,6 +1,7 @@
-package com.atodium.iridynamics.common.block;
+package com.atodium.iridynamics.common.block.equipment;
 
 import com.atodium.iridynamics.api.material.MaterialEntry;
+import com.atodium.iridynamics.common.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

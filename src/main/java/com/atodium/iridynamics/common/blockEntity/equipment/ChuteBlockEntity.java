@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.common.blockEntity;
+package com.atodium.iridynamics.common.blockEntity.equipment;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
@@ -8,7 +8,10 @@ import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
-import com.atodium.iridynamics.common.block.ChuteBlock;
+import com.atodium.iridynamics.common.block.equipment.ChuteBlock;
+import com.atodium.iridynamics.common.blockEntity.FuelBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
+import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

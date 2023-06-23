@@ -1,11 +1,11 @@
-package com.atodium.iridynamics.common.block;
+package com.atodium.iridynamics.common.block.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
-import com.atodium.iridynamics.common.blockEntity.ForgeBlockEntity;
+import com.atodium.iridynamics.common.block.ModBlocks;
+import com.atodium.iridynamics.common.blockEntity.equipment.ForgeBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;

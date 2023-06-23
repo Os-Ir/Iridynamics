@@ -1,8 +1,9 @@
-package com.atodium.iridynamics.common.blockEntity;
+package com.atodium.iridynamics.common.blockEntity.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
-import com.atodium.iridynamics.common.block.BlowerBlock;
+import com.atodium.iridynamics.common.block.equipment.BlowerBlock;
+import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

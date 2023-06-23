@@ -1,10 +1,11 @@
-package com.atodium.iridynamics.common.block;
+package com.atodium.iridynamics.common.block.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.tool.IToolInfo;
 import com.atodium.iridynamics.api.tool.MaterialToolItem;
 import com.atodium.iridynamics.api.util.math.MathUtil;
-import com.atodium.iridynamics.common.blockEntity.AnvilBlockEntity;
+import com.atodium.iridynamics.common.block.ModBlocks;
+import com.atodium.iridynamics.common.blockEntity.equipment.AnvilBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.tool.ToolChisel;
 import com.atodium.iridynamics.common.tool.ToolHammer;
