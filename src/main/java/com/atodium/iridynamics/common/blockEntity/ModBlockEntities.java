@@ -24,6 +24,7 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<ArtisanCraftingTableBlockEntity>> ARTISAN_CRAFTING_TABLE = Iridynamics.REGISTRY.blockEntity("artisan_crafting_table", () -> BlockEntityType.Builder.of(ArtisanCraftingTableBlockEntity::new, ModBlocks.ARTISAN_CRAFTING_TABLE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<BonfireBlockEntity>> BONFIRE = Iridynamics.REGISTRY.blockEntity("bonfire", () -> BlockEntityType.Builder.of(BonfireBlockEntity::new, ModBlocks.BONFIRE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<CarvingTableBlockEntity>> CARVING_TABLE = Iridynamics.REGISTRY.blockEntity("carving_table", () -> BlockEntityType.Builder.of(CarvingTableBlockEntity::new, ModBlocks.CARVING_TABLE.get()).build(null)).register();
+    public static final RegistryObject<BlockEntityType<CrushingBoardBlockEntity>> CRUSHING_BOARD = Iridynamics.REGISTRY.blockEntity("crushing_board", () -> BlockEntityType.Builder.of(CrushingBoardBlockEntity::new, ModBlocks.CRUSHING_BOARD.get()).build(null)).register();
 
     public static void init() {
 

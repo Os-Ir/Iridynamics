@@ -14,6 +14,7 @@ public class ModRecipeTypes {
     public static final RegistryObject<RecipeType<WashingRecipe>> WASHING = register("washing");
     public static final RegistryObject<RecipeType<ToolCraftingRecipe>> TOOL_CRAFTING = register("tool_crafting");
     public static final RegistryObject<RecipeType<GrindstoneRecipe>> GRINDSTONE = register("grindstone");
+    public static final RegistryObject<RecipeType<CrushingRecipe>> CRUSHING = register("crushing");
 
     public static void init() {
 

@@ -1,0 +1,17 @@
+{
+  "type": "iridynamics:crushing",
+  "input": {
+    "type": 0,
+    "ingredient": {
+      "item": "minecraft:oak_log"
+    },
+    "count": 1
+  },
+  "output": {
+    "base": {
+      "item": "iridynamics:wood_brick",
+      "count": 4
+    }
+  },
+  "count": 10
+}

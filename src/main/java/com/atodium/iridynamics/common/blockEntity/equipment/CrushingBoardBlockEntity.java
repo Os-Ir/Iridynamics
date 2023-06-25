@@ -1,42 +1,71 @@
 package com.atodium.iridynamics.common.blockEntity.equipment;
 
+import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
-import com.atodium.iridynamics.api.capability.CarvingCapability;
-import com.atodium.iridynamics.api.capability.ICarving;
-import com.atodium.iridynamics.common.block.ModBlocks;
-import com.atodium.iridynamics.common.block.equipment.CarvingTableBlock;
+import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
+import com.atodium.iridynamics.api.recipe.RecipeUtil;
+import com.atodium.iridynamics.api.recipe.impl.CrushingRecipe;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class CarvingTableBlockEntity extends SyncedBlockEntity {
+public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITickable {
+    private boolean recipeUpdateFlag;
+    private CrushingRecipe recipe;
     private final Inventory inventory;
+    private int progress;
 
-    public CarvingTableBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.CARVING_TABLE.get(), pos, state);
+    public CrushingBoardBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.CRUSHING_BOARD.get(), pos, state);
         this.inventory = new Inventory();
     }
 
-    public static boolean validateItem(ItemStack stack) {
-        return stack.getCapability(CarvingCapability.CARVING).isPresent();
+    @Override
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (this.recipeUpdateFlag) {
+            this.updateRecipe();
+            this.recipeUpdateFlag = false;
+        }
+    }
+
+    public void markRecipeUpdate() {
+        this.recipeUpdateFlag = true;
     }
 
     public void markForItemChange() {
-        this.updateBlockState();
+        this.markRecipeUpdate();
         this.markDirty();
         this.markForSync();
     }
 
-    public Inventory getInventory() {
-        return this.inventory;
+    public void updateRecipe() {
+        this.recipe = RecipeUtil.getRecipe(this.level, ModRecipeTypes.CRUSHING.get(), RecipeUtil.container(this.inventory.getStackInSlot(0)));
+        if (this.recipe == null) this.progress = 0;
+    }
+
+    public boolean crush() {
+        if (this.recipe == null) return false;
+        if (this.progress == this.recipe.count() - 1) {
+            this.progress = 0;
+            this.inventory.setStackInSlot(0, this.recipe.assemble(RecipeUtil.container(this.inventory.getStackInSlot(0))));
+            this.markForItemChange();
+        } else {
+            this.progress++;
+            this.markDirty();
+        }
+        return true;
     }
 
     public boolean isEmpty() {
         return this.inventory.getStackInSlot(0).isEmpty();
+    }
+
+    public Inventory getInventory() {
+        return this.inventory;
     }
 
     public ItemStack takeItem() {
@@ -46,8 +75,9 @@ public class CarvingTableBlockEntity extends SyncedBlockEntity {
         return stack;
     }
 
+
     public ItemStack addItem(ItemStack stack) {
-        if (this.inventory.getStackInSlot(0).isEmpty() && validateItem(stack)) {
+        if (this.inventory.getStackInSlot(0).isEmpty()) {
             ItemStack result = this.inventory.insertItem(0, stack, false);
             this.markForItemChange();
             return result;
@@ -55,45 +85,31 @@ public class CarvingTableBlockEntity extends SyncedBlockEntity {
         return stack;
     }
 
-    public boolean carve(int x, int y) {
-        if (this.isEmpty()) return false;
-        ICarving carving = this.inventory.getStackInSlot(0).getCapability(CarvingCapability.CARVING).orElseThrow(NullPointerException::new);
-        if (carving.carve(x, y)) {
-            this.markForItemChange();
-            return true;
-        }
-        return false;
-    }
-
-    public void updateBlockState() {
-        this.level.getBlockEntity(this.getBlockPos(), ModBlockEntities.CARVING_TABLE.get()).ifPresent((table) -> {
-            int height = 0;
-            LazyOptional<ICarving> optional = table.inventory.getStackInSlot(0).getCapability(CarvingCapability.CARVING);
-            if (optional.isPresent()) height = optional.orElseThrow(NullPointerException::new).getOriginalThickness();
-            this.level.setBlockAndUpdate(this.getBlockPos(), ModBlocks.CARVING_TABLE.get().defaultBlockState().setValue(CarvingTableBlock.HEIGHT, height));
-            this.level.setBlockEntity(table);
-        });
-    }
-
     @Override
     protected CompoundTag writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
+        tag.putInt("progress", this.progress);
         return tag;
     }
 
     @Override
     protected void readSyncData(CompoundTag tag) {
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
+        this.progress = tag.getInt("progress");
+        this.markRecipeUpdate();
     }
 
     @Override
     protected void saveToTag(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
+        tag.putInt("progress", this.progress);
     }
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
+        this.progress = tag.getInt("progress");
+        this.markRecipeUpdate();
     }
 
     public static class Inventory extends ItemStackHandler {
@@ -111,11 +127,6 @@ public class CarvingTableBlockEntity extends SyncedBlockEntity {
         @Override
         public int getSlotLimit(int slot) {
             return 1;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            return validateItem(stack);
         }
     }
 }

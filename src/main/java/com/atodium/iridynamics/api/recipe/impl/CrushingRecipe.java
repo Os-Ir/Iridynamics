@@ -13,11 +13,11 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-public record DryingRecipe(ResourceLocation id, IngredientIndex input, OutputProvider output,
-                           int tick) implements ISpecialRecipe<ItemStackContainer> {
+public record CrushingRecipe(ResourceLocation id, IngredientIndex input, OutputProvider output,
+                             int count) implements ISpecialRecipe<ItemStackContainer> {
     @Override
     public boolean matches(ItemStackContainer inventory, Level level) {
-        return this.input.testEqual(inventory.getItem());
+        return this.input.test(inventory.getItem());
     }
 
     @Override
@@ -36,31 +36,31 @@ public record DryingRecipe(ResourceLocation id, IngredientIndex input, OutputPro
     }
 
     @Override
-    public RecipeSerializer<DryingRecipe> getSerializer() {
-        return ModRecipeSerializers.DRYING.get();
+    public RecipeSerializer<CrushingRecipe> getSerializer() {
+        return ModRecipeSerializers.CRUSHING.get();
     }
 
     @Override
-    public RecipeType<DryingRecipe> getType() {
-        return ModRecipeTypes.DRYING.get();
+    public RecipeType<CrushingRecipe> getType() {
+        return ModRecipeTypes.CRUSHING.get();
     }
 
-    public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, DryingRecipe> {
+    public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, CrushingRecipe> {
         @Override
-        public DryingRecipe fromJson(ResourceLocation id, JsonObject json) {
-            return new DryingRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("tick").getAsInt());
+        public CrushingRecipe fromJson(ResourceLocation id, JsonObject json) {
+            return new CrushingRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("count").getAsInt());
         }
 
         @Override
-        public DryingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-            return new DryingRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readInt());
+        public CrushingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+            return new CrushingRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readInt());
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buf, DryingRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf, CrushingRecipe recipe) {
             recipe.input.toNetwork(buf);
             recipe.output.toNetwork(buf);
-            buf.writeInt(recipe.tick);
+            buf.writeInt(recipe.count);
         }
     }
 }
