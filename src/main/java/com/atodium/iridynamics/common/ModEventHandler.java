@@ -1,9 +1,7 @@
 package com.atodium.iridynamics.common;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.capability.ForgingCapability;
-import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.capability.InventoryCapability;
+import com.atodium.iridynamics.api.capability.*;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,5 +13,8 @@ public class ModEventHandler {
         event.register(HeatCapability.class);
         event.register(ForgingCapability.class);
         event.register(InventoryCapability.class);
+        event.register(LiquidContainerCapability.class);
+        event.register(HeatProcessCapability.class);
+        event.register(CarvingCapability.class);
     }
 }

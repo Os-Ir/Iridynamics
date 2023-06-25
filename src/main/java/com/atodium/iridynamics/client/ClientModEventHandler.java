@@ -38,6 +38,7 @@ public class ClientModEventHandler {
         event.registerBlockEntityRenderer(ModBlockEntities.ANVIL.get(), (context) -> AnvilRenderer.INSTANCE);
         event.registerBlockEntityRenderer(ModBlockEntities.SMALL_CRUCIBLE.get(), (context) -> SmallCrucibleRenderer.INSTANCE);
         event.registerBlockEntityRenderer(ModBlockEntities.MOLD.get(), (context) -> MoldRenderer.INSTANCE);
+        event.registerBlockEntityRenderer(ModBlockEntities.CARVING_TABLE.get(), (context) -> CarvingTableRenderer.INSTANCE);
         event.registerEntityRenderer(ModEntities.BULLET.get(), BulletRenderer::new);
     }
 

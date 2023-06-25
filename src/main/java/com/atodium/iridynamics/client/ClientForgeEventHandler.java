@@ -1,19 +1,18 @@
 package com.atodium.iridynamics.client;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.capability.ForgingCapability;
-import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.capability.InventoryCapability;
-import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
+import com.atodium.iridynamics.api.capability.*;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.client.renderer.RendererUtil;
-import com.atodium.iridynamics.common.block.equipment.AnvilBlock;
-import com.atodium.iridynamics.common.block.equipment.ForgeBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
-import com.atodium.iridynamics.common.blockEntity.equipment.AnvilBlockEntity;
+import com.atodium.iridynamics.common.block.equipment.AnvilBlock;
+import com.atodium.iridynamics.common.block.equipment.CarvingTableBlock;
+import com.atodium.iridynamics.common.block.equipment.ForgeBlock;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
+import com.atodium.iridynamics.common.blockEntity.equipment.AnvilBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.equipment.CarvingTableBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -27,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -84,6 +84,11 @@ public class ClientForgeEventHandler {
                     add.append(ChatFormatting.GRAY).append(" - ").append(ChatFormatting.GREEN).append(MaterialEntry.getItemMaterialEntry(invStack).shape().getUnit()).append(ChatFormatting.GRAY).append("L");
                 tooltip.add(new TextComponent(ChatFormatting.GRAY + "---- " + invStack.getDisplayName().getString() + ChatFormatting.AQUA + " [" + (i + 1) + "]" + add));
             }
+        });
+        stack.getCapability(CarvingCapability.CARVING).ifPresent((carving) -> {
+            if (carving.processed())
+                tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.carving.processed")));
+            else tooltip.add(new TextComponent(ChatFormatting.GRAY + I18n.get("iridynamics.info.carving.unprocessed")));
         });
     }
 
@@ -145,6 +150,28 @@ public class ClientForgeEventHandler {
                     float x = 0.5625f + i / 16.0f;
                     consumer.vertex(pose.pose(), x, height, 0.3125f).color(0.0f, 0.0f, 1.0f, 0.4f).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
                     consumer.vertex(pose.pose(), x, height, 0.75f).color(0.0f, 0.0f, 1.0f, 0.4f).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
+                }
+            }
+            transform.popPose();
+        } else if (state.getBlock() == ModBlocks.CARVING_TABLE.get() && result.getDirection() == Direction.UP) {
+            VertexConsumer consumer = event.getMultiBufferSource().getBuffer(RenderType.lines());
+            Vec3 cameraPos = event.getCamera().getPosition();
+            PoseStack transform = event.getPoseStack();
+            transform.pushPose();
+            transform.translate(pos.getX() - cameraPos.x, pos.getY() - cameraPos.y, pos.getZ() - cameraPos.z);
+            PoseStack.Pose pose = transform.last();
+            BlockEntity entity = level.getBlockEntity(pos);
+            if (entity instanceof CarvingTableBlockEntity table && !table.isEmpty()) {
+                float height = 0.25f + state.getValue(CarvingTableBlock.HEIGHT) / 16.0f;
+                for (int i = 0; i <= 12; i++) {
+                    float z = 0.125f + i / 16.0f;
+                    consumer.vertex(pose.pose(), 0.125f, height, z).color(0.0f, 0.0f, 1.0f, 0.4f).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
+                    consumer.vertex(pose.pose(), 0.875f, height, z).color(0.0f, 0.0f, 1.0f, 0.4f).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
+                }
+                for (int i = 0; i <= 12; i++) {
+                    float x = 0.125f + i / 16.0f;
+                    consumer.vertex(pose.pose(), x, height, 0.125f).color(0.0f, 0.0f, 1.0f, 0.4f).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
+                    consumer.vertex(pose.pose(), x, height, 0.875f).color(0.0f, 0.0f, 1.0f, 0.4f).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
                 }
             }
             transform.popPose();

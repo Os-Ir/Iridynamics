@@ -7,6 +7,7 @@ import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialInfoLoader;
+import com.atodium.iridynamics.api.module.CarvingModule;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
@@ -14,9 +15,9 @@ import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
+import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.equipment.MoldBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.equipment.MoldToolBlockEntity;
-import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.atodium.iridynamics.common.levelgen.feature.ModFeatures;
 import com.atodium.iridynamics.common.module.SmallCrucibleModule;
@@ -84,6 +85,7 @@ public class ForgeEventHandler {
             LiquidContainerModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
         else if (item == Items.CHICKEN) ItemHeatModule.addItemHeat(event, stack, 16000.0, 0.2);
         else if (item == ModItems.SMALL_CRUCIBLE.get()) SmallCrucibleModule.initItem(event, stack);
+        else if (item == ModItems.MOLD_CLAY_ADOBE.get()) CarvingModule.addItemCarving(event, stack, 3, 0x788c96);
         else if (MaterialEntry.containsMaterialEntry(stack))
             HeatUtil.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
     }
