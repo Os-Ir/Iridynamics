@@ -1,0 +1,29 @@
+{
+  "type": "iridynamics:pottery",
+  "input": {
+    "type": 0,
+    "ingredient": {
+      "item": "iridynamics:pot_clay_adobe"
+    },
+    "count": 1
+  },
+  "output": {
+    "base": {
+      "item": "iridynamics:unfired_small_crucible"
+    }
+  },
+  "carved": [
+    30,
+    20,
+    10,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+  ]
+}

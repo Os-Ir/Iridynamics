@@ -1,5 +1,6 @@
 package com.atodium.iridynamics;
 
+import com.atodium.iridynamics.api.gui.plan.PlanGuiCodec;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.recipe.ModOutputDecorators;
@@ -46,6 +47,7 @@ public class Iridynamics {
         ModOutputDecorators.init();
         ModFeatures.init();
         ModNetworkHandler.init();
+        PlanGuiCodec.init();
     }
 
     public static ResourceLocation rl(String path) {

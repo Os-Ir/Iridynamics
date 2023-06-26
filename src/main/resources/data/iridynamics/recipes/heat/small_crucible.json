@@ -1,0 +1,17 @@
+{
+  "type": "iridynamics:heat",
+  "input": {
+    "type": 0,
+    "ingredient": {
+      "item": "iridynamics:unfired_small_crucible"
+    },
+    "count": 1
+  },
+  "output": {
+    "base": {
+      "item": "iridynamics:small_crucible"
+    }
+  },
+  "temperature": 600.0,
+  "energy": 30000000.0
+}

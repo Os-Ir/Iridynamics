@@ -22,7 +22,6 @@ public class ItemHeatModule {
     }
 
     public static void addItemHeat(AttachCapabilitiesEvent<ItemStack> event, ItemStack stack, double capacity, double resistance) {
-        HeatRecipe recipe = RecipeUtil.getRecipe(ModRecipeTypes.HEAT.get(), RecipeUtil.container(stack));
         event.addCapability(HeatCapability.KEY, new HeatCapability(HeatProcessModule.checkItemHeatProcess(stack, capacity), resistance));
     }
 

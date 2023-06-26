@@ -25,8 +25,8 @@ public record PileHeatRecipe(ResourceLocation id, IngredientIndex input,
     }
 
     @Override
-    public boolean matches(ItemStackContainer container, Level level) {
-        return this.input.test(container.getItem());
+    public boolean matches(ItemStackContainer inventory, Level level) {
+        return this.input.test(inventory.getItem());
     }
 
     @Override

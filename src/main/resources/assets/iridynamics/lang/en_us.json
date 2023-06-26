@@ -4,11 +4,13 @@
   "itemGroup.iridynamics_tool": "Iridynamics - Tool",
   "itemGroup.iridynamics_material": "Iridynamics - Material",
 
+  "gui.iridynamics.plan.title": "Plan",
   "gui.iridynamics.chute.title": "Chute",
   "gui.iridynamics.small_crucible.title": "Small Crucible",
   "gui.iridynamics.grindstone.title": "Grindstone",
   "gui.iridynamics.artisan_crafting_table.title": "Artisan Crafting Table",
   "gui.iridynamics.bonfire.title": "Bonfire",
+  "gui.iridynamics.pottery_work_table.title": "Pottery Work Table",
 
   "block.iridynamics.pile": "Pile",
   "block.iridynamics.fuel": "Fuel",
@@ -26,6 +28,7 @@
   "block.iridynamics.bonfire": "Bonfire",
   "block.iridynamics.carving_table": "Carving Table",
   "block.iridynamics.crushing_board": "Crushing Board",
+  "block.iridynamics.pottery_work_table": "Pottery Work Table",
 
   "item.iridynamics.mold": "Mold",
   "item.iridynamics.mold_tool": "Mold",
@@ -36,6 +39,7 @@
   "item.iridynamics.small_crucible": "Small Crucible",
   "item.iridynamics.mold_clay_adobe": "Mold Clay Adobe",
   "item.iridynamics.pot_clay_adobe": "Pot Clay Adobe",
+  "item.iridynamics.unfired_small_crucible": "Unfired Small Crucible",
   "item.iridynamics.igniter": "Igniter",
   "item.iridynamics.tool.hammer": "Hammer",
   "item.iridynamics.tool.chisel": "Chisel",
@@ -43,6 +47,7 @@
 
   "iridynamics.info.heat.heatable": "Heatable",
   "iridynamics.info.heat.weldable": "Weldable",
+  "iridynamics.info.heat.progress": "Heating Progress",
   "iridynamics.info.forging.unprocessed": "Unprocessed",
   "iridynamics.info.forging.processed": "Processed",
   "iridynamics.info.mold_tool.disposable": "Disposable",

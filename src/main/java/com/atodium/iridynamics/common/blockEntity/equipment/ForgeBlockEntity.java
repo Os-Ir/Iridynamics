@@ -5,6 +5,7 @@ import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
 import com.atodium.iridynamics.api.module.BlockHeatModule;
+import com.atodium.iridynamics.api.module.HeatProcessModule;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -34,7 +35,9 @@ public class ForgeBlockEntity extends SyncedBlockEntity implements ITickable {
             BlockHeatModule.blockHeatExchange(level, pos, state, this, false);
             this.inventory.left().getCapability(HeatCapability.HEAT).ifPresent((item) -> ItemHeatModule.heatExchange(this.heat, item, RESISTANCE_ITEM));
             this.inventory.right().getCapability(HeatCapability.HEAT).ifPresent((item) -> ItemHeatModule.heatExchange(this.heat, item, RESISTANCE_ITEM));
+            HeatProcessModule.updateHeatProcess(this.inventory);
             this.markDirty();
+            this.markForSync();
         }
     }
 

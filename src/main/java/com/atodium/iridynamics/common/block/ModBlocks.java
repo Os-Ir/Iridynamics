@@ -29,6 +29,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> BONFIRE = Iridynamics.REGISTRY.block("bonfire", BonfireBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> CARVING_TABLE = Iridynamics.REGISTRY.block("carving_table", CarvingTableBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> CRUSHING_BOARD = Iridynamics.REGISTRY.block("crushing_board", CrushingBoardBlock::new, Material.STONE).strength(3.0f, 2.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
+    public static final RegistryObject<Block> POTTERY_WORK_TABLE = Iridynamics.REGISTRY.block("pottery_work_table", PotteryWorkTableBlock::new, Material.STONE).strength(3.0f, 2.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
 
     public static void init() {
 

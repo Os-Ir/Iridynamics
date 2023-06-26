@@ -2,6 +2,7 @@ package com.atodium.iridynamics.client;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.capability.*;
+import com.atodium.iridynamics.api.heat.impl.HeatProcessPhasePortrait;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
@@ -57,6 +58,10 @@ public class ClientForgeEventHandler {
                 }
             }
             tooltip.add(new TextComponent(ChatFormatting.DARK_RED + I18n.get("iridynamics.info.heat.heatable") + ChatFormatting.WHITE + " - " + String.format("%.1f", heat.getTemperature() - ItemHeatModule.CELSIUS_ZERO) + "℃"));
+            if (heat.getPhasePortrait() instanceof HeatProcessPhasePortrait process) {
+                int progress = (int) (process.progress(heat.getEnergy()) * 20.0);
+                tooltip.add(new TextComponent(ChatFormatting.DARK_AQUA + I18n.get("iridynamics.info.heat.progress") + " " + ChatFormatting.GREEN + "=".repeat(Math.max(0, progress)) + ">" + ChatFormatting.WHITE + "-".repeat(Math.max(0, 19 - progress))));
+            }
         });
         stack.getCapability(ForgingCapability.FORGING).ifPresent((forging) -> {
             if (forging.processed())

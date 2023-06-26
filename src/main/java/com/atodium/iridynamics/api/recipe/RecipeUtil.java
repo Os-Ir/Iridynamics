@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.recipe;
 
 import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -63,5 +64,18 @@ public class RecipeUtil {
         for (T recipe : getAllRecipes(level.getRecipeManager(), type))
             if (recipe.matches(container, level)) return recipe;
         return null;
+    }
+
+    public static <C extends Container, T extends Recipe<C>> List<T> getAllValidRecipes(RecipeType<T> type, C container) {
+        List<T> list = Lists.newArrayList();
+        for (T recipe : getAllRecipes(getRecipeManager(), type)) if (recipe.matches(container, null)) list.add(recipe);
+        return list;
+    }
+
+    public static <C extends Container, T extends Recipe<C>> List<T> getAllValidRecipes(Level level, RecipeType<T> type, C container) {
+        List<T> list = Lists.newArrayList();
+        for (T recipe : getAllRecipes(level.getRecipeManager(), type))
+            if (recipe.matches(container, level)) list.add(recipe);
+        return list;
     }
 }

@@ -56,7 +56,7 @@ public class MaterialToolModel implements IModelGeometry<MaterialToolModel> {
             TextureAtlasSprite sprite;
             if (specialTexture == null) sprite = spriteGetter.apply(owner.resolveTexture("layer" + i));
             else sprite = spriteGetter.apply(specialTexture);
-            tempQuads.addAll(ColoredItemLayerModel.getQuadsForSprite(i, sprite, transform, materialRenderInfo.RGBAColor(), materialRenderInfo.light(), pixelFlag));
+            tempQuads.addAll(ColoredItemLayerModel.getQuadsForSprite(i, sprite, transform, materialRenderInfo.argb(), materialRenderInfo.light(), pixelFlag));
         }
         quads = ImmutableList.copyOf(tempQuads);
         return new BakedItemModel(quads, particle, Maps.immutableEnumMap(transformMap), overrides, true, owner.isSideLit());

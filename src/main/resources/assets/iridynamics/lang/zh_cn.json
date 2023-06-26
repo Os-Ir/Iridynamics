@@ -4,11 +4,13 @@
   "itemGroup.iridynamics_tool": "Iridynamics - 工具",
   "itemGroup.iridynamics_material": "Iridynamics - 材料",
 
+  "gui.iridynamics.plan.title": "计划",
   "gui.iridynamics.chute.title": "料斗",
   "gui.iridynamics.small_crucible.title": "小型坩埚",
   "gui.iridynamics.grindstone.title": "磨石",
   "gui.iridynamics.artisan_crafting_table.title": "工匠工作台",
   "gui.iridynamics.bonfire.title": "篝火",
+  "gui.iridynamics.pottery_work_table.title": "陶器加工台",
 
   "block.iridynamics.pile": "物料堆",
   "block.iridynamics.fuel": "燃料",
@@ -26,6 +28,7 @@
   "block.iridynamics.bonfire": "篝火",
   "block.iridynamics.carving_table": "雕刻台",
   "block.iridynamics.crushing_board": "砧板",
+  "block.iridynamics.pottery_work_table": "陶器加工台",
 
   "item.iridynamics.mold": "模具",
   "item.iridynamics.mold_tool": "模具",
@@ -36,6 +39,7 @@
   "item.iridynamics.small_crucible": "小型坩埚",
   "item.iridynamics.mold_clay_adobe": "模具黏土坯",
   "item.iridynamics.pot_clay_adobe": "陶罐黏土坯",
+  "item.iridynamics.unfired_small_crucible": "未烧制的小型坩埚",
   "item.iridynamics.igniter": "起火器",
   "item.iridynamics.tool.hammer": "锤子",
   "item.iridynamics.tool.chisel": "凿子",
@@ -43,6 +47,7 @@
 
   "iridynamics.info.heat.heatable": "可加热",
   "iridynamics.info.heat.weldable": "可焊接",
+  "iridynamics.info.heat.progress": "加热进度",
   "iridynamics.info.forging.unprocessed": "未被加工",
   "iridynamics.info.forging.processed": "已被加工",
   "iridynamics.info.mold_tool.disposable": "一次性的",

@@ -48,7 +48,7 @@ public class MaterialModel implements IModelGeometry<MaterialModel> {
             MaterialRenderInfo renderInfo = material.getRenderInfo();
             Material texture = renderInfo.specialTextureMaterial(shape);
             sprite = spriteGetter.apply(Objects.requireNonNullElseGet(texture, () -> owner.resolveTexture("texture")));
-            quads = ColoredItemLayerModel.getQuadsForSprite(0, sprite, transform, renderInfo.RGBAColor(), renderInfo.light());
+            quads = ColoredItemLayerModel.getQuadsForSprite(0, sprite, transform, renderInfo.argb(), renderInfo.light());
         }
         return new BakedItemModel(quads, sprite, Maps.immutableEnumMap(transformMap), overrides, true, owner.isSideLit());
     }

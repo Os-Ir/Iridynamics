@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public final class RendererUtil {
     @SuppressWarnings("deprecation")
@@ -48,6 +49,25 @@ public final class RendererUtil {
         BUFFER_BUILDER.vertex(matrix4f, x, y, 0).uv(textureX, textureY).endVertex();
         BUFFER_BUILDER.end();
         BufferUploader.end(BUFFER_BUILDER);
+    }
+
+    public static void fill(PoseStack matrixStack, int x, int y, int width, int height, int color) {
+        int a = (color >> 24) & 0xff;
+        int r = (color >> 16) & 0xff;
+        int g = (color >> 8) & 0xff;
+        int b = color & 0xff;
+        RenderSystem.setShaderColor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.enableBlend();
+        BUFFER_BUILDER.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        Matrix4f matrix4f = matrixStack.last().pose();
+        BUFFER_BUILDER.vertex(matrix4f, x, y + height, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, x + width, y + height, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, x + width, y, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, x, y, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.end();
+        BufferUploader.end(BUFFER_BUILDER);
+        RenderSystem.disableBlend();
     }
 
     public static float getDirectionAngel(Direction direction) {

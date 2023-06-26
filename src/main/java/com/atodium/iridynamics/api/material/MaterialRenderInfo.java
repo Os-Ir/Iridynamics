@@ -80,7 +80,7 @@ public class MaterialRenderInfo {
         return this.color;
     }
 
-    public int RGBAColor() {
+    public int argb() {
         return (this.alpha << 24) + this.color;
     }
 

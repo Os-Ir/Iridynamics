@@ -5,7 +5,7 @@ import com.atodium.iridynamics.api.material.Phase;
 
 public record HeatProcessPhasePortrait(double capacity, double transformPoint,
                                        double transformEnergy) implements IPhasePortrait {
-    public double process(double energy) {
+    public double progress(double energy) {
         double base = this.capacity * this.transformPoint;
         return energy > base ? (energy - base) / this.transformEnergy : 0.0;
     }

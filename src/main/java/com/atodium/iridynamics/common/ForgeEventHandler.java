@@ -4,6 +4,7 @@ import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
+import com.atodium.iridynamics.api.capability.PotteryCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialInfoLoader;
@@ -84,8 +85,11 @@ public class ForgeEventHandler {
         else if (item == ModItems.MOLD_TOOL.get())
             LiquidContainerModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
         else if (item == Items.CHICKEN) ItemHeatModule.addItemHeat(event, stack, 16000.0, 0.2);
+        else if (item == ModItems.UNFIRED_SMALL_CRUCIBLE.get()) ItemHeatModule.addItemHeat(event, stack, 16000.0, 0.2);
         else if (item == ModItems.SMALL_CRUCIBLE.get()) SmallCrucibleModule.initItem(event, stack);
         else if (item == ModItems.MOLD_CLAY_ADOBE.get()) CarvingModule.addItemCarving(event, stack, 3, 0x788c96);
+        else if (item == ModItems.POT_CLAY_ADOBE.get())
+            event.addCapability(PotteryCapability.KEY, new PotteryCapability());
         else if (MaterialEntry.containsMaterialEntry(stack))
             HeatUtil.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
     }

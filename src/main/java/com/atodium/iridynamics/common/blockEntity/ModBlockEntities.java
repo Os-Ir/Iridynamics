@@ -25,6 +25,7 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<BonfireBlockEntity>> BONFIRE = Iridynamics.REGISTRY.blockEntity("bonfire", () -> BlockEntityType.Builder.of(BonfireBlockEntity::new, ModBlocks.BONFIRE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<CarvingTableBlockEntity>> CARVING_TABLE = Iridynamics.REGISTRY.blockEntity("carving_table", () -> BlockEntityType.Builder.of(CarvingTableBlockEntity::new, ModBlocks.CARVING_TABLE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<CrushingBoardBlockEntity>> CRUSHING_BOARD = Iridynamics.REGISTRY.blockEntity("crushing_board", () -> BlockEntityType.Builder.of(CrushingBoardBlockEntity::new, ModBlocks.CRUSHING_BOARD.get()).build(null)).register();
+    public static final RegistryObject<BlockEntityType<PotteryWorkTableBlockEntity>> POTTERY_WORK_TABLE = Iridynamics.REGISTRY.blockEntity("pottery_work_table", () -> BlockEntityType.Builder.of(PotteryWorkTableBlockEntity::new, ModBlocks.POTTERY_WORK_TABLE.get()).build(null)).register();
 
     public static void init() {
 

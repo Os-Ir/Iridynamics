@@ -29,6 +29,7 @@ public class ModItems {
     public static final RegistryObject<Item> SMALL_CRUCIBLE = Iridynamics.REGISTRY.item("small_crucible", Item::new).stacksTo(1).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> MOLD_CLAY_ADOBE = Iridynamics.REGISTRY.item("mold_clay_adobe", Item::new).tab(ModCreativeTabs.ITEM).register();
     public static final RegistryObject<Item> POT_CLAY_ADOBE = Iridynamics.REGISTRY.item("pot_clay_adobe", Item::new).tab(ModCreativeTabs.ITEM).register();
+    public static final RegistryObject<Item> UNFIRED_SMALL_CRUCIBLE = Iridynamics.REGISTRY.item("unfired_small_crucible", Item::new).tab(ModCreativeTabs.ITEM).register();
 
     public static final RegistryObject<Item> GUN = Iridynamics.REGISTRY.item("gun", GunItem::new).tab(ModCreativeTabs.TOOL).register();
     public static final RegistryObject<Item> IGNITER = Iridynamics.REGISTRY.item("igniter", (properties) -> new ToolItem(properties, ToolIgniter.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
