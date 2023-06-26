@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "minecraft:logs"
+    },
+    {
+      "tag": "minecraft:logs"
+    },
+    {
+      "tag": "minecraft:logs"
+    },
+    {
+      "item": "iridynamics:crushed_stone"
+    }
+  ],
+  "result": {
+    "item": "iridynamics:wood_brick",
+    "count": 6
+  }
+}

@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -46,6 +47,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Map;
 
@@ -106,6 +108,22 @@ public class ForgeEventHandler {
                 else if (item == ModItems.MOLD_TOOL.get())
                     MoldToolBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
             });
+        }
+    }
+
+    @SubscribeEvent
+    public static void flintWork(PlayerInteractEvent.RightClickBlock event) {
+        Level level = event.getWorld();
+        if (level.isClientSide) return;
+        BlockPos pos = event.getPos();
+        BlockState state = level.getBlockState(pos);
+        Player player = event.getPlayer();
+        if (!player.isShiftKeyDown()) return;
+        ItemStack stack = player.getItemInHand(event.getHand());
+        Item item = stack.getItem();
+        if (event.getFace() == Direction.UP && state.getMaterial() == Material.STONE && state.isFaceSturdy(level, pos, Direction.UP) && item == Items.FLINT) {
+            stack.shrink(1);
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.POLISHED_FLINT.get()));
         }
     }
 

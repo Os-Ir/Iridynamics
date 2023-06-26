@@ -1,0 +1,32 @@
+{
+  "type": "iridynamics:tool_crafting",
+  "pattern": [
+    "   s ",
+    "  s  ",
+    "gg   ",
+    "sss  ",
+    "     "
+  ],
+  "key": {
+    "s": {
+      "type": 0,
+      "ingredient": {
+        "item": "minecraft:stick"
+      }
+    },
+    "g": {
+      "type": 0,
+      "ingredient": {
+        "item": "iridynamics:dried_grass"
+      }
+    }
+  },
+  "output": {
+    "base": {
+      "item": "iridynamics:igniter"
+    }
+  },
+  "tool": [
+    "iridynamics:knife"
+  ]
+}
