@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.api.recipe.impl;
 
+import com.atodium.iridynamics.api.module.ToolModule;
 import com.atodium.iridynamics.api.recipe.IngredientIndex;
 import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
@@ -32,8 +33,8 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
                 if (!this.input[y][x].isEmpty() && this.input[y][x].test(align[y][x]))
                     this.input[y][x].consume(align[y][x]);
         for (int i = 0; i < this.tools.length; i++)
-            if (IToolInfo.isToolNonnullEquals(this.tools[i], container.getTool(i)))
-                container.getToolItem(i).damageItem(container.getToolItemStack(i), container.getTool(i).getContainerCraftDamage());
+            if (ToolModule.isToolNonnullEquals(this.tools[i], container.getTool(i)))
+                ToolModule.toolCraftingDamage(container.getToolItemStack(i));
     }
 
     @Override
@@ -46,7 +47,7 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
                 if ((!this.input[y][x].isEmpty() && !this.input[y][x].test(align[y][x])) || (this.input[y][x].isEmpty() && !align[y][x].isEmpty()))
                     return false;
         for (int i = 0; i < this.tools.length; i++)
-            if (!IToolInfo.isToolEquals(this.tools[i], container.getTool(i))) return false;
+            if (!ToolModule.isToolEquals(this.tools[i], container.getTool(i))) return false;
         for (int i = this.tools.length; i < container.getToolCount(); i++)
             if (container.getTool(i) != null) return false;
         return true;
@@ -104,7 +105,7 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
             JsonArray toolJson = json.getAsJsonArray("tool");
             IToolInfo[] tools = new IToolInfo[toolJson.size()];
             for (int i = 0; i < tools.length; i++)
-                tools[i] = IToolInfo.TOOL_INFO.get(new ResourceLocation(toolJson.get(i).getAsString()));
+                tools[i] = ToolModule.TOOL_INFO.get(new ResourceLocation(toolJson.get(i).getAsString()));
             return new ToolCraftingRecipe(id, input, OutputProvider.fromJson(json.getAsJsonObject("output")), tools);
         }
 
@@ -117,7 +118,7 @@ public record ToolCraftingRecipe(ResourceLocation id, IngredientIndex[][] input,
                 for (int x = 0; x < width; x++) input[y][x] = IngredientIndex.fromNetwork(buf);
             OutputProvider output = OutputProvider.fromNetwork(buf);
             IToolInfo[] tools = new IToolInfo[buf.readInt()];
-            for (int i = 0; i < tools.length; i++) tools[i] = IToolInfo.TOOL_INFO.get(buf.readResourceLocation());
+            for (int i = 0; i < tools.length; i++) tools[i] = ToolModule.TOOL_INFO.get(buf.readResourceLocation());
             return new ToolCraftingRecipe(id, input, output, tools);
         }
 

@@ -63,7 +63,6 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide) {
             if (this.pileStateUpdateFlag) this.updatePileCondition();
-            System.out.println("Pile: " + this.heat.getTemperature() + "K");
             BlockHeatModule.blockHeatExchange(level, pos, state, this, false);
             if (this.heatRecipe != null && this.heat.getTemperature() >= this.heatRecipe.temperature()) {
                 this.level.setBlockAndUpdate(this.getBlockPos(), ModBlocks.HEAT_PROCESS.get().defaultBlockState().setValue(HeatProcessBlock.HEIGHT, this.height));
@@ -130,6 +129,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         this.markPileStateUpdate();
         this.updateContentHeat();
         this.updateHeatRecipe();
+        this.updateDryingRecipe();
         this.markDirty();
         this.updateBlockState();
     }

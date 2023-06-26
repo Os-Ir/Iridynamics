@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.api.recipe.container;
 
+import com.atodium.iridynamics.api.module.ToolModule;
 import com.atodium.iridynamics.api.tool.IToolInfo;
 import com.atodium.iridynamics.api.tool.ToolItem;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +21,7 @@ public class ToolInventoryContainer extends InventoryContainer {
     }
 
     public void setTool(int index, ItemStack tool) {
-        if (this.validateToolIndex(index) && tool.getItem() instanceof ToolItem) this.tools[index] = tool;
+        if (this.validateToolIndex(index) && ToolModule.isTool(tool)) this.tools[index] = tool;
     }
 
     public int getToolCount() {
@@ -42,7 +43,6 @@ public class ToolInventoryContainer extends InventoryContainer {
     }
 
     public IToolInfo getTool(int index) {
-        ToolItem toolItem = this.getToolItem(index);
-        return toolItem == null ? null : toolItem.getToolInfo();
+        return ToolModule.getItemToolInfo(this.tools[index]);
     }
 }

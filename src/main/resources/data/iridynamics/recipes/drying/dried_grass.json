@@ -1,0 +1,16 @@
+{
+  "type": "iridynamics:drying",
+  "input": {
+    "type": 0,
+    "ingredient": {
+      "item": "iridynamics:grass"
+    },
+    "count": 1
+  },
+  "output": {
+    "base": {
+      "item": "iridynamics:dried_grass"
+    }
+  },
+  "tick": 36000
+}

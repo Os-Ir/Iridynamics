@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.api.tool;
 
+import com.atodium.iridynamics.api.module.ToolModule;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
@@ -122,13 +123,7 @@ public class ToolItem extends Item {
             tag.putInt("damage", damage + value);
             return false;
         }
-        try {
-            Field fieldItem = Arrays.stream(ItemStack.class.getDeclaredFields()).filter(field -> field.getType() == Item.class).findFirst().orElseThrow(ReflectiveOperationException::new);
-            fieldItem.setAccessible(true);
-            fieldItem.set(stack, Items.AIR);
-        } catch (SecurityException | ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
+        ToolModule.clearItem(stack);
         return true;
     }
 

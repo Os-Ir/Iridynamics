@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.api.recipe.impl;
 
+import com.atodium.iridynamics.api.module.ToolModule;
 import com.atodium.iridynamics.api.recipe.IngredientIndex;
 import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
@@ -22,8 +23,8 @@ public record GrindstoneRecipe(ResourceLocation id, IngredientIndex[] input, Out
             if (!this.input[i].isEmpty() && this.input[i].testEqual(container.getItem(i)))
                 this.input[i].consume(container.getItem(i));
         for (int i = 0; i < this.tools.length; i++)
-            if (IToolInfo.isToolNonnullEquals(this.tools[i], container.getTool(i)))
-                container.getToolItem(i).damageItem(container.getToolItemStack(i), this.tools[i].getContainerCraftDamage());
+            if (ToolModule.isToolNonnullEquals(this.tools[i], container.getTool(i)))
+                ToolModule.toolCraftingDamage(container.getToolItemStack(i));
     }
 
     @Override
@@ -34,7 +35,7 @@ public record GrindstoneRecipe(ResourceLocation id, IngredientIndex[] input, Out
         for (int i = this.input.length; i < container.getContainerSize(); i++)
             if (!container.getItem(i).isEmpty()) return false;
         for (int i = 0; i < this.tools.length; i++)
-            if (!IToolInfo.isToolEquals(this.tools[i], container.getTool(i))) return false;
+            if (!ToolModule.isToolEquals(this.tools[i], container.getTool(i))) return false;
         for (int i = this.tools.length; i < container.getToolCount(); i++)
             if (container.getTool(i) != null) return false;
         return true;
@@ -75,7 +76,7 @@ public record GrindstoneRecipe(ResourceLocation id, IngredientIndex[] input, Out
             JsonArray toolJson = json.getAsJsonArray("tool");
             IToolInfo[] tools = new IToolInfo[toolJson.size()];
             for (int i = 0; i < tools.length; i++)
-                tools[i] = IToolInfo.TOOL_INFO.get(new ResourceLocation(toolJson.get(i).getAsString()));
+                tools[i] = ToolModule.TOOL_INFO.get(new ResourceLocation(toolJson.get(i).getAsString()));
             return new GrindstoneRecipe(id, input, OutputProvider.fromJson(json.getAsJsonObject("output")), tools);
         }
 
@@ -85,7 +86,7 @@ public record GrindstoneRecipe(ResourceLocation id, IngredientIndex[] input, Out
             for (int i = 0; i < input.length; i++) input[i] = IngredientIndex.fromNetwork(buf);
             OutputProvider output = OutputProvider.fromNetwork(buf);
             IToolInfo[] tools = new IToolInfo[buf.readInt()];
-            for (int i = 0; i < tools.length; i++) tools[i] = IToolInfo.TOOL_INFO.get(buf.readResourceLocation());
+            for (int i = 0; i < tools.length; i++) tools[i] = ToolModule.TOOL_INFO.get(buf.readResourceLocation());
             return new GrindstoneRecipe(id, input, output, tools);
         }
 
