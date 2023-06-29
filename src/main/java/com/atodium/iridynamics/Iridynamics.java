@@ -11,7 +11,7 @@ import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.entity.ModEntities;
 import com.atodium.iridynamics.common.item.ModItems;
-import com.atodium.iridynamics.common.levelgen.feature.ModFeatures;
+import com.atodium.iridynamics.common.level.levelgen.feature.ModFeatures;
 import com.atodium.iridynamics.common.network.ModNetworkHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;

@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.common.levelgen.config;
+package com.atodium.iridynamics.common.level.levelgen.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;

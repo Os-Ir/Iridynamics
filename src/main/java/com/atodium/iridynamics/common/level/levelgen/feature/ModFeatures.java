@@ -1,8 +1,8 @@
-package com.atodium.iridynamics.common.levelgen.feature;
+package com.atodium.iridynamics.common.level.levelgen.feature;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.common.levelgen.config.OreNuggetConfig;
-import com.atodium.iridynamics.common.levelgen.config.StickConfig;
+import com.atodium.iridynamics.common.level.levelgen.config.StickConfig;
+import com.atodium.iridynamics.common.level.levelgen.config.OreNuggetConfig;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import net.minecraft.core.Holder;

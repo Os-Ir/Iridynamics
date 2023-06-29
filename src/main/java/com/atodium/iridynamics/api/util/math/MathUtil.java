@@ -153,6 +153,8 @@ public class MathUtil {
     }
 
     public static int gcd(int a, int b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
         int t;
         while (b > 0) {
             t = b;
@@ -167,6 +169,8 @@ public class MathUtil {
     }
 
     public static long gcd(long a, long b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
         long t;
         while (b > 0) {
             t = b;

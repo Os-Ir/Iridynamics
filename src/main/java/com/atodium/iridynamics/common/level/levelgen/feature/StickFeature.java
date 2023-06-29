@@ -1,7 +1,7 @@
-package com.atodium.iridynamics.common.levelgen.feature;
+package com.atodium.iridynamics.common.level.levelgen.feature;
 
 import com.atodium.iridynamics.common.block.ModBlocks;
-import com.atodium.iridynamics.common.levelgen.config.StickConfig;
+import com.atodium.iridynamics.common.level.levelgen.config.StickConfig;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

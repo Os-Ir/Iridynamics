@@ -20,7 +20,7 @@ import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.equipment.MoldBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.equipment.MoldToolBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;
-import com.atodium.iridynamics.common.levelgen.feature.ModFeatures;
+import com.atodium.iridynamics.common.level.levelgen.feature.ModFeatures;
 import com.atodium.iridynamics.common.module.SmallCrucibleModule;
 import com.atodium.iridynamics.common.tool.ToolIgniter;
 import net.minecraft.core.BlockPos;

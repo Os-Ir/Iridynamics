@@ -18,8 +18,8 @@ import java.math.RoundingMode;
 public class BigFraction extends Number implements Comparable<BigFraction> {
     @Serial
     private static final long serialVersionUID = 1L;
-    private final BigInteger numerator;
-    private final BigInteger denominator;
+
+    private final BigInteger numerator, denominator;
 
     public final static BigFraction ZERO = new BigFraction(BigInteger.ZERO, BigInteger.ONE, true);
     public final static BigFraction ONE = new BigFraction(BigInteger.ONE, BigInteger.ONE, true);
@@ -288,12 +288,13 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
      * @Returns the absolute value of this.
      */
     public BigFraction abs() {
-        return (signum() < 0 ? negate() : this);
+        return signum() < 0 ? negate() : this;
     }
 
     /**
      * @Returns a string representation of this, in the form numerator/denominator.
      */
+    @Override
     public String toString() {
         return numerator.toString() + "/" + denominator.toString();
     }
@@ -301,6 +302,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
     /**
      * @Returns if this object is equal to another object.
      */
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof BigFraction f)) return false;
         return numerator.equals(f.numerator) && denominator.equals(f.denominator);
@@ -309,6 +311,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
     /**
      * @Returns a hash code for this object.
      */
+    @Override
     public int hashCode() {
         return (31 + numerator.hashCode()) * 31 + denominator.hashCode();
     }
@@ -316,6 +319,7 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
     /**
      * @Returns a negative, zero, or positive number, indicating if this object is less than, equal to, or greater than f, respectively.
      */
+    @Override
     public int compareTo(BigFraction f) {
         if (f == null) throw new IllegalArgumentException("Null argument");
         if (signum() != f.signum()) return signum() - f.signum();
@@ -354,26 +358,32 @@ public class BigFraction extends Number implements Comparable<BigFraction> {
         return denominator;
     }
 
+    @Override
     public byte byteValue() {
         return (byte) Math.max(Byte.MIN_VALUE, Math.min(Byte.MAX_VALUE, longValue()));
     }
 
+    @Override
     public short shortValue() {
         return (short) Math.max(Short.MIN_VALUE, Math.min(Short.MAX_VALUE, longValue()));
     }
 
+    @Override
     public int intValue() {
         return (int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, longValue()));
     }
 
+    @Override
     public long longValue() {
         return Math.round(doubleValue());
     }
 
+    @Override
     public float floatValue() {
         return (float) doubleValue();
     }
 
+    @Override
     public double doubleValue() {
         return toBigDecimal(18).doubleValue();
     }
