@@ -1,11 +1,15 @@
 package com.atodium.iridynamics.common.level.data.rotate;
 
+import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IRotateNode;
 import com.atodium.iridynamics.api.util.data.DirectionInfo;
 import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.commons.compress.utils.Lists;
@@ -16,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 public class RotateSavedData extends SavedData {
+    public static final String ID = Iridynamics.MODID + "_rotate";
+
     public final List<RotateNetwork> allNetworks;
     public final Map<ChunkPos, List<RotateNetwork>> chunkNetworks;
 
@@ -24,8 +30,26 @@ public class RotateSavedData extends SavedData {
         this.chunkNetworks = Maps.newHashMap();
     }
 
+    public static RotateSavedData get(ServerLevel level) {
+        return level.getDataStorage().computeIfAbsent(RotateSavedData::load, RotateSavedData::new, ID);
+    }
+
+    private static RotateSavedData load(CompoundTag tag) {
+        RotateSavedData data = new RotateSavedData();
+        ListTag networksTag = tag.getList("networks", Tag.TAG_COMPOUND);
+        for (int i = 0; i < networksTag.size(); i++) {
+            RotateNetwork network = new RotateNetwork(data);
+            network.deserializeNBT(networksTag.getCompound(i));
+            data.allNetworks.add(network);
+        }
+        return data;
+    }
+
     @Override
     public CompoundTag save(CompoundTag tag) {
+        ListTag networksTag = new ListTag();
+        for (int i = 0; i < this.allNetworks.size(); i++) networksTag.add(i, this.allNetworks.get(i).serializeNBT());
+        tag.put("networks", networksTag);
         return tag;
     }
 
@@ -104,6 +128,7 @@ public class RotateSavedData extends SavedData {
                 }
             }
         }
+        this.setDirty();
     }
 
     protected void removeNetwork(RotateNetwork network) {

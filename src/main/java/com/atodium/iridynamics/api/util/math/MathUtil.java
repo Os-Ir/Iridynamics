@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class MathUtil {
+    public static final double TWO_PI = Math.PI * 2.0;
+
     public static int getWeightedRandom(double[] weightsArray) {
         double total = 0.0;
         for (double weights : weightsArray) total += weights;
@@ -182,6 +184,10 @@ public class MathUtil {
 
     public static long lcm(long a, long b) {
         return a * b / gcd(a, b);
+    }
+
+    public static double castAngle(double angle) {
+        return angle - Math.floor(angle / TWO_PI) * TWO_PI;
     }
 
     public static int[] getRandomSortedArray(int length) {

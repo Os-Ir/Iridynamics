@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.common.level.data.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.IRotateNode;
+import com.atodium.iridynamics.api.module.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.data.DirectionInfo;
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import com.google.common.collect.ImmutableMap;
@@ -9,12 +10,17 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Deque;
 import java.util.Map;
 
-public class RotateNetwork {
+public class RotateNetwork implements INBTSerializable<CompoundTag> {
     public static final Direction[] ORDER = Direction.values();
 
     private final RotateSavedData savedData;
@@ -90,7 +96,7 @@ public class RotateNetwork {
         this.updateStructure();
     }
 
-    protected void addAllNodes(Map<DirectionInfo, IRotateNode> nodes) {
+    protected RotateNetwork addAllNodes(Map<DirectionInfo, IRotateNode> nodes) {
         for (Map.Entry<DirectionInfo, IRotateNode> entry : nodes.entrySet()) {
             DirectionInfo info = entry.getKey();
             if (this.allNodes.containsKey(info)) continue;
@@ -99,18 +105,20 @@ public class RotateNetwork {
             if (this.allNodes.size() == 1) this.center = info;
         }
         this.updateStructure();
+        return this;
     }
 
-    protected void addNode(DirectionInfo info, IRotateNode node) {
-        if (this.allNodes.containsKey(info)) return;
+    protected RotateNetwork addNode(DirectionInfo info, IRotateNode node) {
+        if (this.allNodes.containsKey(info)) return this;
         this.allNodes.put(info, node);
         this.addChunkCount(info.chunk());
         if (this.allNodes.size() == 1) this.center = info;
         this.updateStructure();
+        return this;
     }
 
-    protected void removeNode(DirectionInfo info) {
-        if (!this.allNodes.containsKey(info)) return;
+    protected RotateNetwork removeNode(DirectionInfo info) {
+        if (!this.allNodes.containsKey(info)) return this;
         this.allNodes.remove(info);
         if (this.allNodes.isEmpty()) {
             this.savedData.removeNetwork(this);
@@ -122,6 +130,7 @@ public class RotateNetwork {
             this.removeChunkCount(info.chunk());
             this.updateStructure();
         }
+        return this;
     }
 
     private void addChunkCount(ChunkPos chunk) {
@@ -174,5 +183,36 @@ public class RotateNetwork {
                 }
             }
         }
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        ListTag nodesTag = new ListTag();
+        for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
+            CompoundTag nodeTag = new CompoundTag();
+            IRotateNode node = entry.getValue();
+            IRotateNode.Serializer serializer = node.serializer();
+            nodeTag.putString("id", RotateModule.SERIALIZERS.getKeyForValue(serializer).toString());
+            nodeTag.put("pos", entry.getKey().save());
+            nodeTag.put("node", serializer.serialize(node));
+        }
+        tag.put("nodes", nodesTag);
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag tag) {
+        this.allNodes.clear();
+        ListTag nodesTag = tag.getList("nodes", Tag.TAG_COMPOUND);
+        int size = nodesTag.size();
+        Map<DirectionInfo, IRotateNode> nodes = Maps.newHashMap();
+        for (int i = 0; i < size; i++) {
+            CompoundTag nodeTag = nodesTag.getCompound(i);
+            IRotateNode.Serializer serializer = RotateModule.SERIALIZERS.get(new ResourceLocation(nodeTag.getString("id")));
+            nodes.put(DirectionInfo.load(nodeTag.getCompound("pos")), serializer.deserialize(nodeTag.getCompound("node")));
+        }
+        this.addAllNodes(nodes);
+        this.updateStructure();
     }
 }
