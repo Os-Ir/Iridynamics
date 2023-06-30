@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.common.level.data.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.IRotateNode;
+import com.atodium.iridynamics.api.util.data.DirectionInfo;
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -11,19 +12,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.ChunkPos;
 
 import java.util.Deque;
-import java.util.EnumMap;
 import java.util.Map;
 
 public class RotateNetwork {
     public static final Direction[] ORDER = Direction.values();
 
     private final RotateSavedData savedData;
-    public final Map<BlockPos, IRotateNode> allNodes;
+    public final Map<DirectionInfo, IRotateNode> allNodes;
     public final Map<ChunkPos, Integer> chunkNodeCount;
-    public BlockPos center;
-    public Direction centerDirection;
+    public DirectionInfo center;
     public boolean locked;
-    private final Map<BlockPos, EnumMap<Direction, IntFraction>> scaleMap;
+    private final Map<DirectionInfo, IntFraction> scaleMap;
     private double scaledInertia, angularMomentum;
 
     public RotateNetwork(RotateSavedData savedData) {
@@ -45,7 +44,7 @@ public class RotateNetwork {
         return this.locked;
     }
 
-    protected ImmutableMap<BlockPos, IRotateNode> getAllNodes() {
+    protected ImmutableMap<DirectionInfo, IRotateNode> getAllNodes() {
         return ImmutableMap.copyOf(this.allNodes);
     }
 
@@ -53,21 +52,25 @@ public class RotateNetwork {
         return ImmutableSet.copyOf(this.chunkNodeCount.keySet());
     }
 
-    protected boolean containsPos(BlockPos pos) {
-        return this.allNodes.containsKey(pos);
+    protected boolean contains(DirectionInfo info) {
+        return this.allNodes.containsKey(info);
     }
 
-    protected Map<BlockPos, IRotateNode> searchAllNodes(BlockPos pos, Direction direction) {
-        Map<BlockPos, IRotateNode> relatives = Maps.newHashMap();
-        Deque<BlockPos> task = Lists.newLinkedList();
-        task.addLast(pos);
+    protected Map<DirectionInfo, IRotateNode> searchAllNodes(DirectionInfo info) {
+        Map<DirectionInfo, IRotateNode> relatives = Maps.newHashMap();
+        Deque<DirectionInfo> task = Lists.newLinkedList();
+        BlockPos origin = info.pos();
+        task.addLast(info);
         while (!task.isEmpty()) {
-            BlockPos current = task.pollFirst();
+            DirectionInfo relative = task.pollFirst().relative();
+            IRotateNode relativeNode = this.allNodes.get(relative);
+            if (relativeNode == null || relative.pos().equals(origin) || relatives.containsKey(relative)) continue;
+            relatives.put(relative, relativeNode);
             for (Direction to : ORDER) {
-                BlockPos posTo = current.relative(to);
-                if (!posTo.equals(pos) && !relatives.containsKey(posTo) && this.containsPos(posTo)) {
-                    task.offerLast(posTo);
-                    relatives.put(posTo, this.allNodes.get(posTo));
+                if (to != relative.direction() && relativeNode.isRelated(relative.direction(), to)) {
+                    DirectionInfo change = relative.change(to);
+                    task.addLast(change);
+                    relatives.put(change, relativeNode);
                 }
             }
         }
@@ -87,59 +90,46 @@ public class RotateNetwork {
         this.updateStructure();
     }
 
-    protected void addAllNodes(Map<BlockPos, IRotateNode> nodes) {
-        for (Map.Entry<BlockPos, IRotateNode> entry : nodes.entrySet()) {
-            BlockPos pos = entry.getKey();
-            if (this.allNodes.containsKey(pos)) continue;
-            IRotateNode node = entry.getValue();
-            this.allNodes.put(pos, node);
-            this.addBlockPos(pos);
-            if (this.allNodes.size() == 1) {
-                this.center = pos;
-                for (Direction direction : Direction.values())
-                    if (node.isConnectable(direction)) this.centerDirection = direction;
-            }
+    protected void addAllNodes(Map<DirectionInfo, IRotateNode> nodes) {
+        for (Map.Entry<DirectionInfo, IRotateNode> entry : nodes.entrySet()) {
+            DirectionInfo info = entry.getKey();
+            if (this.allNodes.containsKey(info)) continue;
+            this.allNodes.put(info, entry.getValue());
+            this.addChunkCount(info.chunk());
+            if (this.allNodes.size() == 1) this.center = info;
         }
         this.updateStructure();
     }
 
-    protected void addNode(BlockPos pos, IRotateNode node) {
-        if (this.allNodes.containsKey(pos)) return;
-        this.allNodes.put(pos, node);
-        this.addBlockPos(pos);
-        if (this.allNodes.size() == 1) {
-            this.center = pos;
-            for (Direction direction : Direction.values())
-                if (node.isConnectable(direction)) this.centerDirection = direction;
-        }
+    protected void addNode(DirectionInfo info, IRotateNode node) {
+        if (this.allNodes.containsKey(info)) return;
+        this.allNodes.put(info, node);
+        this.addChunkCount(info.chunk());
+        if (this.allNodes.size() == 1) this.center = info;
         this.updateStructure();
     }
 
-    protected void removeNode(BlockPos pos) {
-        if (!this.allNodes.containsKey(pos)) return;
-        this.allNodes.remove(pos);
+    protected void removeNode(DirectionInfo info) {
+        if (!this.allNodes.containsKey(info)) return;
+        this.allNodes.remove(info);
         if (this.allNodes.isEmpty()) {
             this.savedData.removeNetwork(this);
         } else {
-            if (this.center.equals(pos)) {
-                this.center = this.allNodes.keySet().toArray(new BlockPos[0])[0];
+            if (this.center.equals(info)) {
+                this.center = this.allNodes.keySet().toArray(new DirectionInfo[0])[0];
                 IRotateNode centerNode = this.allNodes.get(this.center);
-                for (Direction direction : Direction.values())
-                    if (centerNode.isConnectable(direction)) this.centerDirection = direction;
             }
-            this.removeBlockPos(pos);
+            this.removeChunkCount(info.chunk());
             this.updateStructure();
         }
     }
 
-    private void addBlockPos(BlockPos pos) {
-        ChunkPos chunk = new ChunkPos(pos);
+    private void addChunkCount(ChunkPos chunk) {
         int newCount = this.chunkNodeCount.compute(chunk, (c, oldCount) -> oldCount == null ? 1 : oldCount + 1);
         if (newCount == 1) this.savedData.addNetworkChunk(chunk, this);
     }
 
-    private void removeBlockPos(BlockPos pos) {
-        ChunkPos chunk = new ChunkPos(pos);
+    private void removeChunkCount(ChunkPos chunk) {
         int newCount = this.chunkNodeCount.computeIfPresent(chunk, (c, oldCount) -> Math.max(oldCount - 1, 0));
         if (newCount == 0) {
             this.chunkNodeCount.remove(chunk);
@@ -148,48 +138,41 @@ public class RotateNetwork {
     }
 
     private void updateStructure() {
-        System.out.println("-------------------------------------");
         this.scaleMap.clear();
         this.locked = false;
+        Deque<DirectionInfo> task = Lists.newLinkedList();
         IRotateNode centerNode = this.allNodes.get(this.center);
+        Direction centerDirection = this.center.direction();
+        task.addLast(this.center);
+        this.scaleMap.put(this.center, IntFraction.ONE);
         for (Direction to : ORDER) {
-            if (to == this.centerDirection || !centerNode.isRelated(this.centerDirection, to)) continue;
-            IntFraction s = centerNode.getRelation(this.centerDirection, to);
-            this.putScale(this.center, to, s);
-            if (this.search(this.center.relative(to), to.getOpposite(), s.negate())) {
-                this.locked = true;
-                break;
+            if (to != centerDirection && centerNode.isRelated(centerDirection, to)) {
+                DirectionInfo change = this.center.change(to);
+                task.addLast(change);
+                this.scaleMap.put(change, centerNode.getRelation(centerDirection, to));
             }
-            System.out.println("-------------------");
         }
-        if (!this.locked) {
-            this.putScale(this.center, this.centerDirection, IntFraction.ONE);
-            if (this.search(this.center.relative(this.centerDirection), this.centerDirection.getOpposite(), IntFraction.NEG_ONE))
-                this.locked = true;
+        while (!task.isEmpty()) {
+            DirectionInfo poll = task.pollFirst();
+            DirectionInfo relative = poll.relative();
+            Direction relativeDirection = relative.direction();
+            IRotateNode relativeNode = this.allNodes.get(relative);
+            IntFraction relativeScale = this.scaleMap.get(poll).negate();
+            if (relativeNode == null) continue;
+            if (this.scaleMap.containsKey(relative)) {
+                if (this.scaleMap.containsKey(relative) && !relativeScale.equals(this.scaleMap.get(relative))) {
+                    this.locked = true;
+                    return;
+                }
+                continue;
+            }
+            for (Direction to : ORDER) {
+                if (to != relative.direction() && relativeNode.isRelated(relative.direction(), to)) {
+                    DirectionInfo change = relative.change(to);
+                    task.addLast(change);
+                    this.scaleMap.put(change, relativeScale.multiply(relativeNode.getRelation(relativeDirection, to)));
+                }
+            }
         }
-    }
-
-    private boolean search(BlockPos pos, Direction direction, IntFraction scale) {
-        System.out.println(pos + " " + direction + " " + scale);
-        if (this.scaleMap.containsKey(pos) && this.scaleMap.get(pos).containsKey(direction))
-            return this.putScale(pos, direction, scale);
-        else if (this.putScale(pos, direction, scale)) return true;
-        if (!this.containsPos(pos)) return false;
-        IRotateNode node = this.allNodes.get(pos);
-        for (Direction to : ORDER) {
-            if (to == direction || !node.isRelated(direction, to)) continue;
-            IntFraction s = scale.multiply(node.getRelation(direction, to));
-            this.putScale(pos, to, s);
-            if (this.search(pos.relative(to), to.getOpposite(), s.negate())) return true;
-        }
-        return false;
-    }
-
-    private boolean putScale(BlockPos pos, Direction direction, IntFraction scale) {
-        if (this.scaleMap.containsKey(pos) && this.scaleMap.get(pos).containsKey(direction) && !scale.equals(this.scaleMap.get(pos).get(direction)))
-            return true;
-        if (!this.scaleMap.containsKey(pos)) this.scaleMap.put(pos, new EnumMap<>(Direction.class));
-        this.scaleMap.get(pos).put(direction, scale);
-        return false;
     }
 }
