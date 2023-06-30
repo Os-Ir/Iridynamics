@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.common.level.data.rotate;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.blockEntity.IRotateNode;
+import com.atodium.iridynamics.api.module.rotate.IRotateNode;
 import com.atodium.iridynamics.api.util.data.DirectionInfo;
 import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
@@ -22,8 +22,8 @@ import java.util.Map;
 public class RotateSavedData extends SavedData {
     public static final String ID = Iridynamics.MODID + "_rotate";
 
-    public final List<RotateNetwork> allNetworks;
-    public final Map<ChunkPos, List<RotateNetwork>> chunkNetworks;
+    private final List<RotateNetwork> allNetworks;
+    private final Map<ChunkPos, List<RotateNetwork>> chunkNetworks;
 
     public RotateSavedData() {
         this.allNetworks = Lists.newArrayList();

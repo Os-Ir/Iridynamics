@@ -3,6 +3,8 @@ package com.atodium.iridynamics.common.block;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.ModCreativeTabs;
 import com.atodium.iridynamics.common.block.equipment.*;
+import com.atodium.iridynamics.common.block.rotate.AxleBlock;
+import com.atodium.iridynamics.common.block.rotate.GearboxBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
@@ -30,6 +32,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> CARVING_TABLE = Iridynamics.REGISTRY.block("carving_table", CarvingTableBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> CRUSHING_BOARD = Iridynamics.REGISTRY.block("crushing_board", CrushingBoardBlock::new, Material.STONE).strength(3.0f, 2.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> POTTERY_WORK_TABLE = Iridynamics.REGISTRY.block("pottery_work_table", PotteryWorkTableBlock::new, Material.STONE).strength(3.0f, 2.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
+
+    public static final RegistryObject<Block> AXLE = Iridynamics.REGISTRY.block("axle", AxleBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
+    public static final RegistryObject<Block> GEARBOX = Iridynamics.REGISTRY.block("gearbox", GearboxBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
 
     public static void init() {
 

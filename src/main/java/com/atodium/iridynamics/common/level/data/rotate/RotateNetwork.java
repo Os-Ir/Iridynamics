@@ -1,6 +1,6 @@
 package com.atodium.iridynamics.common.level.data.rotate;
 
-import com.atodium.iridynamics.api.blockEntity.IRotateNode;
+import com.atodium.iridynamics.api.module.rotate.IRotateNode;
 import com.atodium.iridynamics.api.module.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.data.DirectionInfo;
 import com.atodium.iridynamics.api.util.math.IntFraction;
@@ -13,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -21,13 +20,13 @@ import java.util.Deque;
 import java.util.Map;
 
 public class RotateNetwork implements INBTSerializable<CompoundTag> {
-    public static final Direction[] ORDER = Direction.values();
+    protected static final Direction[] ORDER = Direction.values();
 
     private final RotateSavedData savedData;
-    public final Map<DirectionInfo, IRotateNode> allNodes;
-    public final Map<ChunkPos, Integer> chunkNodeCount;
-    public DirectionInfo center;
-    public boolean locked;
+    private final Map<DirectionInfo, IRotateNode> allNodes;
+    private final Map<ChunkPos, Integer> chunkNodeCount;
+    private DirectionInfo center;
+    private boolean locked;
     private final Map<DirectionInfo, IntFraction> scaleMap;
     private double scaledInertia, angularMomentum;
 
@@ -190,12 +189,10 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         CompoundTag tag = new CompoundTag();
         ListTag nodesTag = new ListTag();
         for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
-            CompoundTag nodeTag = new CompoundTag();
             IRotateNode node = entry.getValue();
-            IRotateNode.Serializer serializer = node.serializer();
-            nodeTag.putString("id", RotateModule.SERIALIZERS.getKeyForValue(serializer).toString());
+            CompoundTag nodeTag = RotateModule.writeRotateNode(node);
             nodeTag.put("pos", entry.getKey().save());
-            nodeTag.put("node", serializer.serialize(node));
+            nodesTag.add(nodesTag.size(), nodeTag);
         }
         tag.put("nodes", nodesTag);
         return tag;
@@ -209,8 +206,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         Map<DirectionInfo, IRotateNode> nodes = Maps.newHashMap();
         for (int i = 0; i < size; i++) {
             CompoundTag nodeTag = nodesTag.getCompound(i);
-            IRotateNode.Serializer serializer = RotateModule.SERIALIZERS.get(new ResourceLocation(nodeTag.getString("id")));
-            nodes.put(DirectionInfo.load(nodeTag.getCompound("pos")), serializer.deserialize(nodeTag.getCompound("node")));
+            nodes.put(DirectionInfo.load(nodeTag.getCompound("pos")), RotateModule.readRotateNode(nodeTag));
         }
         this.addAllNodes(nodes);
         this.updateStructure();

@@ -2,9 +2,6 @@ package com.atodium.iridynamics.api.module;
 
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.IHeat;
-import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
-import com.atodium.iridynamics.api.recipe.RecipeUtil;
-import com.atodium.iridynamics.api.recipe.impl.HeatRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 

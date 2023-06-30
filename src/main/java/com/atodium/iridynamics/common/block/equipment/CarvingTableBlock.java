@@ -74,9 +74,7 @@ public class CarvingTableBlock extends Block implements EntityBlock {
         boolean harvest = state.canHarvestBlock(level, pos, player);
         if (!player.isCreative() && harvest)
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.CARVING_TABLE.get()));
-        level.getBlockEntity(pos, ModBlockEntities.CARVING_TABLE.get()).ifPresent((table) -> {
-            ItemHandlerHelper.giveItemToPlayer(player, table.getInventory().getStackInSlot(0));
-        });
+        level.getBlockEntity(pos, ModBlockEntities.CARVING_TABLE.get()).ifPresent((table) -> ItemHandlerHelper.giveItemToPlayer(player, table.getInventory().getStackInSlot(0)));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 

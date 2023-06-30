@@ -1,8 +1,6 @@
 package com.atodium.iridynamics.api.tool;
 
 import com.atodium.iridynamics.api.material.type.MaterialBase;
-import com.atodium.iridynamics.api.util.data.ItemDelegate;
-import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;

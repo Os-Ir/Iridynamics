@@ -1,10 +1,8 @@
-package com.atodium.iridynamics.api.blockEntity;
+package com.atodium.iridynamics.api.module.rotate;
 
-import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 
 public interface IRotateNode {
     Serializer serializer();
@@ -31,5 +29,9 @@ public interface IRotateNode {
         IRotateNode deserialize(CompoundTag tag);
 
         CompoundTag serialize(IRotateNode node);
+
+        CompoundTag writeSyncTag(IRotateNode node);
+
+        void readSyncTag(IRotateNode node, CompoundTag tag);
     }
 }

@@ -1,6 +1,5 @@
 package com.atodium.iridynamics.api.module.rotate;
 
-import com.atodium.iridynamics.api.blockEntity.IRotateNode;
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import net.minecraft.core.Direction;
@@ -23,9 +22,35 @@ public class Gearbox implements IRotateNode {
         this.ba = new IntFraction(-this.gearB, this.gearA);
     }
 
+    public int getValidDirections() {
+        return (directionA == null ? 0 : 1) + (directionB == null ? 0 : 1);
+    }
+
+    public Direction getDirectionA() {
+        return this.directionA;
+    }
+
+    public Direction getDirectionB() {
+        return this.directionB;
+    }
+
+    public int getGearA() {
+        return this.gearA;
+    }
+
+    public int getGearB() {
+        return this.gearB;
+    }
+
+    public int getGear(Direction direction) {
+        if (direction == this.directionA) return this.gearA;
+        if (direction == this.directionB) return this.gearB;
+        return 0;
+    }
+
     @Override
     public Serializer serializer() {
-        return null;
+        return SERIALIZER;
     }
 
     @Override
@@ -92,6 +117,22 @@ public class Gearbox implements IRotateNode {
             tag.putInt("gearA", gearbox.gearA);
             tag.putInt("gearB", gearbox.gearB);
             return tag;
+        }
+
+        @Override
+        public CompoundTag writeSyncTag(IRotateNode node) {
+            CompoundTag tag = new CompoundTag();
+            Gearbox gearbox = (Gearbox) node;
+            tag.putDouble("angle", gearbox.angle);
+            tag.putDouble("angularVelocity", gearbox.angularVelocity);
+            return tag;
+        }
+
+        @Override
+        public void readSyncTag(IRotateNode node, CompoundTag tag) {
+            Gearbox gearbox = (Gearbox) node;
+            gearbox.angle = tag.getDouble("angle");
+            gearbox.angularVelocity = tag.getDouble("angularVelocity");
         }
     }
 }

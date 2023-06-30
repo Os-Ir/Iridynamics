@@ -1,6 +1,5 @@
 package com.atodium.iridynamics.api.module.rotate;
 
-import com.atodium.iridynamics.api.blockEntity.IRotateNode;
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import net.minecraft.core.Direction;
@@ -80,6 +79,22 @@ public class Axle implements IRotateNode {
             CompoundTag tag = new CompoundTag();
             tag.putInt("direction", ((Axle) node).direction.get3DDataValue());
             return tag;
+        }
+
+        @Override
+        public CompoundTag writeSyncTag(IRotateNode node) {
+            CompoundTag tag = new CompoundTag();
+            Axle axle = (Axle) node;
+            tag.putDouble("angle", axle.angle);
+            tag.putDouble("angularVelocity", axle.angularVelocity);
+            return tag;
+        }
+
+        @Override
+        public void readSyncTag(IRotateNode node, CompoundTag tag) {
+            Axle axle = (Axle) node;
+            axle.angle = tag.getDouble("angle");
+            axle.angularVelocity = tag.getDouble("angularVelocity");
         }
     }
 }
