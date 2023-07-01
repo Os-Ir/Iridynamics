@@ -21,6 +21,8 @@ public interface IRotateNode {
 
     void setAngularVelocity(Direction direction, double angularVelocity);
 
+    double getInertia(Direction direction);
+
     double getTorque(Direction direction);
 
     double getFriction(Direction direction);

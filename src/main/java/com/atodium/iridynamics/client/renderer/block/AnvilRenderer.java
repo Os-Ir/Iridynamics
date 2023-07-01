@@ -9,7 +9,6 @@ import com.atodium.iridynamics.common.block.equipment.AnvilBlock;
 import com.atodium.iridynamics.common.blockEntity.equipment.AnvilBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,9 +27,7 @@ public class AnvilRenderer implements BlockEntityRenderer<AnvilBlockEntity> {
         ItemStack left = inventory.left();
         ItemStack right = inventory.right();
         transform.pushPose();
-        transform.translate(0.5, 0.0, 0.5);
-        transform.mulPose(Vector3f.YP.rotationDegrees(RendererUtil.getDirectionAngel(anvil.getBlockState().getValue(AnvilBlock.DIRECTION).getOpposite())));
-        transform.translate(-0.5, 0.0, -0.5);
+        RendererUtil.transformToDirection(transform, anvil.getBlockState().getValue(AnvilBlock.DIRECTION).getOpposite());
         if (!left.isEmpty())
             left.getCapability(ForgingCapability.FORGING).ifPresent((forging) -> this.renderItem(left, forging, 0.125, transform, consumer, texture, combinedLight, combinedOverlay));
         if (!right.isEmpty())

@@ -39,6 +39,11 @@ public class RotateModule {
         node.serializer().readSyncTag(node, tag);
     }
 
+    public static void tryTick(ServerLevel level, BlockPos pos) {
+        RotateSavedData data = RotateSavedData.get(level);
+        data.tryTick(level, pos, level.getGameTime());
+    }
+
     public static void addRotateBlock(ServerLevel level, BlockPos pos, IRotateNode node) {
         RotateSavedData.get(level).addNode(pos, node);
     }
@@ -53,8 +58,8 @@ public class RotateModule {
         data.addNode(pos, node);
     }
 
-    public static Axle axle(Direction direction) {
-        return new Axle(direction);
+    public static Axle axle(Direction direction, double inertia, double friction) {
+        return new Axle(direction, inertia, friction);
     }
 
     public static Gearbox gearbox(Direction directionA, Direction directionB, int gearA, int gearB) {

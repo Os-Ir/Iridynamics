@@ -1,53 +1,73 @@
 package com.atodium.iridynamics.common.blockEntity.rotate;
 
+import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
+import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.module.rotate.Axle;
+import com.atodium.iridynamics.api.module.rotate.IRotateNode;
 import com.atodium.iridynamics.api.module.rotate.RotateModule;
+import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.rotate.AxleBlock;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class AxleBlockEntity extends SyncedBlockEntity {
-    private boolean isClientSetup;
+public class AxleBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder {
+    public static final double INERTIA = 1.0;
+    public static final double FRICTION = 0.2;
+
     private Axle rotate;
 
     public AxleBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.AXLE.get(), pos, state);
+        this.rotate = RotateModule.axle(this.getBlockState().getValue(AxleBlock.DIRECTION), INERTIA, FRICTION);
+    }
+
+    @Override
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (level.isClientSide) return;
+        RotateModule.tryTick((ServerLevel) level, pos);
+        this.markForSync();
     }
 
     public void setupRotate(ServerLevel level) {
-        this.rotate = RotateModule.axle(this.getBlockState().getValue(AxleBlock.DIRECTION));
         RotateModule.addRotateBlock(level, this.getBlockPos(), this.rotate);
         this.markForSync();
     }
 
+    public double getRenderAngle(float partialTicks) {
+        Direction direction = this.getBlockState().getValue(AxleBlock.DIRECTION);
+//        return MathUtil.castAngle(this.rotate.getAngle(direction) + this.rotate.getAngularVelocity(direction) * partialTicks / 20.0);
+        return MathUtil.castAngle(this.rotate.getAngle(direction));
+    }
+
+    @Override
+    public void receive(IRotateNode node) {
+        this.rotate = (Axle) node;
+    }
+
     @Override
     protected CompoundTag writeSyncData(CompoundTag tag) {
-        if (!this.isClientSetup) {
-            tag.put("rotate", RotateModule.writeRotateNode(this.rotate));
-            this.isClientSetup = true;
-        }
         tag.put("rotateSync", RotateModule.writeSyncTag(this.rotate));
         return tag;
     }
 
     @Override
     protected void readSyncData(CompoundTag tag) {
-        if (tag.contains("rotate")) this.rotate = (Axle) RotateModule.readRotateNode(tag.getCompound("rotate"));
         RotateModule.readSyncTag(this.rotate, tag.getCompound("rotateSync"));
     }
 
     @Override
     protected void saveToTag(CompoundTag tag) {
-        tag.put("rotate", RotateModule.writeRotateNode(this.rotate));
+
     }
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
-        this.rotate = (Axle) RotateModule.readRotateNode(tag.getCompound("rotate"));
-        if (this.rotate == null) this.rotate = RotateModule.axle(this.getBlockState().getValue(AxleBlock.DIRECTION));
+
     }
 }

@@ -1,11 +1,11 @@
 package com.atodium.iridynamics.common.block.rotate;
 
+import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.module.rotate.RotateModule;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.rotate.AxleBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +17,8 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -30,33 +32,39 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import java.util.Random;
 
 public class AxleBlock extends Block implements EntityBlock {
-    public static final DirectionProperty DIRECTION = BlockStateProperties.HORIZONTAL_FACING;
+    public static final DirectionProperty DIRECTION = BlockStateProperties.FACING;
     public static final VoxelShape SHAPE_NS = box(6.0, 6.0, 0.0, 10.0, 10.0, 16.0);
     public static final VoxelShape SHAPE_WE = box(0.0, 6.0, 6.0, 16.0, 10.0, 10.0);
+    public static final VoxelShape SHAPE_UD = box(6.0, 0.0, 6.0, 10.0, 16.0, 10.0);
 
     public AxleBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 
     @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return type == ModBlockEntities.AXLE.get() ? ITickable.ticker() : null;
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         switch (state.getValue(DIRECTION)) {
+            case NORTH, SOUTH -> {
+                return SHAPE_NS;
+            }
             case WEST, EAST -> {
                 return SHAPE_WE;
             }
             default -> {
-                return SHAPE_NS;
+                return SHAPE_UD;
             }
         }
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction direction;
-        if (context.getClickedFace().get2DDataValue() >= 0) direction = context.getClickedFace().getOpposite();
-        else direction = context.getHorizontalDirection().getOpposite();
-        return defaultBlockState().setValue(DIRECTION, direction);
+        return defaultBlockState().setValue(DIRECTION, context.getClickedFace().getOpposite());
     }
 
     @Override

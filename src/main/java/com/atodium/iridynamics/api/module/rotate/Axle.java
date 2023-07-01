@@ -9,10 +9,13 @@ public class Axle implements IRotateNode {
     public static final Serializer SERIALIZER = new Serializer();
 
     private final Direction direction;
+    private final double inertia, friction;
     private double angle, angularVelocity;
 
-    public Axle(Direction direction) {
+    public Axle(Direction direction, double inertia, double friction) {
         this.direction = direction;
+        this.inertia = inertia;
+        this.friction = friction;
     }
 
     @Override
@@ -23,6 +26,17 @@ public class Axle implements IRotateNode {
     @Override
     public boolean isConnectable(Direction direction) {
         return this.direction == direction || this.direction == direction.getOpposite();
+    }
+
+    @Override
+    public boolean isRelated(Direction from, Direction to) {
+        return (this.direction == from && this.direction == to.getOpposite()) || (this.direction == to && this.direction == from.getOpposite());
+    }
+
+    @Override
+    public IntFraction getRelation(Direction from, Direction to) {
+        if (this.isRelated(from, to)) return IntFraction.NEG_ONE;
+        return null;
     }
 
     @Override
@@ -48,14 +62,9 @@ public class Axle implements IRotateNode {
     }
 
     @Override
-    public boolean isRelated(Direction from, Direction to) {
-        return (this.direction == from && this.direction == to.getOpposite()) || (this.direction == to && this.direction == from.getOpposite());
-    }
-
-    @Override
-    public IntFraction getRelation(Direction from, Direction to) {
-        if (this.isRelated(from, to)) return IntFraction.NEG_ONE;
-        return null;
+    public double getInertia(Direction direction) {
+        if (this.isConnectable(direction)) return this.inertia / 2.0;
+        return 0.0;
     }
 
     @Override
@@ -65,19 +74,23 @@ public class Axle implements IRotateNode {
 
     @Override
     public double getFriction(Direction direction) {
+        if (this.isConnectable(direction)) return this.friction / 2.0;
         return 0.0;
     }
 
     public static class Serializer implements IRotateNode.Serializer {
         @Override
         public IRotateNode deserialize(CompoundTag tag) {
-            return new Axle(Direction.from3DDataValue(tag.getInt("direction")));
+            return new Axle(Direction.from3DDataValue(tag.getInt("direction")), tag.getDouble("inertia"), tag.getDouble("friction"));
         }
 
         @Override
         public CompoundTag serialize(IRotateNode node) {
             CompoundTag tag = new CompoundTag();
-            tag.putInt("direction", ((Axle) node).direction.get3DDataValue());
+            Axle axle = (Axle) node;
+            tag.putInt("direction", axle.direction.get3DDataValue());
+            tag.putDouble("inertia", axle.inertia);
+            tag.putDouble("friction", axle.friction);
             return tag;
         }
 

@@ -3,6 +3,7 @@ package com.atodium.iridynamics.client.renderer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -67,6 +68,18 @@ public final class RendererUtil {
         BUFFER_BUILDER.end();
         BufferUploader.end(BUFFER_BUILDER);
         RenderSystem.disableBlend();
+    }
+
+    public static void transformToDirection(PoseStack transform, Direction direction) {
+        if (direction.get2DDataValue() >= 0) {
+            transform.translate(0.5, 0.0, 0.5);
+            transform.mulPose(Vector3f.YP.rotationDegrees(getDirectionAngel(direction)));
+            transform.translate(-0.5, 0.0, -0.5);
+        } else {
+            transform.translate(0.0, 0.5, 0.5);
+            transform.mulPose(Vector3f.XP.rotationDegrees(direction == Direction.UP ? 90.0f : -90.0f));
+            transform.translate(0.0, -0.5, -0.5);
+        }
     }
 
     public static float getDirectionAngel(Direction direction) {

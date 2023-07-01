@@ -93,13 +93,18 @@ public class Gearbox implements IRotateNode {
     }
 
     @Override
+    public double getInertia(Direction direction) {
+        return 1.0;
+    }
+
+    @Override
     public double getTorque(Direction direction) {
         return 0.0;
     }
 
     @Override
     public double getFriction(Direction direction) {
-        return 0.0;
+        return 0.2;
     }
 
     public static class Serializer implements IRotateNode.Serializer {

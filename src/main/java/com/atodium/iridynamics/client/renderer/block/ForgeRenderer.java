@@ -36,9 +36,7 @@ public class ForgeRenderer implements BlockEntityRenderer<ForgeBlockEntity> {
         ItemStack left = inventory.left();
         ItemStack right = inventory.right();
         transform.pushPose();
-        transform.translate(0.5, 0.0, 0.5);
-        transform.mulPose(Vector3f.YP.rotationDegrees(RendererUtil.getDirectionAngel(forge.getBlockState().getValue(ForgeBlock.DIRECTION).getOpposite())));
-        transform.translate(-0.5, 0.0, -0.5);
+        RendererUtil.transformToDirection(transform, forge.getBlockState().getValue(ForgeBlock.DIRECTION).getOpposite());
         if (!left.isEmpty()) {
             LazyOptional<IForging> optionalLeft = left.getCapability(ForgingCapability.FORGING);
             if (optionalLeft.isPresent())

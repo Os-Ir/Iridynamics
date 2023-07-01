@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.common.block.rotate;
 
+import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.module.rotate.RotateModule;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
@@ -14,6 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -25,6 +28,11 @@ import java.util.Random;
 public class GearboxBlock extends Block implements EntityBlock {
     public GearboxBlock(BlockBehaviour.Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return type == ModBlockEntities.GEARBOX.get() ? ITickable.ticker() : null;
     }
 
     @Override

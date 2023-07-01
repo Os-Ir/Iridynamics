@@ -53,6 +53,13 @@ public class RotateSavedData extends SavedData {
         return tag;
     }
 
+    public void tryTick(ServerLevel level, BlockPos pos, long tick) {
+        for (Direction to : RotateNetwork.ORDER) {
+            RotateNetwork network = this.getPosNetwork(new DirectionInfo(pos, to));
+            if (network != null) network.tryTick(level, tick);
+        }
+    }
+
     public void addNode(BlockPos pos, IRotateNode node) {
         EnumMap<Direction, RotateNetwork> relatives = Maps.newEnumMap(Direction.class);
         EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
@@ -122,6 +129,7 @@ public class RotateSavedData extends SavedData {
             for (Direction toSearch : connected) {
                 Map<DirectionInfo, IRotateNode> subNodes = network.searchAllNodes(new DirectionInfo(pos, toSearch));
                 if (!subNodes.isEmpty() && this.getPosNetwork(subNodes.keySet().toArray(new DirectionInfo[0])[0]) == null) {
+                    //TODO: 为分开的网络初始化角度和角动量
                     RotateNetwork subNetwork = new RotateNetwork(this);
                     subNetwork.addAllNodes(subNodes);
                     this.allNetworks.add(subNetwork);
