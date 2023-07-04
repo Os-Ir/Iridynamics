@@ -181,6 +181,29 @@ public final class RendererUtil {
         return ret;
     }
 
+    public static float[][] buildVertices(Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+        switch (direction) {
+            case EAST -> {
+                return buildNegativeXVertices(minX, minY, minZ, maxX, maxY, maxZ);
+            }
+            case WEST -> {
+                return buildPositiveXVertices(minX, minY, minZ, maxX, maxY, maxZ);
+            }
+            case UP -> {
+                return buildPositiveYVertices(minX, minY, minZ, maxX, maxY, maxZ);
+            }
+            case DOWN -> {
+                return buildNegativeYVertices(minX, minY, minZ, maxX, maxY, maxZ);
+            }
+            case SOUTH -> {
+                return buildNegativeZVertices(minX, minY, minZ, maxX, maxY, maxZ);
+            }
+            default -> {
+                return buildPositiveZVertices(minX, minY, minZ, maxX, maxY, maxZ);
+            }
+        }
+    }
+
     public static float[][] buildPositiveXVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
                 {minX, minY, minZ, 0, 1},

@@ -29,6 +29,8 @@
   "block.iridynamics.carving_table": "Carving Table",
   "block.iridynamics.crushing_board": "Crushing Board",
   "block.iridynamics.pottery_work_table": "Pottery Work Table",
+  "block.iridynamics.axle": "Axle",
+  "block.iridynamics.gearbox": "Gearbox",
 
   "item.iridynamics.wood_brick": "Wood Brick",
   "item.iridynamics.crushed_stone": "Crushed Stone",

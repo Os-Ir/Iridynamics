@@ -17,6 +17,10 @@ public abstract class ItemDelegate {
         return this.createStack(1);
     }
 
+    public boolean is(ItemStack stack) {
+        return this.uniqueName().equals(of(stack).uniqueName());
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof ItemDelegate delegate)) return false;
@@ -34,6 +38,10 @@ public abstract class ItemDelegate {
 
     public static ItemDelegate of(ItemStack stack) {
         return MaterialEntry.containsMaterialEntry(stack) ? new MaterialItemDelegate(MaterialEntry.getItemMaterialEntry(stack)) : new SimpleItemDelegate(stack.getItem());
+    }
+
+    public static ItemDelegate of(SolidShape shape, MaterialBase material) {
+        return new MaterialItemDelegate(shape, material);
     }
 
     private static class SimpleItemDelegate extends ItemDelegate {

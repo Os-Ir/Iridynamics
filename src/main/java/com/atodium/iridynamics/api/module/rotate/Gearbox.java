@@ -18,8 +18,12 @@ public class Gearbox implements IRotateNode {
         this.directionB = directionB;
         this.gearA = gearA;
         this.gearB = gearB;
-        this.ab = new IntFraction(-this.gearA, this.gearB);
-        this.ba = new IntFraction(-this.gearB, this.gearA);
+        if (gearA == 0 || gearB == 0) {
+            this.ab = this.ba = IntFraction.ONE;
+        } else {
+            this.ab = new IntFraction(-this.gearA, this.gearB);
+            this.ba = new IntFraction(-this.gearB, this.gearA);
+        }
     }
 
     public int getValidDirections() {
@@ -110,15 +114,15 @@ public class Gearbox implements IRotateNode {
     public static class Serializer implements IRotateNode.Serializer {
         @Override
         public IRotateNode deserialize(CompoundTag tag) {
-            return new Gearbox(Direction.from3DDataValue(tag.getInt("directionA")), Direction.from3DDataValue(tag.getInt("directionB")), tag.getInt("gearA"), tag.getInt("gearB"));
+            return new Gearbox(tag.contains("directionA") ? Direction.from3DDataValue(tag.getInt("directionA")) : null, tag.contains("directionB") ? Direction.from3DDataValue(tag.getInt("directionB")) : null, tag.getInt("gearA"), tag.getInt("gearB"));
         }
 
         @Override
         public CompoundTag serialize(IRotateNode node) {
             CompoundTag tag = new CompoundTag();
             Gearbox gearbox = (Gearbox) node;
-            tag.putInt("directionA", gearbox.directionA.get3DDataValue());
-            tag.putInt("directionB", gearbox.directionB.get3DDataValue());
+            if (gearbox.directionA != null) tag.putInt("directionA", gearbox.directionA.get3DDataValue());
+            if (gearbox.directionB != null) tag.putInt("directionB", gearbox.directionB.get3DDataValue());
             tag.putInt("gearA", gearbox.gearA);
             tag.putInt("gearB", gearbox.gearB);
             return tag;

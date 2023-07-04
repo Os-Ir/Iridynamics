@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.api.util.math;
 
+import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -220,5 +221,41 @@ public class MathUtil {
     public static double getTriangularWave(int period, double min, double max) {
         double x = ((double) (System.currentTimeMillis() % period)) / period;
         return Mth.lerp((x > 0.5 ? 1 - x : x) * 2, min, max);
+    }
+
+    public static double derivative(Double2DoubleFunction function, double x) {
+        double y = function.get(x);
+        double dx = 1e-7;
+        double dy;
+        while (true) {
+            dy = function.get(x + dx) - y;
+            if (dy != 0) return dy / dx;
+            dx += 1e-7;
+        }
+    }
+
+    public static Double2DoubleFunction derivative(Double2DoubleFunction function) {
+        return (x) -> derivative(function, x);
+    }
+
+    public static double newton(Double2DoubleFunction function, double original, double error, double iterations) {
+        return newton(function, derivative(function), original, error, iterations);
+    }
+
+    public static double newton(Double2DoubleFunction function, Double2DoubleFunction derivative, double original, double error, double iterations) {
+        iterations = Mth.clamp(iterations, 1, 100);
+        error = Math.abs(error);
+        double negativeError = -error;
+        double x = original;
+        double y, dy;
+        for (int i = 0; i < iterations; i++) {
+            y = function.get(x);
+            dy = derivative.get(x);
+            x -= y / dy;
+            if (between(y, negativeError, error)) {
+                break;
+            }
+        }
+        return x;
     }
 }

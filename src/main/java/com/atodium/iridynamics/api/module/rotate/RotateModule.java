@@ -63,7 +63,6 @@ public class RotateModule {
     }
 
     public static Gearbox gearbox(Direction directionA, Direction directionB, int gearA, int gearB) {
-        System.out.println(directionA + "  " + directionB + "  " + gearA + "  " + gearB);
         return new Gearbox(directionA, directionB, gearA, gearB);
     }
 }

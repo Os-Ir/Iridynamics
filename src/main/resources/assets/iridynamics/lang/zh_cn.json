@@ -29,6 +29,8 @@
   "block.iridynamics.carving_table": "雕刻台",
   "block.iridynamics.crushing_board": "砧板",
   "block.iridynamics.pottery_work_table": "陶器加工台",
+  "block.iridynamics.axle": "轴",
+  "block.iridynamics.gearbox": "齿轮箱",
 
   "item.iridynamics.wood_brick": "木块",
   "item.iridynamics.crushed_stone": "碎石块",

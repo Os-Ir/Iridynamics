@@ -41,6 +41,7 @@ public class ClientModEventHandler {
         event.registerBlockEntityRenderer(ModBlockEntities.CARVING_TABLE.get(), (context) -> CarvingTableRenderer.INSTANCE);
         event.registerBlockEntityRenderer(ModBlockEntities.CRUSHING_BOARD.get(), (context) -> CrushingBoardRenderer.INSTANCE);
         event.registerBlockEntityRenderer(ModBlockEntities.AXLE.get(), (context) -> AxleRenderer.INSTANCE);
+        event.registerBlockEntityRenderer(ModBlockEntities.GEARBOX.get(), (context) -> GearboxRenderer.INSTANCE);
         event.registerEntityRenderer(ModEntities.BULLET.get(), BulletRenderer::new);
     }
 

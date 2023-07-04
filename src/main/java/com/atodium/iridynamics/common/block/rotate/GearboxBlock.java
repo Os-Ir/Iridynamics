@@ -39,7 +39,7 @@ public class GearboxBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
-        level.getBlockEntity(pos, ModBlockEntities.GEARBOX.get()).ifPresent((gearbox) -> gearbox.updateDirection(result.getDirection()));
+        level.getBlockEntity(pos, ModBlockEntities.GEARBOX.get()).ifPresent((gearbox) -> ItemHandlerHelper.giveItemToPlayer(player, gearbox.updateGearbox(result.getDirection(), player.getItemInHand(hand))));
         return InteractionResult.CONSUME;
     }
 
@@ -62,6 +62,9 @@ public class GearboxBlock extends Block implements EntityBlock {
         boolean harvest = state.canHarvestBlock(level, pos, player);
         if (!player.isCreative() && harvest)
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.GEARBOX.get()));
+        level.getBlockEntity(pos, ModBlockEntities.GEARBOX.get()).ifPresent((gearbox) -> {
+            for (ItemStack stack : gearbox.getAllGears()) ItemHandlerHelper.giveItemToPlayer(player, stack);
+        });
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 

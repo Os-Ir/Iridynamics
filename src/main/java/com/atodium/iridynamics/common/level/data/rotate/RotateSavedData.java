@@ -116,12 +116,10 @@ public class RotateSavedData extends SavedData {
             RotateNetwork network = relatives.get(direction);
             EnumSet<Direction> connected = EnumSet.noneOf(Direction.class);
             connected.add(direction);
-            network.removeNode(new DirectionInfo(pos, direction));
             finish.put(direction, true);
             for (Direction innerDirection : RotateNetwork.ORDER) {
-                if (finish.get(innerDirection) && network != relatives.get(innerDirection)) continue;
+                if (finish.get(innerDirection) || network != relatives.get(innerDirection)) continue;
                 connected.add(innerDirection);
-                network.removeNode(new DirectionInfo(pos, innerDirection));
                 finish.put(innerDirection, true);
             }
             if (network.isEmpty()) continue;
@@ -129,9 +127,10 @@ public class RotateSavedData extends SavedData {
             for (Direction toSearch : connected) {
                 Map<DirectionInfo, IRotateNode> subNodes = network.searchAllNodes(new DirectionInfo(pos, toSearch));
                 if (!subNodes.isEmpty() && this.getPosNetwork(subNodes.keySet().toArray(new DirectionInfo[0])[0]) == null) {
-                    //TODO: 为分开的网络初始化角度和角动量
                     RotateNetwork subNetwork = new RotateNetwork(this);
                     subNetwork.addAllNodes(subNodes);
+                    subNetwork.setAngularVelocity(network.angularVelocity(subNetwork.center()));
+                    subNetwork.setAngle(network.angle(subNetwork.center()));
                     this.allNetworks.add(subNetwork);
                 }
             }

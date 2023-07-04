@@ -29,7 +29,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
     private DirectionInfo center;
     private boolean locked;
     private final Map<DirectionInfo, IntFraction> scaleMap;
-    private double angularMomentum, angle;
+    private double angularMomentum, angle, angularVelocity;
     private long lastTickTime;
 
     public RotateNetwork(RotateSavedData savedData) {
@@ -69,22 +69,21 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         if (this.locked) {
             this.angularMomentum = 0.0;
             this.angle = 0.0;
-        } else {
-            double scaledInertia = 0.0;
-            double scaledTorque = 0.0;
-            int frictionDirection = Double.compare(this.angularMomentum, 0.0);
+            Set<BlockPos> received = Sets.newHashSet();
             for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
                 DirectionInfo info = entry.getKey();
+                BlockPos pos = info.pos();
                 IRotateNode node = entry.getValue();
-                double scale = this.scaleMap.get(info).doubleValue();
-                scaledInertia += node.getInertia(info.direction()) * scale * scale;
-                scaledTorque += node.getTorque(info.direction()) * scale;
-                scaledTorque -= Math.abs(node.getFriction(info.direction()) * scale) * frictionDirection;
+                node.setAngle(info.direction(), 0.0);
+                node.setAngularVelocity(info.direction(), 0.0);
+                if (!received.contains(pos)) {
+                    ((IRotateNodeHolder) level.getBlockEntity(pos)).receive(node);
+                    received.add(pos);
+                }
             }
-            scaledTorque = 1;
-            this.angularMomentum += scaledTorque / 20.0;
-            double angularVelocity = this.angularMomentum / scaledInertia;
-            this.angle = MathUtil.castAngle(this.angle + angularVelocity / 20.0);
+        } else {
+            this.updateAngularVelocity();
+            this.angle = MathUtil.castAngle(this.angle + this.angularVelocity / 20.0);
             Set<BlockPos> received = Sets.newHashSet();
             for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
                 DirectionInfo info = entry.getKey();
@@ -92,13 +91,66 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
                 IRotateNode node = entry.getValue();
                 double scale = this.scaleMap.get(info).doubleValue();
                 node.setAngle(info.direction(), MathUtil.castAngle(this.angle * scale));
-                node.setAngularVelocity(info.direction(), angularVelocity * scale);
+                node.setAngularVelocity(info.direction(), this.angularVelocity * scale);
                 if (!received.contains(pos)) {
                     ((IRotateNodeHolder) level.getBlockEntity(pos)).receive(node);
                     received.add(pos);
                 }
             }
         }
+    }
+
+    protected void updateAngularVelocity() {
+        double scaledInertia = 0.0;
+        double scaledTorque = 0.0;
+        int frictionDirection = Double.compare(this.angularMomentum, 0.0);
+        for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
+            DirectionInfo info = entry.getKey();
+            IRotateNode node = entry.getValue();
+            double scale = this.scaleMap.get(info).doubleValue();
+            scaledInertia += node.getInertia(info.direction()) * scale * scale;
+            scaledTorque += node.getTorque(info.direction()) * scale;
+            scaledTorque -= Math.abs(node.getFriction(info.direction()) * scale) * frictionDirection;
+        }
+        scaledTorque = 1.0;
+        this.angularMomentum += scaledTorque / 20.0;
+        this.angularVelocity = this.angularMomentum / scaledInertia;
+    }
+
+    protected DirectionInfo center() {
+        return this.center;
+    }
+
+    protected IntFraction scale(DirectionInfo info) {
+        return this.scaleMap.get(info);
+    }
+
+    protected double angle(DirectionInfo info) {
+        if (!this.scaleMap.containsKey(info)) return 0.0;
+        return MathUtil.castAngle(this.angle * this.scaleMap.get(info).doubleValue());
+    }
+
+    protected double angularVelocity(DirectionInfo info) {
+        if (!this.scaleMap.containsKey(info)) return 0.0;
+        if (MathUtil.isEquals(this.angularVelocity, 0.0)) this.updateAngularVelocity();
+        return this.angularVelocity * this.scaleMap.get(info).doubleValue();
+    }
+
+    protected void setAngularVelocity(double angularVelocity) {
+        double scaledInertia = 0.0;
+        int frictionDirection = Double.compare(this.angularMomentum, 0.0);
+        for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
+            DirectionInfo info = entry.getKey();
+            IRotateNode node = entry.getValue();
+            double scale = this.scaleMap.get(info).doubleValue();
+            scaledInertia += node.getInertia(info.direction()) * scale * scale;
+        }
+        this.angularVelocity = angularVelocity;
+        this.angularMomentum = angularVelocity * scaledInertia;
+    }
+
+    protected void setAngle(double angle) {
+        this.angle = angle;
     }
 
     protected Map<DirectionInfo, IRotateNode> searchAllNodes(DirectionInfo info) {
@@ -226,7 +278,6 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         }
     }
 
-    //TODO: 将角动量和角度信息进行存储
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
@@ -238,6 +289,8 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
             nodesTag.add(nodesTag.size(), nodeTag);
         }
         tag.put("nodes", nodesTag);
+        tag.putDouble("angularMomentum", this.angularMomentum);
+        tag.putDouble("angle", this.angle);
         return tag;
     }
 
@@ -253,5 +306,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         }
         this.addAllNodes(nodes);
         this.updateStructure();
+        this.angularMomentum = tag.getDouble("angularMomentum");
+        this.angle = tag.getDouble("angle");
     }
 }

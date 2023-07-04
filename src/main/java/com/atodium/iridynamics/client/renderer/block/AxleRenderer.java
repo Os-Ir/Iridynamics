@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class AxleRenderer implements BlockEntityRenderer<AxleBlockEntity> {
     public static final AxleRenderer INSTANCE = new AxleRenderer();
@@ -22,8 +21,7 @@ public class AxleRenderer implements BlockEntityRenderer<AxleBlockEntity> {
     public void render(AxleBlockEntity axle, float partialTicks, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(Iridynamics.rl("block/white"));
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
-        BlockState state = axle.getBlockState();
-        Direction direction = state.getValue(AxleBlock.DIRECTION);
+        Direction direction = axle.getBlockState().getValue(AxleBlock.DIRECTION);
         transform.pushPose();
         transform.translate(0.5, 0.5, 0.5);
         if (direction.get2DDataValue() >= 0)

@@ -41,7 +41,6 @@ public class AxleBlockEntity extends SyncedBlockEntity implements ITickable, IRo
 
     public double getRenderAngle(float partialTicks) {
         Direction direction = this.getBlockState().getValue(AxleBlock.DIRECTION);
-//        return MathUtil.castAngle(this.rotate.getAngle(direction) + this.rotate.getAngularVelocity(direction) * partialTicks / 20.0);
         return MathUtil.castAngle(this.rotate.getAngle(direction));
     }
 
