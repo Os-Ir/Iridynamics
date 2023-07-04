@@ -4,14 +4,13 @@ import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.module.rotate.RotateModule;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
-import com.atodium.iridynamics.common.blockEntity.rotate.AxleBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.rotate.FlywheelBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -26,42 +25,21 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Random;
 
-public class AxleBlock extends Block implements EntityBlock {
+public class FlywheelBlock extends Block implements EntityBlock {
     public static final DirectionProperty DIRECTION = BlockStateProperties.FACING;
-    public static final VoxelShape SHAPE_NS = box(6.0, 6.0, 0.0, 10.0, 10.0, 16.0);
-    public static final VoxelShape SHAPE_WE = box(0.0, 6.0, 6.0, 16.0, 10.0, 10.0);
-    public static final VoxelShape SHAPE_UD = box(6.0, 0.0, 6.0, 10.0, 16.0, 10.0);
 
-    public AxleBlock(BlockBehaviour.Properties properties) {
+    public FlywheelBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(DIRECTION, Direction.NORTH));
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return type == ModBlockEntities.AXLE.get() ? ITickable.ticker() : null;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(DIRECTION)) {
-            case NORTH, SOUTH -> {
-                return SHAPE_NS;
-            }
-            case WEST, EAST -> {
-                return SHAPE_WE;
-            }
-            default -> {
-                return SHAPE_UD;
-            }
-        }
+        return type == ModBlockEntities.FLYWHEEL.get() ? ITickable.ticker() : null;
     }
 
     @Override
@@ -90,7 +68,7 @@ public class AxleBlock extends Block implements EntityBlock {
     @Override
     @SuppressWarnings("deprecation")
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
-        level.getBlockEntity(pos, ModBlockEntities.AXLE.get()).ifPresent((axle) -> axle.setupRotate(level));
+        level.getBlockEntity(pos, ModBlockEntities.FLYWHEEL.get()).ifPresent((flywheel) -> flywheel.setupRotate(level));
     }
 
     @Override
@@ -99,13 +77,13 @@ public class AxleBlock extends Block implements EntityBlock {
         RotateModule.removeRotateBlock((ServerLevel) level, pos);
         boolean harvest = state.canHarvestBlock(level, pos, player);
         if (!player.isCreative() && harvest)
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.AXLE.get()));
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.FLYWHEEL.get()));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new AxleBlockEntity(pos, state);
+        return new FlywheelBlockEntity(pos, state);
     }
 
     @Override

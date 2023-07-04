@@ -16,6 +16,7 @@ public class RotateModule {
         SERIALIZERS.register(Iridynamics.rl("axle"), Axle.SERIALIZER);
         SERIALIZERS.register(Iridynamics.rl("gearbox"), Gearbox.SERIALIZER);
         SERIALIZERS.register(Iridynamics.rl("escapement"), Escapement.SERIALIZER);
+        SERIALIZERS.register(Iridynamics.rl("flywheel"), Flywheel.SERIALIZER);
     }
 
     public static CompoundTag writeRotateNode(IRotateNode node) {
@@ -69,5 +70,9 @@ public class RotateModule {
 
     public static Escapement escapement(Direction direction) {
         return new Escapement(direction);
+    }
+
+    public static Flywheel flywheel(Direction direction) {
+        return new Flywheel(direction);
     }
 }
