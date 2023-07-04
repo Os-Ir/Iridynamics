@@ -4,6 +4,7 @@ import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.ModCreativeTabs;
 import com.atodium.iridynamics.common.block.equipment.*;
 import com.atodium.iridynamics.common.block.rotate.AxleBlock;
+import com.atodium.iridynamics.common.block.rotate.EscapementBlock;
 import com.atodium.iridynamics.common.block.rotate.GearboxBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -35,6 +36,7 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> AXLE = Iridynamics.REGISTRY.block("axle", AxleBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> GEARBOX = Iridynamics.REGISTRY.block("gearbox", GearboxBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
+    public static final RegistryObject<Block> ESCAPEMENT = Iridynamics.REGISTRY.block("escapement", EscapementBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
 
     public static void init() {
 

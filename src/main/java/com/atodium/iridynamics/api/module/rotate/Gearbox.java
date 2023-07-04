@@ -111,6 +111,11 @@ public class Gearbox implements IRotateNode {
         return 0.2;
     }
 
+    @Override
+    public double maxAngularVelocity(Direction direction) {
+        return 300.0;
+    }
+
     public static class Serializer implements IRotateNode.Serializer {
         @Override
         public IRotateNode deserialize(CompoundTag tag) {

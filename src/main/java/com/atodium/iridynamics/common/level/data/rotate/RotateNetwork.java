@@ -103,18 +103,27 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
     protected void updateAngularVelocity() {
         double scaledInertia = 0.0;
         double scaledTorque = 0.0;
+        double maxAngularVelocity = Double.MAX_VALUE;
         int frictionDirection = Double.compare(this.angularMomentum, 0.0);
         for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
             DirectionInfo info = entry.getKey();
+            Direction direction = info.direction();
             IRotateNode node = entry.getValue();
             double scale = this.scaleMap.get(info).doubleValue();
-            scaledInertia += node.getInertia(info.direction()) * scale * scale;
-            scaledTorque += node.getTorque(info.direction()) * scale;
+            scaledInertia += node.getInertia(direction) * scale * scale;
+            scaledTorque += node.getTorque(direction) * scale;
             scaledTorque -= Math.abs(node.getFriction(info.direction()) * scale) * frictionDirection;
+            maxAngularVelocity = Math.min(maxAngularVelocity, Math.abs(node.maxAngularVelocity(direction) / scale));
         }
-        scaledTorque = 1.0;
         this.angularMomentum += scaledTorque / 20.0;
         this.angularVelocity = this.angularMomentum / scaledInertia;
+        if (this.angularVelocity > maxAngularVelocity) {
+            this.angularVelocity = maxAngularVelocity;
+            this.angularMomentum = scaledInertia * maxAngularVelocity;
+        } else if (-this.angularVelocity > maxAngularVelocity) {
+            this.angularVelocity = -maxAngularVelocity;
+            this.angularMomentum = -scaledInertia * maxAngularVelocity;
+        }
     }
 
     protected DirectionInfo center() {

@@ -27,6 +27,8 @@ public interface IRotateNode {
 
     double getFriction(Direction direction);
 
+    double maxAngularVelocity(Direction direction);
+
     interface Serializer {
         IRotateNode deserialize(CompoundTag tag);
 
