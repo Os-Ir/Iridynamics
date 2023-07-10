@@ -17,5 +17,6 @@ public class ModEventHandler {
         event.register(HeatProcessCapability.class);
         event.register(CarvingCapability.class);
         event.register(PotteryCapability.class);
+        event.register(ResearchCapability.class);
     }
 }

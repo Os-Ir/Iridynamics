@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.api.gui;
 
-import com.atodium.iridynamics.common.network.CapabilityUpdatePacket;
-import com.atodium.iridynamics.common.network.ModNetworkHandler;
+import com.atodium.iridynamics.network.CapabilityUpdatePacket;
+import com.atodium.iridynamics.network.ModNetworkHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

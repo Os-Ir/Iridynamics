@@ -60,7 +60,7 @@ public class Flywheel implements IRotateNode {
 
     @Override
     public double getInertia(Direction direction) {
-        if (this.isConnectable(direction)) return 40.0;
+        if (this.isConnectable(direction)) return 400.0;
         return 0.0;
     }
 

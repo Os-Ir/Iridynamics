@@ -2,8 +2,8 @@ package com.atodium.iridynamics.api.gui;
 
 import com.atodium.iridynamics.api.gui.widget.*;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
-import com.atodium.iridynamics.common.network.ModNetworkHandler;
-import com.atodium.iridynamics.common.network.ModularGuiOpenPacket;
+import com.atodium.iridynamics.network.ModNetworkHandler;
+import com.atodium.iridynamics.network.ModularGuiOpenPacket;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;

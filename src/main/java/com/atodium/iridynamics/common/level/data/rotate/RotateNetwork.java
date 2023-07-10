@@ -271,7 +271,6 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
             if (this.scaleMap.containsKey(relative)) {
                 if (this.scaleMap.containsKey(relative) && !relativeScale.equals(this.scaleMap.get(relative))) {
                     this.locked = true;
-                    System.out.println(this.scaleMap);
                     return;
                 }
                 continue;

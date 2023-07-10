@@ -3,10 +3,7 @@ package com.atodium.iridynamics.common.blockEntity;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.equipment.*;
-import com.atodium.iridynamics.common.blockEntity.rotate.AxleBlockEntity;
-import com.atodium.iridynamics.common.blockEntity.rotate.EscapementBlockEntity;
-import com.atodium.iridynamics.common.blockEntity.rotate.FlywheelBlockEntity;
-import com.atodium.iridynamics.common.blockEntity.rotate.GearboxBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.rotate.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -35,6 +32,7 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<GearboxBlockEntity>> GEARBOX = Iridynamics.REGISTRY.blockEntity("gearbox", () -> BlockEntityType.Builder.of(GearboxBlockEntity::new, ModBlocks.GEARBOX.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<EscapementBlockEntity>> ESCAPEMENT = Iridynamics.REGISTRY.blockEntity("escapement", () -> BlockEntityType.Builder.of(EscapementBlockEntity::new, ModBlocks.ESCAPEMENT.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<FlywheelBlockEntity>> FLYWHEEL = Iridynamics.REGISTRY.blockEntity("flywheel", () -> BlockEntityType.Builder.of(FlywheelBlockEntity::new, ModBlocks.FLYWHEEL.get()).build(null)).register();
+    public static final RegistryObject<BlockEntityType<HandleBlockEntity>> HANDLE = Iridynamics.REGISTRY.blockEntity("handle", () -> BlockEntityType.Builder.of(HandleBlockEntity::new, ModBlocks.HANDLE.get()).build(null)).register();
 
     public static void init() {
 

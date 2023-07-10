@@ -3,10 +3,7 @@ package com.atodium.iridynamics.common.block;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.ModCreativeTabs;
 import com.atodium.iridynamics.common.block.equipment.*;
-import com.atodium.iridynamics.common.block.rotate.AxleBlock;
-import com.atodium.iridynamics.common.block.rotate.EscapementBlock;
-import com.atodium.iridynamics.common.block.rotate.FlywheelBlock;
-import com.atodium.iridynamics.common.block.rotate.GearboxBlock;
+import com.atodium.iridynamics.common.block.rotate.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
@@ -39,6 +36,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> GEARBOX = Iridynamics.REGISTRY.block("gearbox", GearboxBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> ESCAPEMENT = Iridynamics.REGISTRY.block("escapement", EscapementBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
     public static final RegistryObject<Block> FLYWHEEL = Iridynamics.REGISTRY.block("flywheel", FlywheelBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
+    public static final RegistryObject<Block> HANDLE = Iridynamics.REGISTRY.block("handle", HandleBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.BLOCK);
 
     public static void init() {
 

@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.common.network;
+package com.atodium.iridynamics.network;
 
 import com.atodium.iridynamics.api.gui.CapabilityUpdateListener;
 import com.google.common.collect.Maps;

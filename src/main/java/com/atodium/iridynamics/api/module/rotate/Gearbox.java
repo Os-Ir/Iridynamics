@@ -98,7 +98,7 @@ public class Gearbox implements IRotateNode {
 
     @Override
     public double getInertia(Direction direction) {
-        return 1.0;
+        return 10.0;
     }
 
     @Override

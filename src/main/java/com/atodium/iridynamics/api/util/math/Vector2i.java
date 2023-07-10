@@ -38,4 +38,8 @@ public class Vector2i {
     public int dot(Vector2i vec) {
         return this.x * vec.x + this.y * vec.y;
     }
+
+    public int cross(Vector2i vec) {
+        return this.x * vec.y - this.y * vec.x;
+    }
 }
