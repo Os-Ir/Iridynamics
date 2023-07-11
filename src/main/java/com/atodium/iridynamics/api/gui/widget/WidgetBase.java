@@ -30,7 +30,7 @@ public class WidgetBase implements IWidget {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void renderBg(PoseStack transform, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop) {
-        if (this.isEnable && this.renderer != null)
+        if (this.renderer != null)
             this.renderer.draw(transform, guiLeft + this.x, guiTop + this.y, this.width, this.height);
     }
 

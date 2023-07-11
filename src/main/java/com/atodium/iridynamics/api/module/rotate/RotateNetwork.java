@@ -1,8 +1,6 @@
-package com.atodium.iridynamics.common.level.data.rotate;
+package com.atodium.iridynamics.api.module.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
-import com.atodium.iridynamics.api.module.rotate.IRotateNode;
-import com.atodium.iridynamics.api.module.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.data.DirectionInfo;
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import com.atodium.iridynamics.api.util.math.MathUtil;

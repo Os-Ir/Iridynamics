@@ -1,7 +1,9 @@
 package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.module.research.ResearchModule;
 import com.atodium.iridynamics.api.module.research.ResearchNetwork;
+import com.google.common.collect.Maps;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -11,16 +13,29 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
+import java.util.Map;
+
 public class ResearchCapability implements IResearch, ICapabilitySerializable<CompoundTag> {
     public static final ResourceLocation KEY = Iridynamics.rl("research");
     public static final Capability<IResearch> RESEARCH = CapabilityManager.get(new CapabilityToken<>() {
     });
 
-    private ResearchNetwork network;
+    private final Map<String, ResearchNetwork> networks;
+
+    public ResearchCapability() {
+        this.networks = Maps.newHashMap();
+        for (Map.Entry<String, String> entry : ResearchModule.NETWORK_TYPES.entrySet())
+            this.networks.put(entry.getKey(), new ResearchNetwork(entry.getValue()));
+    }
 
     @Override
-    public ResearchNetwork network() {
-        return this.network;
+    public Map<String, ResearchNetwork> allNetworks() {
+        return this.networks;
+    }
+
+    @Override
+    public ResearchNetwork network(String category) {
+        return this.networks.get(category);
     }
 
     @Override
@@ -32,12 +47,12 @@ public class ResearchCapability implements IResearch, ICapabilitySerializable<Co
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.put("network", this.network.serialize());
+        this.networks.forEach((category, network) -> tag.put(category, network.serialize()));
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        this.network.deserialize(tag.getCompound("network"));
+        this.networks.forEach((category, network) -> network.deserialize(tag.getCompound(category)));
     }
 }

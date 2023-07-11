@@ -2,7 +2,6 @@ package com.atodium.iridynamics.api.module.rotate;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
-import com.atodium.iridynamics.common.level.data.rotate.RotateSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

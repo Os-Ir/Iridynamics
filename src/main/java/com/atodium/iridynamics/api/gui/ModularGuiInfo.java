@@ -95,12 +95,12 @@ public class ModularGuiInfo {
     public static void backToParentGui(ModularContainer container, int... args) {
         IModularGuiHolder<?>[] parentHolders = container.getParentGuiHolders();
         if (parentHolders.length >= 2)
-            openModularGui(parentHolders[parentHolders.length - 2], (ServerPlayer) container.getGuiInfo().player, Arrays.copyOf(parentHolders, parentHolders.length - 2), args);
+            openModularGui(parentHolders[parentHolders.length - 2], (ServerPlayer) container.guiInfo().player, Arrays.copyOf(parentHolders, parentHolders.length - 2), args);
     }
 
     public static void refreshGui(ModularContainer container, int... args) {
         IModularGuiHolder<?>[] parentHolders = container.getParentGuiHolders();
-        openModularGui(parentHolders[parentHolders.length - 1], (ServerPlayer) container.getGuiInfo().player, Arrays.copyOf(parentHolders, parentHolders.length - 1), args);
+        openModularGui(parentHolders[parentHolders.length - 1], (ServerPlayer) container.guiInfo().player, Arrays.copyOf(parentHolders, parentHolders.length - 1), args);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -113,7 +113,7 @@ public class ModularGuiInfo {
         guiInfo.initWidgets();
         ModularScreen screen = new ModularScreen(window, guiInfo, ArrayUtils.add(parentHolders, holder), player.getInventory(), guiInfo.title);
         updateTag.forEach((buf) -> {
-            IWidget widget = guiInfo.container.getGuiInfo().getWidget(buf.readInt());
+            IWidget widget = guiInfo.container.guiInfo().getWidget(buf.readInt());
             widget.receiveMessageFromServer(buf);
         });
         player.containerMenu = guiInfo.container;
@@ -217,6 +217,13 @@ public class ModularGuiInfo {
         return true;
     }
 
+    public boolean handleMouseScrolled(double mouseX, double mouseY, double move) {
+        this.widgets.forEach((id, widget) -> {
+            if (widget.isEnable() && widget.isInRange(mouseX, mouseY)) widget.onMouseScrolled(mouseX, mouseY, move);
+        });
+        return true;
+    }
+
     public void initWidgets() {
         this.widgets.forEach((id, widget) -> widget.initWidget(this));
     }
@@ -244,8 +251,8 @@ public class ModularGuiInfo {
             this.widgets = new HashMap<>();
             this.openListeners = new ArrayList<>();
             this.closeListeners = new ArrayList<>();
-            this.internalWidget(new ButtonWidget(-1, this.width - 19, -9, 9, 9, (data, container) -> backToParentGui(container, container.getGuiInfo().args)).setRenderer(ModularScreen.BACK));
-            this.internalWidget(new ButtonWidget(-2, this.width - 9, -9, 9, 9, (data, container) -> refreshGui(container, container.getGuiInfo().args)).setRenderer(ModularScreen.REFRESH));
+            this.internalWidget(new ButtonWidget(-1, this.width - 19, -9, 9, 9, (data, container) -> backToParentGui(container, container.guiInfo().args)).setRenderer(ModularScreen.BACK));
+            this.internalWidget(new ButtonWidget(-2, this.width - 9, -9, 9, 9, (data, container) -> refreshGui(container, container.guiInfo().args)).setRenderer(ModularScreen.REFRESH));
         }
 
         public Builder background(IWidgetRenderer background) {
@@ -277,8 +284,15 @@ public class ModularGuiInfo {
             return this;
         }
 
-        public Builder renderer(int id, int x, int y, int width, int height, RendererWidget.IContainerRenderer renderer) {
+        public Builder renderer(int id, int x, int y, int width, int height, IContainerRenderer renderer) {
             RendererWidget widget = new RendererWidget(x, y, width, height, renderer);
+            this.widgets.put(id, widget);
+            widget.setWidgetId(id);
+            return this;
+        }
+
+        public Builder draggableRenderer(int id, int x, int y, int width, int height, ScaledDraggableWidget.IDraggableRenderer renderer) {
+            ScaledDraggableWidget widget = new ScaledDraggableWidget(x, y, width, height, renderer);
             this.widgets.put(id, widget);
             widget.setWidgetId(id);
             return this;

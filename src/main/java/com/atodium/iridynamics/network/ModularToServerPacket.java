@@ -30,7 +30,7 @@ public class ModularToServerPacket {
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
             if (player != null && (this.window == 0 || this.window == player.containerMenu.containerId) && player.containerMenu instanceof ModularContainer modularContainer)
-                modularContainer.getGuiInfo().getWidget(this.data.readInt()).receiveMessageFromClient(this.data);
+                modularContainer.guiInfo().getWidget(this.data.readInt()).receiveMessageFromClient(this.data);
         });
     }
 }

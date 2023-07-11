@@ -1,0 +1,7 @@
+{
+  "category": "agricultural_age",
+  "type": "idea",
+  "name": "force",
+  "min_unlock_coefficient": 0.5,
+  "correlations_to": []
+}

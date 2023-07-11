@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 public interface IWidgetRenderer {
     IWidgetRenderer EMPTY = new EmptyWidgetRenderer();
 
-    void draw(PoseStack transform, int x, int y, int width, int height);
+    void draw(PoseStack transform, float x, float y, float width, float height);
 
     default IWidgetRenderer merge(IWidgetRenderer renderer) {
         return (transform, x, y, width, height) -> {
@@ -17,7 +17,7 @@ public interface IWidgetRenderer {
 
     class EmptyWidgetRenderer implements IWidgetRenderer {
         @Override
-        public void draw(PoseStack transform, int x, int y, int width, int height) {
+        public void draw(PoseStack transform, float x, float y, float width, float height) {
 
         }
     }

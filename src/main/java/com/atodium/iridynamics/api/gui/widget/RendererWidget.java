@@ -1,6 +1,6 @@
 package com.atodium.iridynamics.api.gui.widget;
 
-import com.atodium.iridynamics.api.gui.ModularContainer;
+import com.atodium.iridynamics.api.gui.IContainerRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,10 +26,5 @@ public class RendererWidget extends WidgetBase {
     @OnlyIn(Dist.CLIENT)
     public void renderBg(PoseStack transform, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop) {
         this.renderer.draw(this.info.getContainer(), transform, guiLeft + this.getX(), guiTop + this.getY(), this.getWidth(), this.getHeight());
-    }
-
-    @FunctionalInterface
-    public interface IContainerRenderer {
-        void draw(ModularContainer container, PoseStack transform, int x, int y, int width, int height);
     }
 }

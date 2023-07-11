@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.client.renderer;
 
+import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public final class RendererUtil {
     @SuppressWarnings("deprecation")
@@ -21,7 +23,7 @@ public final class RendererUtil {
         RenderSystem.setShaderTexture(0, location);
     }
 
-    public static void drawScaledTexturedRect(PoseStack transform, int x, int y, int width, int height, float textureX, float textureY, float textureWidth, float textureHeight) {
+    public static void drawScaledTexturedRect(PoseStack transform, float x, float y, float width, float height, float textureX, float textureY, float textureWidth, float textureHeight) {
         drawScaledTexturedRect(transform, x, y, width, height, textureX, textureY, textureWidth, textureHeight, 1.0f);
     }
 
@@ -38,20 +40,20 @@ public final class RendererUtil {
      * @param textureHeight 材质绘制部分高度的x占比, 属于[0, 1]
      * @param alpha         不透明度, 属于[0, 1]
      */
-    public static void drawScaledTexturedRect(PoseStack transform, int x, int y, int width, int height, float textureX, float textureY, float textureWidth, float textureHeight, float alpha) {
+    public static void drawScaledTexturedRect(PoseStack transform, float x, float y, float width, float height, float textureX, float textureY, float textureWidth, float textureHeight, float alpha) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         BUFFER_BUILDER.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         Matrix4f matrix4f = transform.last().pose();
-        BUFFER_BUILDER.vertex(matrix4f, x, y + height, 0).uv(textureX, textureY + textureHeight).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, x + width, y + height, 0).uv(textureX + textureWidth, textureY + textureHeight).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, x + width, y, 0).uv(textureX + textureWidth, textureY).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, x, y, 0).uv(textureX, textureY).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, x, y + height, 0.0f).uv(textureX, textureY + textureHeight).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, x + width, y + height, 0.0f).uv(textureX + textureWidth, textureY + textureHeight).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, x + width, y, 0.0f).uv(textureX + textureWidth, textureY).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, x, y, 0.0f).uv(textureX, textureY).endVertex();
         BUFFER_BUILDER.end();
         BufferUploader.end(BUFFER_BUILDER);
     }
 
-    public static void fill(PoseStack matrixStack, int x, int y, int width, int height, int color) {
+    public static void fill(PoseStack transform, float xi, float yi, float width, float height, int color) {
         int a = (color >> 24) & 0xff;
         int r = (color >> 16) & 0xff;
         int g = (color >> 8) & 0xff;
@@ -60,11 +62,37 @@ public final class RendererUtil {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
         BUFFER_BUILDER.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        Matrix4f matrix4f = matrixStack.last().pose();
-        BUFFER_BUILDER.vertex(matrix4f, x, y + height, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, x + width, y + height, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, x + width, y, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, x, y, 0).color(r, g, b, a).endVertex();
+        Matrix4f matrix4f = transform.last().pose();
+        float xa = xi + width;
+        float ya = yi + height;
+        BUFFER_BUILDER.vertex(matrix4f, xi, ya, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xa, ya, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xa, yi, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xi, yi, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.end();
+        BufferUploader.end(BUFFER_BUILDER);
+        RenderSystem.disableBlend();
+    }
+
+    public static void fillInRange(PoseStack transform, float x, float y, float width, float height, int color, float minX, float maxX, float minY, float maxY) {
+        float xi = Mth.clamp(x, minX, maxX);
+        float xa = Mth.clamp(x + width, minX, maxX);
+        float yi = Mth.clamp(y, minY, maxY);
+        float ya = Mth.clamp(y + height, minY, maxY);
+        if (MathUtil.isEquals(xi, xa) || MathUtil.isEquals(yi, ya)) return;
+        int a = (color >> 24) & 0xff;
+        int r = (color >> 16) & 0xff;
+        int g = (color >> 8) & 0xff;
+        int b = color & 0xff;
+        RenderSystem.setShaderColor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.enableBlend();
+        BUFFER_BUILDER.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        Matrix4f matrix4f = transform.last().pose();
+        BUFFER_BUILDER.vertex(matrix4f, xi, ya, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xa, ya, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xa, yi, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xi, yi, 0).color(r, g, b, a).endVertex();
         BUFFER_BUILDER.end();
         BufferUploader.end(BUFFER_BUILDER);
         RenderSystem.disableBlend();

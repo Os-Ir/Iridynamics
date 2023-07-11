@@ -81,6 +81,10 @@ public interface IWidget {
         return false;
     }
 
+    default boolean onMouseScrolled(double mouseX, double mouseY, double move) {
+        return false;
+    }
+
     @OnlyIn(Dist.CLIENT)
     default void renderLabels(PoseStack transform, int mouseX, int mouseY, int guiLeft, int guiTop) {
 

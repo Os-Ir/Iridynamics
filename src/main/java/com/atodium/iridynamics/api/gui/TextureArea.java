@@ -30,22 +30,22 @@ public class TextureArea implements IWidgetRenderer {
     }
 
     @Override
-    public void draw(PoseStack transform, int x, int y, int width, int height) {
+    public void draw(PoseStack transform, float x, float y, float width, float height) {
         RendererUtil.bindTexture(this.location);
         RendererUtil.drawScaledTexturedRect(transform, x, y, width, height, this.x, this.y, this.width, this.height);
     }
 
-    public void draw(PoseStack transform, int x, int y, int width, int height, float alpha) {
+    public void draw(PoseStack transform, float x, float y, float width, float height, float alpha) {
         RendererUtil.bindTexture(this.location);
         RendererUtil.drawScaledTexturedRect(transform, x, y, width, height, this.x, this.y, this.width, this.height, alpha);
     }
 
-    public void drawSubArea(PoseStack transform, int x, int y, int width, int height, float subX, float subY, float subWidth, float subHeight) {
+    public void drawSubArea(PoseStack transform, float x, float y, float width, float height, float subX, float subY, float subWidth, float subHeight) {
         RendererUtil.bindTexture(this.location);
         RendererUtil.drawScaledTexturedRect(transform, x, y, width, height, this.x + subX * this.width, this.y + subY * this.height, subWidth * this.width, subHeight * this.height);
     }
 
-    public void drawSubArea(PoseStack transform, int x, int y, int width, int height, float subX, float subY, float subWidth, float subHeight, float alpha) {
+    public void drawSubArea(PoseStack transform, float x, float y, float width, float height, float subX, float subY, float subWidth, float subHeight, float alpha) {
         RendererUtil.bindTexture(this.location);
         RendererUtil.drawScaledTexturedRect(transform, x, y, width, height, this.x + subX * this.width, this.y + subY * this.height, subWidth * this.width, subHeight * this.height, alpha);
     }

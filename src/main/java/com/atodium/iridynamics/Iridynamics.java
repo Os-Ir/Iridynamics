@@ -3,6 +3,7 @@ package com.atodium.iridynamics;
 import com.atodium.iridynamics.api.gui.plan.PlanGuiCodec;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
+import com.atodium.iridynamics.api.module.research.ResearchModule;
 import com.atodium.iridynamics.api.module.rotate.RotateModule;
 import com.atodium.iridynamics.api.recipe.ModOutputDecorators;
 import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
@@ -50,6 +51,7 @@ public class Iridynamics {
         ModNetworkHandler.init();
         PlanGuiCodec.init();
         RotateModule.init();
+        ResearchModule.init();
     }
 
     public static ResourceLocation rl(String path) {

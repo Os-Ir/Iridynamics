@@ -22,10 +22,13 @@ public class UnorderedRegistry<K, T> {
     }
 
     public void freeze() {
-        if (this.frozen) {
-            throw new IllegalStateException("This registry has already frozen");
-        }
+        if (this.frozen) throw new IllegalStateException("This registry has already frozen");
         this.frozen = true;
+    }
+
+    public void clear() {
+        if (this.frozen) throw new IllegalStateException("This registry has already frozen");
+        this.registry.clear();
     }
 
     public boolean containsKey(K key) {
@@ -58,16 +61,13 @@ public class UnorderedRegistry<K, T> {
     }
 
     public void register(K key, T value) {
-        if (this.frozen) {
-            throw new IllegalStateException("This registry has already frozen");
-        }
-        if (this.registry.containsKey(key)) {
-            throw new IllegalStateException("This key has been registered");
-        }
+        if (this.frozen) throw new IllegalStateException("This registry has already frozen");
+        if (this.registry.containsKey(key)) throw new IllegalStateException("This key has been registered");
         this.registry.put(key, value);
     }
 
     public void delete(K key) {
+        if (this.frozen) throw new IllegalStateException("This registry has already frozen");
         this.registry.remove(key);
     }
 }

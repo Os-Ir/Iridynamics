@@ -40,7 +40,7 @@ public class ModularScreen extends AbstractContainerScreen<ModularContainer> {
     public void render(PoseStack transform, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(transform);
         this.info.getBackground().draw(transform, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
-        List<Component> titles = Arrays.stream(this.menu.getParentGuiHolders()).map((holder) -> holder.getTitle(this.menu.getGuiInfo().getPlayer())).toList();
+        List<Component> titles = Arrays.stream(this.menu.getParentGuiHolders()).map((holder) -> holder.getTitle(this.menu.guiInfo().getPlayer())).toList();
         StringBuilder text = new StringBuilder();
         for (int i = 0; i < titles.size(); i++) {
             text.append(titles.get(i).getString());
@@ -78,5 +78,11 @@ public class ModularScreen extends AbstractContainerScreen<ModularContainer> {
     public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double dragX, double dragY) {
         super.mouseDragged(mouseX, mouseY, mouseButton, dragX, dragY);
         return this.info.handleMouseClickMove(mouseX - this.leftPos, mouseY - this.topPos, mouseButton, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double move) {
+        super.mouseScrolled(mouseX, mouseY, move);
+        return this.info.handleMouseScrolled(mouseX, mouseY, move);
     }
 }

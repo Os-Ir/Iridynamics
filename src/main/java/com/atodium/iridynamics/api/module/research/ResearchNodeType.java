@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.api.module.research;
 
 public enum ResearchNodeType {
-    THEORY("theory"), IDEA("idea"), SUMMARY("summary"), APPLICATION("application"), COMBINATION("combination");
+    ROOT("root"), MATH("math"), THEORY("theory"), IDEA("idea"), SUMMARY("summary"), APPLICATION("application"), COMBINATION("combination");
 
     private final String typeName;
 

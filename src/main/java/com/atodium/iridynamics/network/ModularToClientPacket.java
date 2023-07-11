@@ -31,7 +31,7 @@ public class ModularToClientPacket {
         context.enqueueWork(() -> {
             LocalPlayer player = Minecraft.getInstance().player;
             if (player != null && (this.window == 0 || this.window == player.containerMenu.containerId) && player.containerMenu instanceof ModularContainer modularContainer)
-                modularContainer.getGuiInfo().getWidget(this.data.readInt()).receiveMessageFromServer(this.data);
+                modularContainer.guiInfo().getWidget(this.data.readInt()).receiveMessageFromServer(this.data);
         });
     }
 }

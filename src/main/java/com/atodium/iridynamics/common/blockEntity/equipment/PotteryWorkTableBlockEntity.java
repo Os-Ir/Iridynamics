@@ -96,7 +96,7 @@ public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements IT
         this.markDirty();
     }
 
-    private void renderWorkBoard(ModularContainer container, PoseStack transform, int x, int y, int width, int height) {
+    private void renderWorkBoard(ModularContainer container, PoseStack transform, float x, float y, float width, float height) {
         ItemStack stack = this.inventory.getStackInSlot(0);
         stack.getCapability(PotteryCapability.POTTERY).ifPresent((pottery) -> {
             for (int i = 0; i < 12; i++) {
@@ -137,12 +137,12 @@ public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements IT
                 .renderer(2, 25, 6, 105, 120, this::renderWorkBoard)
                 .widget(4, new ButtonWidget(1, 133, 7, 16, 16, this::openPlanGui).setRenderer((transform, x, y, width, height) -> {
                     if (this.recipes.length > this.plan && this.plan >= 0)
-                        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(this.recipes[this.plan].output().withoutDecorate(), x, y);
+                        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(this.recipes[this.plan].output().withoutDecorate(), (int) x, (int) y);
                 })).build(player);
     }
 
     public void openPlanGui(ButtonWidget.ButtonClickData clickData, ModularContainer container) {
-        ModularGuiInfo.openModularGui(new PlanGuiHolder(this), (ServerPlayer) container.getGuiInfo().getPlayer(), container.getParentGuiHolders());
+        ModularGuiInfo.openModularGui(new PlanGuiHolder(this), (ServerPlayer) container.guiInfo().getPlayer(), container.getParentGuiHolders());
     }
 
     @Override
@@ -154,7 +154,7 @@ public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements IT
     public IWidgetRenderer getOverlayRenderer(int count) {
         return (transform, x, y, width, height) -> {
             if (this.recipes.length > count)
-                Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(this.recipes[count].output().withoutDecorate(), x + 1, y + 1);
+                Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(this.recipes[count].output().withoutDecorate(), (int) (x + 1), (int) (y + 1));
         };
     }
 

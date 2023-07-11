@@ -23,6 +23,7 @@ public class MaterialInfoLoader extends SimpleJsonLoader {
         super(ROOT);
     }
 
+    @Override
     public void onDatapackSync(OnDatapackSyncEvent event) {
 
     }

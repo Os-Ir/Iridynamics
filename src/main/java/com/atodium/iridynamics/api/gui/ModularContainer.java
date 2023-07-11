@@ -64,8 +64,12 @@ public class ModularContainer extends AbstractContainerMenu implements ISyncedWi
         info.onGuiOpen();
     }
 
-    public ModularGuiInfo getGuiInfo() {
+    public ModularGuiInfo guiInfo() {
         return this.info;
+    }
+
+    public Player player() {
+        return this.info.getPlayer();
     }
 
     @SuppressWarnings("unchecked")

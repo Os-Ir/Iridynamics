@@ -1,0 +1,11 @@
+{
+  "category": "agricultural_age",
+  "type": "root",
+  "name": "agricultural_age_root",
+  "correlations_to": [
+    {
+      "name": "force",
+      "correlation": 1.0
+    }
+  ]
+}

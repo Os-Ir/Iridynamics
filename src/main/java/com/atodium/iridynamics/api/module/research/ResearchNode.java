@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.minecraft.util.Mth;
 
 public class ResearchNode {
-    private final ResearchNetwork network;
     private final ResearchNodeType type;
     private final String name;
     private final Object2FloatMap<ResearchNode> correlationsTo;
@@ -13,18 +12,13 @@ public class ResearchNode {
     private final float minUnlockCoefficient;
     private int layer;
 
-    public ResearchNode(ResearchNetwork network, ResearchNodeType type, String name, Object2FloatMap<ResearchNode> correlations, float minUnlockCoefficient) {
-        this.network = network;
+    public ResearchNode(ResearchNodeType type, String name, float minUnlockCoefficient) {
         this.type = type;
         this.name = name;
-        this.correlationsTo = correlations;
+        this.correlationsTo = new Object2FloatOpenHashMap<>();
         this.correlationsFrom = new Object2FloatOpenHashMap<>();
         this.minUnlockCoefficient = Mth.clamp(minUnlockCoefficient, 0.0f, 1.0f);
-        this.layer = 1;
-    }
-
-    public ResearchNetwork network() {
-        return this.network;
+        this.layer = ResearchModule.MAX_LAYER;
     }
 
     public ResearchNodeType type() {
@@ -44,7 +38,11 @@ public class ResearchNode {
     }
 
     public void setLayer(int layer) {
-        this.layer = layer;
+        this.layer = Mth.clamp(layer, 0, ResearchModule.MAX_LAYER);
+    }
+
+    public void putCorrelationTo(ResearchNode to, float correlation) {
+        if (!this.correlationsTo.containsKey(to)) this.correlationsTo.put(to, correlation);
     }
 
     public float correlationTo(ResearchNode to) {

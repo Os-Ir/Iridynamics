@@ -5,12 +5,14 @@ import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.capability.PotteryCapability;
+import com.atodium.iridynamics.api.capability.ResearchCapability;
 import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialInfoLoader;
 import com.atodium.iridynamics.api.module.CarvingModule;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
+import com.atodium.iridynamics.api.module.research.ResearchNodeLoader;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.util.data.DataUtil;
@@ -27,6 +29,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +41,10 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
-import net.minecraftforge.event.*;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -66,12 +72,14 @@ public class ForgeEventHandler {
     public static void onDatapackSync(OnDatapackSyncEvent event) {
         JsonRecipeLoader.INSTANCE.onDatapackSync(event);
         MaterialInfoLoader.INSTANCE.onDatapackSync(event);
+        ResearchNodeLoader.INSTANCE.onDatapackSync(event);
     }
 
     @SubscribeEvent
     public static void addReloadListener(AddReloadListenerEvent event) {
         event.addListener(JsonRecipeLoader.INSTANCE);
         event.addListener(MaterialInfoLoader.INSTANCE);
+        event.addListener(ResearchNodeLoader.INSTANCE);
     }
 
     @SubscribeEvent
@@ -91,6 +99,12 @@ public class ForgeEventHandler {
             event.addCapability(PotteryCapability.KEY, new PotteryCapability());
         else if (MaterialEntry.containsMaterialEntry(stack))
             HeatUtil.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
+    }
+
+    @SubscribeEvent
+    public static void attachPlayerCapability(AttachCapabilitiesEvent<Entity> event) {
+        if (event.getObject() instanceof Player player)
+            event.addCapability(ResearchCapability.KEY, new ResearchCapability());
     }
 
     @SubscribeEvent
