@@ -1,15 +1,12 @@
 package com.atodium.iridynamics.client.renderer.block;
 
-import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.atodium.iridynamics.common.blockEntity.PlacedStoneBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import java.util.Random;
 
@@ -18,7 +15,6 @@ public class PlacedStoneRenderer implements BlockEntityRenderer<PlacedStoneBlock
 
     @Override
     public void render(PlacedStoneBlockEntity stone, float partialTick, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(Iridynamics.rl("block/white"));
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         Random rand = new Random(stone.getBlockPos().hashCode());
         int height = rand.nextInt(5) + 4;
@@ -28,7 +24,7 @@ public class PlacedStoneRenderer implements BlockEntityRenderer<PlacedStoneBlock
         int z = (int) (rand.nextFloat() * (16 - widthZ));
         transform.pushPose();
         transform.translate(x / 16.0, 0.0, z / 16.0);
-        RendererUtil.renderCuboid(transform, consumer, texture, stone.getMaterial().getRenderInfo().color(), combinedLight, combinedOverlay, 0.0f, 0.0f, 0.0f, widthX / 16.0f, height / 16.0f, widthZ / 16.0f);
+        RendererUtil.renderColorCuboid(transform, consumer, stone.getMaterial().getRenderInfo().color(), combinedLight, combinedOverlay, 0.0f, 0.0f, 0.0f, widthX / 16.0f, height / 16.0f, widthZ / 16.0f);
         transform.popPose();
     }
 }

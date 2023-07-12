@@ -30,7 +30,7 @@ public class GearboxRenderer implements BlockEntityRenderer<GearboxBlockEntity> 
             else transform.mulPose(Vector3f.XP.rotationDegrees(direction == Direction.UP ? 90.0f : -90.0f));
             transform.mulPose(Vector3f.ZP.rotationDegrees((float) Math.toDegrees(gearbox.getRenderAngle(direction, partialTicks))));
             transform.translate(-0.125, -0.125, -0.5);
-            RendererUtil.renderCuboid(transform, consumer, texture, 0xffffff, combinedLight, combinedOverlay, 0.0f, 0.0f, 0.0f, 0.25f, 0.25f, 0.0625f);
+            RendererUtil.renderColorCuboid(transform, consumer, 0xffffff, combinedLight, combinedOverlay, 0.0f, 0.0f, 0.0f, 0.25f, 0.25f, 0.0625f);
             transform.popPose();
         }
         transform.popPose();

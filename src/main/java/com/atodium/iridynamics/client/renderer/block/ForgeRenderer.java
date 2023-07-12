@@ -1,6 +1,5 @@
 package com.atodium.iridynamics.client.renderer.block;
 
-import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.capability.ForgingCapability;
 import com.atodium.iridynamics.api.capability.IForging;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
@@ -16,12 +15,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
-
-import java.util.function.Function;
 
 public class ForgeRenderer implements BlockEntityRenderer<ForgeBlockEntity> {
     public static final ForgeRenderer INSTANCE = new ForgeRenderer();
@@ -30,8 +25,6 @@ public class ForgeRenderer implements BlockEntityRenderer<ForgeBlockEntity> {
     public void render(ForgeBlockEntity forge, float partialTick, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ForgeBlockEntity.Inventory inventory = forge.getInventory();
-        Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS);
-        TextureAtlasSprite texture = atlas.apply(Iridynamics.rl("block/white"));
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         ItemStack left = inventory.left();
         ItemStack right = inventory.right();
@@ -40,20 +33,20 @@ public class ForgeRenderer implements BlockEntityRenderer<ForgeBlockEntity> {
         if (!left.isEmpty()) {
             LazyOptional<IForging> optionalLeft = left.getCapability(ForgingCapability.FORGING);
             if (optionalLeft.isPresent())
-                this.renderMaterialItem(left, optionalLeft.orElseThrow(NullPointerException::new), 0.0625, transform, consumer, texture, combinedLight, combinedOverlay);
+                this.renderMaterialItem(left, optionalLeft.orElseThrow(NullPointerException::new), 0.0625, transform, consumer, combinedLight, combinedOverlay);
             else this.renderSimpleItem(left, 0.28125f, itemRenderer, transform, buffer, combinedLight, combinedOverlay);
         }
         if (!right.isEmpty()) {
             LazyOptional<IForging> optionalRight = right.getCapability(ForgingCapability.FORGING);
             if (optionalRight.isPresent())
-                this.renderMaterialItem(right, optionalRight.orElseThrow(NullPointerException::new), 0.5, transform, consumer, texture, combinedLight, combinedOverlay);
+                this.renderMaterialItem(right, optionalRight.orElseThrow(NullPointerException::new), 0.5, transform, consumer, combinedLight, combinedOverlay);
             else
                 this.renderSimpleItem(right, 0.71875f, itemRenderer, transform, buffer, combinedLight, combinedOverlay);
         }
         transform.popPose();
     }
 
-    private void renderMaterialItem(ItemStack stack, IForging forging, double x, PoseStack transform, VertexConsumer consumer, TextureAtlasSprite texture, int combinedLight, int combinedOverlay) {
+    private void renderMaterialItem(ItemStack stack, IForging forging, double x, PoseStack transform, VertexConsumer consumer, int combinedLight, int combinedOverlay) {
         int color = MaterialBase.getItemMaterial(stack).getRenderInfo().color();
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
@@ -61,7 +54,7 @@ public class ForgeRenderer implements BlockEntityRenderer<ForgeBlockEntity> {
                 if (thickness <= 0.0f) continue;
                 transform.pushPose();
                 transform.translate(x + i * 0.0625, 0.0625, 0.375 + j * 0.0625);
-                RendererUtil.renderCuboid(transform, consumer, texture, color, combinedLight, combinedOverlay, 0.0f, 0.0f, 0.0f, 0.0625f, 0.0625f * thickness, 0.0625f);
+                RendererUtil.renderColorCuboid(transform, consumer, color, combinedLight, combinedOverlay, 0.0f, 0.0f, 0.0f, 0.0625f, 0.0625f * thickness, 0.0625f);
                 transform.popPose();
             }
         }

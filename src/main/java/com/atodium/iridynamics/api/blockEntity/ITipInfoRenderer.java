@@ -1,16 +1,13 @@
 package com.atodium.iridynamics.api.blockEntity;
 
-import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.BlockHitResult;
@@ -18,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 
 public interface ITipInfoRenderer {
     default void render(Camera camera, BlockHitResult result, PoseStack transform, MultiBufferSource buffer, float partialTicks) {
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(Iridynamics.rl("block/white"));
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         BlockPos blockPos = result.getBlockPos();
         Vec3 cameraPos = camera.getPosition();
@@ -38,7 +34,7 @@ public interface ITipInfoRenderer {
         transform.pushPose();
         transform.translate(blockPos.getX() - cameraPos.x + (closest == Direction.NORTH || closest == Direction.EAST ? 1.0 : 0.0), blockPos.getY() - cameraPos.y + 1.0, blockPos.getZ() - cameraPos.z + (closest == Direction.SOUTH || closest == Direction.EAST ? 1.0 : 0.0));
         transform.mulPose(Vector3f.YP.rotationDegrees(RendererUtil.getDirectionAngel(closest.getOpposite())));
-        RendererUtil.renderFace(transform, consumer, texture, 0xffffffff, 255, 0, Direction.SOUTH, 0.0f, 0.0f, 0.0f, width, height, 0.0f, 0.0f, 0.0f, 1.0f, 16.0f, 16.0f);
+        RendererUtil.renderColorFace(transform, consumer, 0xffffffff, 255, 0, Direction.SOUTH, 0.0f, 0.0f, 0.0f, width, height, 0.0f, 0.0f, 0.0f, 1.0f);
         transform.popPose();
     }
 

@@ -1,10 +1,12 @@
 package com.atodium.iridynamics.client.renderer;
 
+import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -18,6 +20,14 @@ public final class RendererUtil {
     public static final ResourceLocation BLOCKS_ATLAS = TextureAtlas.LOCATION_BLOCKS;
     public static final Tesselator TESSELATOR = Tesselator.getInstance();
     public static final BufferBuilder BUFFER_BUILDER = TESSELATOR.getBuilder();
+
+    private static TextureAtlasSprite whiteTexture;
+
+    public static TextureAtlasSprite whiteTexture() {
+        if (whiteTexture == null)
+            whiteTexture = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS).apply(Iridynamics.rl("block/white"));
+        return whiteTexture;
+    }
 
     public static void bindTexture(ResourceLocation location) {
         RenderSystem.setShaderTexture(0, location);
@@ -140,44 +150,31 @@ public final class RendererUtil {
         renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, Direction.NORTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, -1.0f, xSize, ySize);
     }
 
-    public static void renderCuboid(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int color, int combinedLight, int combinedOverlay, float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
-        int xSize = Math.round(16.0f * (maxX - minX));
-        int ySize = Math.round(16.0f * (maxY - minY));
-        int zSize = Math.round(16.0f * (maxZ - minZ));
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.EAST, minX, minY, minZ, maxX, maxY, maxZ, 1.0f, 0.0f, 0.0f, zSize, ySize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.WEST, minX, minY, minZ, maxX, maxY, maxZ, -1.0f, 0.0f, 0.0f, zSize, ySize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.UP, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 1.0f, 0.0f, zSize, xSize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.DOWN, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, -1.0f, 0.0f, zSize, xSize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.SOUTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, 1.0f, xSize, ySize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.NORTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, -1.0f, xSize, ySize);
+    public static void renderColorCuboid(PoseStack transform, VertexConsumer consumer, int color, int combinedLight, int combinedOverlay, float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+        renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.EAST, minX, minY, minZ, maxX, maxY, maxZ, 1.0f, 0.0f, 0.0f);
+        renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.WEST, minX, minY, minZ, maxX, maxY, maxZ, -1.0f, 0.0f, 0.0f);
+        renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.UP, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 1.0f, 0.0f);
+        renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.DOWN, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, -1.0f, 0.0f);
+        renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.SOUTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, 1.0f);
+        renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.NORTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, -1.0f);
     }
 
     public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize, float uStart, float vStart) {
         float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
-        for (float[] vertex : vertices) {
+        for (float[] vertex : vertices)
             renderVertex(transform, consumer, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, uStart + sprite.getU(vertex[3] * uSize), vStart + sprite.getV(vertex[4] * vSize));
-        }
-    }
-
-    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int color, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize, float uStart, float vStart) {
-        float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
-        for (float[] vertex : vertices) {
-            renderVertex(transform, consumer, color, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, uStart + sprite.getU(vertex[3] * uSize), vStart + sprite.getV(vertex[4] * vSize));
-        }
     }
 
     public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize) {
         float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
-        for (float[] vertex : vertices) {
+        for (float[] vertex : vertices)
             renderVertex(transform, consumer, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, sprite.getU(vertex[3] * uSize), sprite.getV(vertex[4] * vSize));
-        }
     }
 
-    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int color, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize) {
+    public static void renderColorFace(PoseStack transform, VertexConsumer consumer, int color, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz) {
         float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
-        for (float[] vertex : vertices) {
-            renderVertex(transform, consumer, color, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, sprite.getU(vertex[3] * uSize), sprite.getV(vertex[4] * vSize));
-        }
+        for (float[] vertex : vertices)
+            renderColorVertex(transform, consumer, color, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, whiteTexture().getU(vertex[3] * 16.0f), whiteTexture().getV(vertex[4] * 16.0f));
     }
 
     public static void renderVertex(PoseStack transform, VertexConsumer consumer, int combinedLight, int combinedOverlay, float x, float y, float z, float nx, float ny, float nz, float u, float v) {
@@ -185,7 +182,7 @@ public final class RendererUtil {
         consumer.vertex(transform.last().pose(), x, y, z).color(shade, shade, shade, 1.0f).uv(u, v).uv2(combinedLight).overlayCoords(combinedOverlay).normal(transform.last().normal(), nx, ny, nz).endVertex();
     }
 
-    public static void renderVertex(PoseStack transform, VertexConsumer consumer, int color, int combinedLight, int combinedOverlay, float x, float y, float z, float nx, float ny, float nz, float u, float v) {
+    public static void renderColorVertex(PoseStack transform, VertexConsumer consumer, int color, int combinedLight, int combinedOverlay, float x, float y, float z, float nx, float ny, float nz, float u, float v) {
         float shade = getShade(nx, ny, nz);
         consumer.vertex(transform.last().pose(), x, y, z).color(((color >> 16) & 0xff) / 255.0f * shade, ((color >> 8) & 0xff) / 255.0f * shade, (color & 0xff) / 255.0f * shade, 1.0f).uv(u, v).uv2(combinedLight).overlayCoords(combinedOverlay).normal(transform.last().normal(), nx, ny, nz).endVertex();
     }
