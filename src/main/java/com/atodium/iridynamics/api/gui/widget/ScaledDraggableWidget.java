@@ -33,6 +33,12 @@ public class ScaledDraggableWidget extends WidgetBase {
         return true;
     }
 
+    @Override
+    public boolean onMouseScrolled(double mouseX, double mouseY, double move) {
+        this.scale = (float) Math.max(this.scale + move * 0.2f, 0.2f);
+        return true;
+    }
+
     @FunctionalInterface
     public interface IDraggableRenderer {
         void draw(ModularContainer container, PoseStack transform, float x, float y, float width, float height, float moveX, float moveY, float scale);

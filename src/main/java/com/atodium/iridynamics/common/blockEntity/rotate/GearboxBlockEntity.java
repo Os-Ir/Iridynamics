@@ -2,6 +2,7 @@ package com.atodium.iridynamics.common.blockEntity.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
+import com.atodium.iridynamics.api.blockEntity.ITipInfoRenderer;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
@@ -12,6 +13,9 @@ import com.atodium.iridynamics.api.util.data.ItemDelegate;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,12 +23,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.EnumMap;
 import java.util.List;
 
-public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder {
+public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder, ITipInfoRenderer {
     public static final ItemDelegate SMALL_GEAR = ItemDelegate.of(ModSolidShapes.SMALL_GEAR, ModMaterials.IRON);
     public static final ItemDelegate GEAR = ItemDelegate.of(ModSolidShapes.GEAR, ModMaterials.IRON);
 
@@ -95,6 +100,21 @@ public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, 
 
     public double getRenderAngle(Direction direction, float partialTicks) {
         return MathUtil.castAngle(this.rotate.getAngle(direction));
+    }
+
+    @Override
+    public float width() {
+        return 2.0f;
+    }
+
+    @Override
+    public float height() {
+        return 1.0f;
+    }
+
+    @Override
+    public void renderInfo(Camera camera, BlockHitResult result, PoseStack transform, MultiBufferSource buffer, float partialTicks) {
+
     }
 
     @Override

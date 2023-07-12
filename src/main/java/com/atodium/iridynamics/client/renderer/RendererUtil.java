@@ -132,45 +132,49 @@ public final class RendererUtil {
         int xSize = Math.round(16.0f * (maxX - minX));
         int ySize = Math.round(16.0f * (maxY - minY));
         int zSize = Math.round(16.0f * (maxZ - minZ));
-        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, buildPositiveXVertices(minX, minY, minZ, maxX, maxY, maxZ), 1.0f, 0.0f, 0.0f, zSize, ySize);
-        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, buildNegativeXVertices(minX, minY, minZ, maxX, maxY, maxZ), -1.0f, 0.0f, 0.0f, zSize, ySize);
-        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, buildPositiveYVertices(minX, minY, minZ, maxX, maxY, maxZ), 0.0f, 1.0f, 0.0f, zSize, xSize);
-        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, buildNegativeYVertices(minX, minY, minZ, maxX, maxY, maxZ), 0.0f, -1.0f, 0.0f, zSize, xSize);
-        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, buildPositiveZVertices(minX, minY, minZ, maxX, maxY, maxZ), 0.0f, 0.0f, 1.0f, xSize, ySize);
-        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, buildNegativeZVertices(minX, minY, minZ, maxX, maxY, maxZ), 0.0f, 0.0f, -1.0f, xSize, ySize);
+        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, Direction.EAST, minX, minY, minZ, maxX, maxY, maxZ, 1.0f, 0.0f, 0.0f, zSize, ySize);
+        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, Direction.WEST, minX, minY, minZ, maxX, maxY, maxZ, -1.0f, 0.0f, 0.0f, zSize, ySize);
+        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, Direction.UP, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 1.0f, 0.0f, zSize, xSize);
+        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, Direction.DOWN, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, -1.0f, 0.0f, zSize, xSize);
+        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, Direction.SOUTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, 1.0f, xSize, ySize);
+        renderFace(transform, consumer, sprite, combinedLight, combinedOverlay, Direction.NORTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, -1.0f, xSize, ySize);
     }
 
     public static void renderCuboid(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int color, int combinedLight, int combinedOverlay, float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         int xSize = Math.round(16.0f * (maxX - minX));
         int ySize = Math.round(16.0f * (maxY - minY));
         int zSize = Math.round(16.0f * (maxZ - minZ));
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, buildPositiveXVertices(minX, minY, minZ, maxX, maxY, maxZ), 1.0f, 0.0f, 0.0f, zSize, ySize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, buildNegativeXVertices(minX, minY, minZ, maxX, maxY, maxZ), -1.0f, 0.0f, 0.0f, zSize, ySize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, buildPositiveYVertices(minX, minY, minZ, maxX, maxY, maxZ), 0.0f, 1.0f, 0.0f, zSize, xSize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, buildNegativeYVertices(minX, minY, minZ, maxX, maxY, maxZ), 0.0f, -1.0f, 0.0f, zSize, xSize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, buildPositiveZVertices(minX, minY, minZ, maxX, maxY, maxZ), 0.0f, 0.0f, 1.0f, xSize, ySize);
-        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, buildNegativeZVertices(minX, minY, minZ, maxX, maxY, maxZ), 0.0f, 0.0f, -1.0f, xSize, ySize);
+        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.EAST, minX, minY, minZ, maxX, maxY, maxZ, 1.0f, 0.0f, 0.0f, zSize, ySize);
+        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.WEST, minX, minY, minZ, maxX, maxY, maxZ, -1.0f, 0.0f, 0.0f, zSize, ySize);
+        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.UP, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 1.0f, 0.0f, zSize, xSize);
+        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.DOWN, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, -1.0f, 0.0f, zSize, xSize);
+        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.SOUTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, 1.0f, xSize, ySize);
+        renderFace(transform, consumer, sprite, color, combinedLight, combinedOverlay, Direction.NORTH, minX, minY, minZ, maxX, maxY, maxZ, 0.0f, 0.0f, -1.0f, xSize, ySize);
     }
 
-    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int combinedLight, int combinedOverlay, float[][] vertices, float nx, float ny, float nz, float uSize, float vSize, float uStart, float vStart) {
+    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize, float uStart, float vStart) {
+        float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
         for (float[] vertex : vertices) {
             renderVertex(transform, consumer, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, uStart + sprite.getU(vertex[3] * uSize), vStart + sprite.getV(vertex[4] * vSize));
         }
     }
 
-    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int color, int combinedLight, int combinedOverlay, float[][] vertices, float nx, float ny, float nz, float uSize, float vSize, float uStart, float vStart) {
+    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int color, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize, float uStart, float vStart) {
+        float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
         for (float[] vertex : vertices) {
             renderVertex(transform, consumer, color, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, uStart + sprite.getU(vertex[3] * uSize), vStart + sprite.getV(vertex[4] * vSize));
         }
     }
 
-    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int combinedLight, int combinedOverlay, float[][] vertices, float nx, float ny, float nz, float uSize, float vSize) {
+    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize) {
+        float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
         for (float[] vertex : vertices) {
             renderVertex(transform, consumer, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, sprite.getU(vertex[3] * uSize), sprite.getV(vertex[4] * vSize));
         }
     }
 
-    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int color, int combinedLight, int combinedOverlay, float[][] vertices, float nx, float ny, float nz, float uSize, float vSize) {
+    public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int color, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize) {
+        float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
         for (float[] vertex : vertices) {
             renderVertex(transform, consumer, color, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, sprite.getU(vertex[3] * uSize), sprite.getV(vertex[4] * vSize));
         }
@@ -212,10 +216,10 @@ public final class RendererUtil {
     public static float[][] buildVertices(Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         switch (direction) {
             case EAST -> {
-                return buildNegativeXVertices(minX, minY, minZ, maxX, maxY, maxZ);
+                return buildPositiveXVertices(minX, minY, minZ, maxX, maxY, maxZ);
             }
             case WEST -> {
-                return buildPositiveXVertices(minX, minY, minZ, maxX, maxY, maxZ);
+                return buildNegativeXVertices(minX, minY, minZ, maxX, maxY, maxZ);
             }
             case UP -> {
                 return buildPositiveYVertices(minX, minY, minZ, maxX, maxY, maxZ);
@@ -224,65 +228,65 @@ public final class RendererUtil {
                 return buildNegativeYVertices(minX, minY, minZ, maxX, maxY, maxZ);
             }
             case SOUTH -> {
-                return buildNegativeZVertices(minX, minY, minZ, maxX, maxY, maxZ);
+                return buildPositiveZVertices(minX, minY, minZ, maxX, maxY, maxZ);
             }
             default -> {
-                return buildPositiveZVertices(minX, minY, minZ, maxX, maxY, maxZ);
+                return buildNegativeZVertices(minX, minY, minZ, maxX, maxY, maxZ);
             }
         }
     }
 
     public static float[][] buildPositiveXVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {minX, minY, minZ, 0, 1},
-                {minX, minY, maxZ, 1, 1},
-                {minX, maxY, maxZ, 1, 0},
-                {minX, maxY, minZ, 0, 0}
+                {maxX, maxY, maxZ, 0, 0},
+                {maxX, minY, maxZ, 0, 1},
+                {maxX, minY, minZ, 1, 1},
+                {maxX, maxY, minZ, 1, 0}
         };
     }
 
     public static float[][] buildNegativeXVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {maxX, minY, maxZ, 1, 0},
-                {maxX, minY, minZ, 0, 0},
-                {maxX, maxY, minZ, 0, 1},
-                {maxX, maxY, maxZ, 1, 1}
+                {minX, maxY, minZ, 0, 0},
+                {minX, minY, minZ, 0, 1},
+                {minX, minY, maxZ, 1, 1},
+                {minX, maxY, maxZ, 1, 0}
         };
     }
 
     public static float[][] buildPositiveYVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {minX, maxY, minZ, 0, 1},
-                {minX, maxY, maxZ, 1, 1},
-                {maxX, maxY, maxZ, 1, 0},
-                {maxX, maxY, minZ, 0, 0}
+                {minX, maxY, minZ, 0, 0},
+                {minX, maxY, maxZ, 0, 1},
+                {maxX, maxY, maxZ, 1, 1},
+                {maxX, maxY, minZ, 1, 0}
         };
     }
 
     public static float[][] buildNegativeYVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {minX, minY, maxZ, 1, 0},
-                {minX, minY, minZ, 0, 0},
-                {maxX, minY, minZ, 0, 1},
-                {maxX, minY, maxZ, 1, 1}
+                {minX, minY, maxZ, 0, 0},
+                {minX, minY, minZ, 0, 1},
+                {maxX, minY, minZ, 1, 1},
+                {maxX, minY, maxZ, 1, 0}
         };
     }
 
     public static float[][] buildPositiveZVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {maxX, minY, minZ, 0, 1},
-                {minX, minY, minZ, 1, 1},
-                {minX, maxY, minZ, 1, 0},
-                {maxX, maxY, minZ, 0, 0}
+                {minX, maxY, maxZ, 0, 0},
+                {minX, minY, maxZ, 0, 1},
+                {maxX, minY, maxZ, 1, 1},
+                {maxX, maxY, maxZ, 1, 0}
         };
     }
 
     public static float[][] buildNegativeZVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {minX, minY, maxZ, 1, 0},
-                {maxX, minY, maxZ, 0, 0},
-                {maxX, maxY, maxZ, 0, 1},
-                {minX, maxY, maxZ, 1, 1}
+                {maxX, maxY, minZ, 0, 0},
+                {maxX, minY, minZ, 0, 1},
+                {minX, minY, minZ, 1, 1},
+                {minX, maxY, minZ, 1, 0}
         };
     }
 }

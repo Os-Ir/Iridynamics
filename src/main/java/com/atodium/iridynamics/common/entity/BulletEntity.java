@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 
-public class BulletEntity extends EntityProjectileBase {
+public class BulletEntity extends ProjectileBaseEntity {
     public BulletEntity(EntityType<BulletEntity> type, Level level) {
         super(type, level);
     }

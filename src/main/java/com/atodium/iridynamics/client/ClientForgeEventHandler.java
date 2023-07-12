@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.client;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.blockEntity.ITipInfoRenderer;
 import com.atodium.iridynamics.api.capability.*;
 import com.atodium.iridynamics.api.heat.impl.HeatProcessPhasePortrait;
 import com.atodium.iridynamics.api.material.MaterialEntry;
@@ -98,11 +99,20 @@ public class ClientForgeEventHandler {
     }
 
     @SubscribeEvent
+    public static void renderBlockTipInfo(DrawSelectionEvent.HighlightBlock event) {
+        ClientLevel level = Minecraft.getInstance().level;
+        BlockHitResult result = event.getTarget();
+        BlockPos pos = result.getBlockPos();
+        BlockEntity entity = level.getBlockEntity(pos);
+        if (entity instanceof ITipInfoRenderer renderer)
+            renderer.render(event.getCamera(), result, event.getPoseStack(), event.getMultiBufferSource(), event.getPartialTicks());
+    }
+
+    @SubscribeEvent
     public static void drawBlockHighlight(DrawSelectionEvent.HighlightBlock event) {
         ClientLevel level = Minecraft.getInstance().level;
         BlockHitResult result = event.getTarget();
         BlockPos pos = result.getBlockPos();
-        assert level != null;
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() == ModBlocks.FORGE.get() && result.getDirection() == Direction.UP) {
             VertexConsumer consumer = event.getMultiBufferSource().getBuffer(RenderType.lines());

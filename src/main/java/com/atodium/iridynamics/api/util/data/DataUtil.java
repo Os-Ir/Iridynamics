@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.util.data;
 
 import com.google.gson.Gson;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,6 +15,8 @@ import java.util.function.Predicate;
 
 public class DataUtil {
     public static final Gson GSON = new Gson();
+    public static final Direction[] DIRECTIONS = {Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+    public static final Direction[] HORIZONTALS = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
 
     @SuppressWarnings("deprecation")
     public static String writeItemToString(Item item) {

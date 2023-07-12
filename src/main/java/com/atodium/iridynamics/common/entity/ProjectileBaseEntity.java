@@ -20,19 +20,19 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class EntityProjectileBase extends AbstractArrow {
+public abstract class ProjectileBaseEntity extends AbstractArrow {
     protected BlockPos groundPos;
     protected BlockState lastGround;
     protected int inAirTime;
 
-    public EntityProjectileBase(EntityType<? extends EntityProjectileBase> type, Level level) {
+    public ProjectileBaseEntity(EntityType<? extends ProjectileBaseEntity> type, Level level) {
         super(type, level);
     }
 
@@ -40,27 +40,19 @@ public abstract class EntityProjectileBase extends AbstractArrow {
     public void tick() {
         this.baseTick();
         BlockState ground = null;
-        if (this.groundPos != null) {
-            ground = this.level.getBlockState(this.groundPos);
-        }
+        if (this.groundPos != null) ground = this.level.getBlockState(this.groundPos);
         if (ground != null && ground.getMaterial() != Material.AIR) {
             VoxelShape shape = ground.getCollisionShape(this.level, this.groundPos);
-            if (!shape.isEmpty()) {
-                for (AABB aabb : shape.toAabbs()) {
-                    Vec3 pos = this.position();
-                    if (aabb.contains(pos)) {
-                        this.inGround = true;
-                        break;
-                    }
+            if (!shape.isEmpty()) for (AABB aabb : shape.toAabbs())
+                if (aabb.contains(this.position())) {
+                    this.inGround = true;
+                    break;
                 }
-            }
         }
         if (this.inGround) {
             if (ground == this.lastGround) {
                 this.inGroundTime++;
-                if (this.inGroundTime >= this.maxTicksInGround()) {
-                    this.remove(RemovalReason.DISCARDED);
-                }
+                if (this.inGroundTime >= this.maxTicksInGround()) this.remove(RemovalReason.DISCARDED);
             } else {
                 this.inGround = false;
                 this.setDeltaMovement(this.getDeltaMovement().multiply(this.random.nextFloat() * 0.2, this.random.nextFloat() * 0.2, this.random.nextFloat() * 0.2));
@@ -78,19 +70,15 @@ public abstract class EntityProjectileBase extends AbstractArrow {
             Vec3 velocity = this.getDeltaMovement();
             Vec3 nextPos = pos.add(velocity);
             BlockHitResult rayTrace = this.level.clip(new ClipContext(pos, nextPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
-            if (rayTrace.getType() == BlockHitResult.Type.BLOCK) {
-                nextPos = rayTrace.getLocation();
-            }
-            List<Pair<Double, Entity>> entityHit = new ArrayList<>();
+            if (rayTrace.getType() == BlockHitResult.Type.BLOCK) nextPos = rayTrace.getLocation();
+            List<Pair<Double, Entity>> entityHit = Lists.newArrayList();
             double distance = nextPos.distanceTo(pos);
             for (Entity entity : this.level.getEntities(this, this.getBoundingBox().expandTowards(velocity).inflate(1.0D), this::canHitEntity)) {
                 AABB aabb = entity.getBoundingBox().inflate(this.getCollisionWidth() / 2);
                 Optional<Vec3> optional = aabb.clip(pos, nextPos);
                 if (optional.isPresent()) {
                     double d = pos.distanceTo(optional.get());
-                    if (d < distance) {
-                        entityHit.add(Pair.of(d, entity));
-                    }
+                    if (d < distance) entityHit.add(Pair.of(d, entity));
                 }
             }
             Entity owner = this.getOwner();
@@ -115,9 +103,7 @@ public abstract class EntityProjectileBase extends AbstractArrow {
                 for (int i = 0; i < size; i++) {
                     double p = entityHit.get(i).getLeft();
                     double add = (p - currentMove) / velo;
-                    if (usedTick + add > 1) {
-                        break;
-                    }
+                    if (usedTick + add > 1) break;
                     Entity entity = entityHit.get(i).getRight();
                     this.onHitEntity(new EntityHitResult(entity));
                     usedTick += add;
@@ -127,9 +113,8 @@ public abstract class EntityProjectileBase extends AbstractArrow {
                 }
                 currentMove += (1 - usedTick) * velo;
                 if (currentMove - distance > -0.05) {
-                    if (rayTrace.getType() == BlockHitResult.Type.BLOCK && !ForgeEventFactory.onProjectileImpact(this, rayTrace)) {
+                    if (rayTrace.getType() == BlockHitResult.Type.BLOCK && !ForgeEventFactory.onProjectileImpact(this, rayTrace))
                         this.onHitBlock(rayTrace);
-                    }
                     velocity = this.getDeltaMovement();
                     this.setPosRaw(pos.x + velocity.x, pos.y + velocity.y, pos.z + velocity.z);
                 } else {
@@ -161,13 +146,10 @@ public abstract class EntityProjectileBase extends AbstractArrow {
         int damage = Mth.ceil(this.getDeltaMovement().length() * this.getBaseDamage());
         Entity owner = this.getOwner();
         DamageSource damageSource;
-        if (owner == null) {
-            damageSource = DamageSource.arrow(this, this);
-        } else {
+        if (owner == null) damageSource = DamageSource.arrow(this, this);
+        else {
             damageSource = DamageSource.arrow(this, owner);
-            if (owner instanceof LivingEntity) {
-                ((LivingEntity) owner).setLastHurtMob(entity);
-            }
+            if (owner instanceof LivingEntity) ((LivingEntity) owner).setLastHurtMob(entity);
         }
         if (entity.hurt(damageSource, damage)) {
             if (entity instanceof LivingEntity living) {
