@@ -75,10 +75,10 @@ public final class RendererUtil {
         Matrix4f matrix4f = transform.last().pose();
         float xa = xi + width;
         float ya = yi + height;
-        BUFFER_BUILDER.vertex(matrix4f, xi, ya, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, xa, ya, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, xa, yi, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, xi, yi, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xi, ya, 0.0f).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xa, ya, 0.0f).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xa, yi, 0.0f).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xi, yi, 0.0f).color(r, g, b, a).endVertex();
         BUFFER_BUILDER.end();
         BufferUploader.end(BUFFER_BUILDER);
         RenderSystem.disableBlend();
@@ -99,10 +99,10 @@ public final class RendererUtil {
         RenderSystem.enableBlend();
         BUFFER_BUILDER.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         Matrix4f matrix4f = transform.last().pose();
-        BUFFER_BUILDER.vertex(matrix4f, xi, ya, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, xa, ya, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, xa, yi, 0).color(r, g, b, a).endVertex();
-        BUFFER_BUILDER.vertex(matrix4f, xi, yi, 0).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xi, ya, 0.0f).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xa, ya, 0.0f).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xa, yi, 0.0f).color(r, g, b, a).endVertex();
+        BUFFER_BUILDER.vertex(matrix4f, xi, yi, 0.0f).color(r, g, b, a).endVertex();
         BUFFER_BUILDER.end();
         BufferUploader.end(BUFFER_BUILDER);
         RenderSystem.disableBlend();
@@ -161,8 +161,10 @@ public final class RendererUtil {
 
     public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize, float uStart, float vStart) {
         float[][] vertices = buildVertices(direction, minX, minY, minZ, maxX, maxY, maxZ);
+        float du = uStart * (sprite.getU(1.0) - sprite.getU(0.0));
+        float dv = vStart * (sprite.getV(1.0) - sprite.getV(0.0));
         for (float[] vertex : vertices)
-            renderVertex(transform, consumer, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, uStart + sprite.getU(vertex[3] * uSize), vStart + sprite.getV(vertex[4] * vSize));
+            renderVertex(transform, consumer, combinedLight, combinedOverlay, vertex[0], vertex[1], vertex[2], nx, ny, nz, du + sprite.getU(vertex[3] * uSize), dv + sprite.getV(vertex[4] * vSize));
     }
 
     public static void renderFace(PoseStack transform, VertexConsumer consumer, TextureAtlasSprite sprite, int combinedLight, int combinedOverlay, Direction direction, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float nx, float ny, float nz, float uSize, float vSize) {
@@ -235,55 +237,55 @@ public final class RendererUtil {
 
     public static float[][] buildPositiveXVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {maxX, maxY, maxZ, 0, 0},
-                {maxX, minY, maxZ, 0, 1},
-                {maxX, minY, minZ, 1, 1},
-                {maxX, maxY, minZ, 1, 0}
+                {maxX, maxY, maxZ, 0.0f, 0.0f},
+                {maxX, minY, maxZ, 0.0f, 1.0f},
+                {maxX, minY, minZ, 1.0f, 1.0f},
+                {maxX, maxY, minZ, 1.0f, 0.0f}
         };
     }
 
     public static float[][] buildNegativeXVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {minX, maxY, minZ, 0, 0},
-                {minX, minY, minZ, 0, 1},
-                {minX, minY, maxZ, 1, 1},
-                {minX, maxY, maxZ, 1, 0}
+                {minX, maxY, minZ, 0.0f, 0.0f},
+                {minX, minY, minZ, 0.0f, 1.0f},
+                {minX, minY, maxZ, 1.0f, 1.0f},
+                {minX, maxY, maxZ, 1.0f, 0.0f}
         };
     }
 
     public static float[][] buildPositiveYVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {minX, maxY, minZ, 0, 0},
-                {minX, maxY, maxZ, 0, 1},
-                {maxX, maxY, maxZ, 1, 1},
-                {maxX, maxY, minZ, 1, 0}
+                {minX, maxY, minZ, 0.0f, 0.0f},
+                {minX, maxY, maxZ, 0.0f, 1.0f},
+                {maxX, maxY, maxZ, 1.0f, 1.0f},
+                {maxX, maxY, minZ, 1.0f, 0.0f}
         };
     }
 
     public static float[][] buildNegativeYVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {minX, minY, maxZ, 0, 0},
-                {minX, minY, minZ, 0, 1},
-                {maxX, minY, minZ, 1, 1},
-                {maxX, minY, maxZ, 1, 0}
+                {minX, minY, maxZ, 0.0f, 0.0f},
+                {minX, minY, minZ, 0.0f, 1.0f},
+                {maxX, minY, minZ, 1.0f, 1.0f},
+                {maxX, minY, maxZ, 1.0f, 0.0f}
         };
     }
 
     public static float[][] buildPositiveZVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {minX, maxY, maxZ, 0, 0},
-                {minX, minY, maxZ, 0, 1},
-                {maxX, minY, maxZ, 1, 1},
-                {maxX, maxY, maxZ, 1, 0}
+                {minX, maxY, maxZ, 0.0f, 0.0f},
+                {minX, minY, maxZ, 0.0f, 1.0f},
+                {maxX, minY, maxZ, 1.0f, 1.0f},
+                {maxX, maxY, maxZ, 1.0f, 0.0f}
         };
     }
 
     public static float[][] buildNegativeZVertices(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         return new float[][]{
-                {maxX, maxY, minZ, 0, 0},
-                {maxX, minY, minZ, 0, 1},
-                {minX, minY, minZ, 1, 1},
-                {minX, maxY, minZ, 1, 0}
+                {maxX, maxY, minZ, 0.0f, 0.0f},
+                {maxX, minY, minZ, 0.0f, 1.0f},
+                {minX, minY, minZ, 1.0f, 1.0f},
+                {minX, maxY, minZ, 1.0f, 0.0f}
         };
     }
 }

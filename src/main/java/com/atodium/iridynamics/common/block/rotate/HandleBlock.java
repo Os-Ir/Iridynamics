@@ -2,6 +2,7 @@ package com.atodium.iridynamics.common.block.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.module.rotate.RotateModule;
+import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.rotate.HandleBlockEntity;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Random;
@@ -49,7 +51,11 @@ public class HandleBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
-        System.out.println(level.getGameTime());
+        if (result.getDirection() == state.getValue(DIRECTION).getOpposite()) {
+            Vec3 location = MathUtil.transformPosition(MathUtil.minus(result.getLocation(), pos), Direction.NORTH, state.getValue(DIRECTION));
+            boolean isLeft = location.x <= 0.5;
+            level.getBlockEntity(pos, ModBlockEntities.HANDLE.get()).ifPresent((handle) -> handle.handle(isLeft));
+        }
         return InteractionResult.CONSUME;
     }
 

@@ -15,6 +15,7 @@ import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -114,7 +115,12 @@ public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, 
 
     @Override
     public void renderInfo(Camera camera, BlockHitResult result, PoseStack transform, MultiBufferSource buffer, float partialTicks) {
-
+        transform.pushPose();
+        transform.translate(0.0f, 1.0f, 0.001f);
+        transform.scale(1.0f, -1.0f, 1.0f);
+        transform.scale(0.125f, 0.125f, 1.0f);
+        Minecraft.getInstance().font.draw(transform, "Test", 0.0f, 0.0f, 0x000000);
+        transform.popPose();
     }
 
     @Override

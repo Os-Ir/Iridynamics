@@ -34,7 +34,8 @@ public interface ITipInfoRenderer {
         transform.pushPose();
         transform.translate(blockPos.getX() - cameraPos.x + (closest == Direction.NORTH || closest == Direction.EAST ? 1.0 : 0.0), blockPos.getY() - cameraPos.y + 1.0, blockPos.getZ() - cameraPos.z + (closest == Direction.SOUTH || closest == Direction.EAST ? 1.0 : 0.0));
         transform.mulPose(Vector3f.YP.rotationDegrees(RendererUtil.getDirectionAngel(closest.getOpposite())));
-        RendererUtil.renderColorFace(transform, consumer, 0xffffffff, 255, 0, Direction.SOUTH, 0.0f, 0.0f, 0.0f, width, height, 0.0f, 0.0f, 0.0f, 1.0f);
+//        RendererUtil.renderColorFace(transform, consumer, 0xffffffff, 255, 0, Direction.SOUTH, 0.0f, 0.0f, 0.0f, width, height, 0.0f, 0.0f, 0.0f, 1.0f);
+//        this.renderInfo(camera, result, transform, buffer, partialTicks);
         transform.popPose();
     }
 

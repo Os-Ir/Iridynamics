@@ -8,10 +8,10 @@ import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.gui.widget.ScaledDraggableWidget;
 import com.atodium.iridynamics.api.module.research.ResearchModule;
 import com.atodium.iridynamics.api.module.research.ResearchNetwork;
 import com.atodium.iridynamics.api.module.research.ResearchNode;
-import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -35,15 +35,19 @@ public class ResearchTableBlockEntity extends SyncedBlockEntity implements IBloc
 
     private void drawResearchNodes(ModularContainer container, PoseStack transform, float x, float y, float width, float height, float moveX, float moveY, float scale) {
         ResearchNetwork network = ResearchModule.getPlayerResearchNetwork(container.player(), "agricultural_age");
-        float rootX = x + width / 2.0f + moveX;
-        float rootY = y + height / 2.0f + moveY;
+        float rootX = x + width / 2.0f + moveX - 8.0f;
+        float rootY = y + height / 2.0f + moveY - 8.0f;
         for (Map.Entry<ResearchNode, Vector3f> entry : network.position().entrySet()) {
             ResearchNode node = entry.getKey();
             Vector3f pos = entry.getValue();
-            float nodeX = rootX + pos.x() * 30.0f * scale;
-            float nodeY = rootY + pos.y() * 30.0f * scale;
-            RendererUtil.fillInRange(transform, nodeX, nodeY, 5.0f, 5.0f, node.layer() == 0 ? 0xffffffff : 0xff000000, x, x + width, y, y + height);
+            float nodeX = rootX + pos.x() * 40.0f * scale;
+            float nodeY = rootY + pos.y() * 40.0f * scale;
+            node.type().texture().drawInRange(transform, nodeX, nodeY, 16.0f, 16.0f, x, x + width, y, y + height);
         }
+    }
+
+    private void drawResearchNodeInfo(ModularContainer container, float moveX, float moveY, float scale, double mouseX, double mouseY, int button) {
+        ResearchNetwork network = ResearchModule.getPlayerResearchNetwork(container.player(), "agricultural_age");
     }
 
     @Override
@@ -59,7 +63,7 @@ public class ResearchTableBlockEntity extends SyncedBlockEntity implements IBloc
     @Override
     public ModularGuiInfo createGuiInfo(Player player) {
         return ModularGuiInfo.builder(416, 220).background(BACKGROUND)
-                .draggableRenderer(0, 111, 10, 295, 200, this::drawResearchNodes)
+                .widget(0, new ScaledDraggableWidget(111, 10, 295, 200, this::drawResearchNodes).setHoveredListener(this::drawResearchNodeInfo))
                 .build(player);
     }
 

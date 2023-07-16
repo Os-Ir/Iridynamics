@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ScaledDraggableWidget extends WidgetBase {
     private final IDraggableRenderer renderer;
+    private IMouseEventListener hoveredListener, clickListener, releaseListener;
     private float scale, moveX, moveY;
 
     public ScaledDraggableWidget(int x, int y, int width, int height, IDraggableRenderer renderer) {
@@ -20,6 +21,22 @@ public class ScaledDraggableWidget extends WidgetBase {
         throw new UnsupportedOperationException();
     }
 
+    public ScaledDraggableWidget setHoveredListener(IMouseEventListener hoveredListener) {
+        this.hoveredListener = hoveredListener;
+        return this;
+    }
+
+
+    public ScaledDraggableWidget setClickListener(IMouseEventListener clickListener) {
+        this.clickListener = clickListener;
+        return this;
+    }
+
+    public ScaledDraggableWidget setReleaseListener(IMouseEventListener releaseListener) {
+        this.releaseListener = releaseListener;
+        return this;
+    }
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public void renderBg(PoseStack transform, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop) {
@@ -27,9 +44,31 @@ public class ScaledDraggableWidget extends WidgetBase {
     }
 
     @Override
+    public void onMouseHovered(int mouseX, int mouseY) {
+        if (this.hoveredListener != null)
+            this.hoveredListener.mouseEvent(this.info.getContainer(), this.moveX, this.moveY, this.scale, mouseX, mouseY, 0);
+    }
+
+    @Override
+    public boolean onMouseClicked(double mouseX, double mouseY, int button) {
+        if (this.clickListener == null) return false;
+        this.clickListener.mouseEvent(this.info.getContainer(), this.moveX, this.moveY, this.scale, mouseX, mouseY, button);
+        return true;
+    }
+
+    @Override
+    public boolean onMouseReleased(double mouseX, double mouseY, int button) {
+        if (this.releaseListener == null) return false;
+        this.releaseListener.mouseEvent(this.info.getContainer(), this.moveX, this.moveY, this.scale, mouseX, mouseY, button);
+        return true;
+    }
+
+    @Override
     public boolean onMouseClickMove(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        this.moveX += dragX / this.scale;
-        this.moveY += dragY / this.scale;
+        if (button == 0) {
+            this.moveX += dragX;
+            this.moveY += dragY;
+        }
         return true;
     }
 
@@ -42,5 +81,10 @@ public class ScaledDraggableWidget extends WidgetBase {
     @FunctionalInterface
     public interface IDraggableRenderer {
         void draw(ModularContainer container, PoseStack transform, float x, float y, float width, float height, float moveX, float moveY, float scale);
+    }
+
+    @FunctionalInterface
+    public interface IMouseEventListener {
+        void mouseEvent(ModularContainer container, float moveX, float moveY, float scale, double mouseX, double mouseY, int button);
     }
 }

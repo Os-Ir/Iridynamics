@@ -50,6 +50,9 @@ public class ClientModEventHandler {
         if (event.getAtlas().location().equals(RendererUtil.BLOCKS_ATLAS)) {
             PileBlockEntity.PILE_ITEM.values().forEach((info) -> event.addSprite(info.getTextureName()));
             event.addSprite(Iridynamics.rl("block/white"));
+            event.addSprite(Iridynamics.rl("block/axle_1"));
+            event.addSprite(Iridynamics.rl("block/axle_2"));
+            event.addSprite(Iridynamics.rl("block/axle_3"));
         }
     }
 

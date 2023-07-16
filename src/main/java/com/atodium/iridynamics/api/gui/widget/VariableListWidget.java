@@ -14,10 +14,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class VariableListWidget implements IWidget, ISyncedWidgetList {
-    private ModularGuiInfo guiInfo;
-    private ISyncedWidgetList widgetList;
-    private int id;
-    private final Map<Integer, IWidget> widgets;
+    protected ModularGuiInfo guiInfo;
+    protected ISyncedWidgetList widgetList;
+    protected int id;
+    protected final Map<Integer, IWidget> widgets;
 
     public VariableListWidget() {
         this.widgets = new HashMap<>();

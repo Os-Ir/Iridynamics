@@ -90,7 +90,10 @@ public class PileBlock extends Block implements EntityBlock {
             Item item = stack.getItem();
             if (PileBlockEntity.PILE_ITEM.containsKey(item)) {
                 if (pile.addContent(item) && !player.isCreative()) stack.shrink(1);
-            } else ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(pile.removeTopContent()));
+            } else {
+                if (player.isCreative()) pile.removeTopContent();
+                else ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(pile.removeTopContent()));
+            }
         });
         return InteractionResult.CONSUME;
     }

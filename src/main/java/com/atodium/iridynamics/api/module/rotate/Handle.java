@@ -16,6 +16,10 @@ public class Handle implements IRotateNode {
         this.direction = direction;
     }
 
+    public void setTorque(double torque) {
+        this.torque = torque;
+    }
+
     @Override
     public Serializer serializer() {
         return SERIALIZER;
