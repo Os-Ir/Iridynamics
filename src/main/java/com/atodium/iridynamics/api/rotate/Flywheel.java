@@ -1,21 +1,18 @@
-package com.atodium.iridynamics.api.module.rotate;
+package com.atodium.iridynamics.api.rotate;
 
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
-public class Axle implements IRotateNode {
+public class Flywheel implements IRotateNode {
     public static final Serializer SERIALIZER = new Serializer();
 
     private final Direction direction;
-    private final double inertia, friction;
     private double angle, angularVelocity;
 
-    public Axle(Direction direction, double inertia, double friction) {
+    public Flywheel(Direction direction) {
         this.direction = direction;
-        this.inertia = inertia;
-        this.friction = friction;
     }
 
     @Override
@@ -63,7 +60,7 @@ public class Axle implements IRotateNode {
 
     @Override
     public double getInertia(Direction direction) {
-        if (this.isConnectable(direction)) return this.inertia / 2.0;
+        if (this.isConnectable(direction)) return 400.0;
         return 0.0;
     }
 
@@ -74,7 +71,7 @@ public class Axle implements IRotateNode {
 
     @Override
     public double getFriction(Direction direction) {
-        if (this.isConnectable(direction)) return this.friction / 2.0;
+        if (this.isConnectable(direction)) return 0.1;
         return 0.0;
     }
 
@@ -86,33 +83,31 @@ public class Axle implements IRotateNode {
     public static class Serializer implements IRotateNode.Serializer {
         @Override
         public IRotateNode deserialize(CompoundTag tag) {
-            return new Axle(Direction.from3DDataValue(tag.getInt("direction")), tag.getDouble("inertia"), tag.getDouble("friction"));
+            return new Flywheel(Direction.from3DDataValue(tag.getInt("direction")));
         }
 
         @Override
         public CompoundTag serialize(IRotateNode node) {
             CompoundTag tag = new CompoundTag();
-            Axle axle = (Axle) node;
-            tag.putInt("direction", axle.direction.get3DDataValue());
-            tag.putDouble("inertia", axle.inertia);
-            tag.putDouble("friction", axle.friction);
+            Flywheel flywheel = (Flywheel) node;
+            tag.putInt("direction", flywheel.direction.get3DDataValue());
             return tag;
         }
 
         @Override
         public CompoundTag writeSyncTag(IRotateNode node) {
             CompoundTag tag = new CompoundTag();
-            Axle axle = (Axle) node;
-            tag.putDouble("angle", axle.angle);
-            tag.putDouble("angularVelocity", axle.angularVelocity);
+            Flywheel flywheel = (Flywheel) node;
+            tag.putDouble("angle", flywheel.angle);
+            tag.putDouble("angularVelocity", flywheel.angularVelocity);
             return tag;
         }
 
         @Override
         public void readSyncTag(IRotateNode node, CompoundTag tag) {
-            Axle axle = (Axle) node;
-            axle.angle = tag.getDouble("angle");
-            axle.angularVelocity = tag.getDouble("angularVelocity");
+            Flywheel flywheel = (Flywheel) node;
+            flywheel.angle = tag.getDouble("angle");
+            flywheel.angularVelocity = tag.getDouble("angularVelocity");
         }
     }
 }

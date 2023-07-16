@@ -12,7 +12,7 @@ import com.atodium.iridynamics.api.material.MaterialInfoLoader;
 import com.atodium.iridynamics.api.module.CarvingModule;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
-import com.atodium.iridynamics.api.module.research.ResearchNodeLoader;
+import com.atodium.iridynamics.api.research.ResearchNodeLoader;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.util.data.DataUtil;

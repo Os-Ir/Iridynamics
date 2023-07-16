@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.module.research;
+package com.atodium.iridynamics.api.research;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.util.data.SimpleJsonLoader;

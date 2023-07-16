@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.module.research;
+package com.atodium.iridynamics.api.research;
 
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;

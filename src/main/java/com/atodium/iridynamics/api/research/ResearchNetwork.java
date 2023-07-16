@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.module.research;
+package com.atodium.iridynamics.api.research;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

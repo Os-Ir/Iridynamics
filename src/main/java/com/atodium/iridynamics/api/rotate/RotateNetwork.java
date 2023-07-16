@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.module.rotate;
+package com.atodium.iridynamics.api.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
 import com.atodium.iridynamics.api.util.data.DirectionInfo;

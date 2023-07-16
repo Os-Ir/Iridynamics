@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.common.block.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
-import com.atodium.iridynamics.api.module.rotate.RotateModule;
+import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.rotate.GearboxBlockEntity;

@@ -1,6 +1,6 @@
 package com.atodium.iridynamics.api.capability;
 
-import com.atodium.iridynamics.api.module.research.ResearchNetwork;
+import com.atodium.iridynamics.api.research.ResearchNetwork;
 
 import java.util.Map;
 

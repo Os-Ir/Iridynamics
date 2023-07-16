@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.module.moving;
+package com.atodium.iridynamics.api.moving;
 
 import net.minecraft.world.phys.AABB;
 import org.apache.commons.compress.utils.Lists;

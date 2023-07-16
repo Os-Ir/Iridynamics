@@ -1,8 +1,8 @@
 package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.module.research.ResearchModule;
-import com.atodium.iridynamics.api.module.research.ResearchNetwork;
+import com.atodium.iridynamics.api.research.ResearchModule;
+import com.atodium.iridynamics.api.research.ResearchNetwork;
 import com.google.common.collect.Maps;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

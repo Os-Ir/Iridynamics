@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.common.entity;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.module.moving.MovingStructureEntity;
+import com.atodium.iridynamics.api.moving.MovingStructureEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.registries.RegistryObject;
