@@ -7,8 +7,11 @@ import com.atodium.iridynamics.api.material.type.MaterialBase;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public abstract class ItemDelegate {
+    public static final ItemDelegate EMPTY = of(Items.AIR);
+
     public abstract ResourceLocation uniqueName();
 
     public abstract ItemStack createStack(int count);
@@ -44,7 +47,17 @@ public abstract class ItemDelegate {
         return new MaterialItemDelegate(shape, material);
     }
 
+    public static ItemDelegate of(String id) {
+        if (id.startsWith(SimpleItemDelegate.PREFIX))
+            return SimpleItemDelegate.fromString(id.substring(SimpleItemDelegate.PREFIX.length()));
+        if (id.startsWith(MaterialItemDelegate.PREFIX))
+            return MaterialItemDelegate.fromString(id.substring(SimpleItemDelegate.PREFIX.length()));
+        return EMPTY;
+    }
+
     private static class SimpleItemDelegate extends ItemDelegate {
+        public static final String PREFIX = "simple_";
+
         private final Item item;
 
         private SimpleItemDelegate(Item item) {
@@ -60,20 +73,31 @@ public abstract class ItemDelegate {
         public ItemStack createStack(int count) {
             return new ItemStack(this.item, count);
         }
+
+        public static ItemDelegate fromString(String id) {
+            return new SimpleItemDelegate(DataUtil.readItemFromString(id));
+        }
+
+        @Override
+        public String toString() {
+            return PREFIX + this.uniqueName();
+        }
     }
 
     private static class MaterialItemDelegate extends ItemDelegate {
+        public static final String PREFIX = "material_";
+
         private final MaterialEntry entry;
         private final ResourceLocation name;
 
         private MaterialItemDelegate(SolidShape shape, MaterialBase material) {
             this.entry = MaterialEntry.of(shape, material);
-            this.name = Iridynamics.rl("material_item/" + shape.getName() + "/" + material.getName());
+            this.name = Iridynamics.rl("material_item/" + this.entry);
         }
 
         public MaterialItemDelegate(MaterialEntry entry) {
             this.entry = entry;
-            this.name = Iridynamics.rl("material_item/" + entry.shape().getName() + "/" + entry.material().getName());
+            this.name = Iridynamics.rl("material_item/" + this.entry);
         }
 
         @Override
@@ -84,6 +108,15 @@ public abstract class ItemDelegate {
         @Override
         public ItemStack createStack(int count) {
             return MaterialEntry.getMaterialItemStack(this.entry, count);
+        }
+
+        public static ItemDelegate fromString(String id) {
+            return new MaterialItemDelegate(MaterialEntry.fromString(new ResourceLocation(id).getPath().substring(14)));
+        }
+
+        @Override
+        public String toString() {
+            return PREFIX + this.uniqueName();
         }
     }
 }

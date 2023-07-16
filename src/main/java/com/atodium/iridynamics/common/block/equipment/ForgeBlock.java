@@ -5,9 +5,9 @@ import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
-import com.atodium.iridynamics.common.blockEntity.equipment.ForgeBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.equipment.ForgeBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.atodium.iridynamics.common.tool.ToolIgniter;
 import net.minecraft.core.BlockPos;
@@ -68,7 +68,7 @@ public class ForgeBlock extends Block implements EntityBlock {
             Item item = stack.getItem();
             Vec3 location = MathUtil.transformPosition(MathUtil.minus(result.getLocation(), pos), state.getValue(DIRECTION));
             if (result.getDirection() == Direction.UP) {
-                if (PileBlockEntity.PILE_ITEM.containsKey(item)) {
+                if (PileBlockEntity.containsItemInfo(item)) {
                     BlockPos posBelow = pos.below();
                     BlockState stateBelow = level.getBlockState(posBelow);
                     if (stateBelow.isAir()) {

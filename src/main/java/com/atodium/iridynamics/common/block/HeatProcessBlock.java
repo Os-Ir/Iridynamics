@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -98,8 +97,7 @@ public class HeatProcessBlock extends Block implements EntityBlock {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         level.getBlockEntity(pos, ModBlockEntities.HEAT_PROCESS.get()).ifPresent((process) -> {
             if (process.isFinish()) ItemHandlerHelper.giveItemToPlayer(player, process.getOutput().copy());
-            else
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(process.getContent(), process.getHeight()));
+            else ItemHandlerHelper.giveItemToPlayer(player, process.getContent().createStack(process.getHeight()));
         });
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }

@@ -84,7 +84,7 @@ public class FuelBlock extends Block implements EntityBlock {
         if (!player.isCreative() && harvest) {
             level.getBlockEntity(pos, ModBlockEntities.FUEL.get()).ifPresent((fuel) -> {
                 int remain = (int) fuel.getRemainItems();
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(fuel.getFuelItem(), remain));
+                ItemHandlerHelper.giveItemToPlayer(player, fuel.getFuelItem().createStack(remain));
             });
         }
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);

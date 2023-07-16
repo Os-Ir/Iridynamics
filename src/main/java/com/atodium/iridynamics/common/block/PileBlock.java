@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
+import com.atodium.iridynamics.api.util.data.ItemDelegate;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -87,12 +87,11 @@ public class PileBlock extends Block implements EntityBlock {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         level.getBlockEntity(pos, ModBlockEntities.PILE.get()).ifPresent((pile) -> {
             ItemStack stack = player.getItemInHand(hand);
-            Item item = stack.getItem();
-            if (PileBlockEntity.PILE_ITEM.containsKey(item)) {
-                if (pile.addContent(item) && !player.isCreative()) stack.shrink(1);
+            if (PileBlockEntity.containsItemInfo(stack)) {
+                if (pile.addContent(stack) && !player.isCreative()) stack.shrink(1);
             } else {
                 if (player.isCreative()) pile.removeTopContent();
-                else ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(pile.removeTopContent()));
+                else ItemHandlerHelper.giveItemToPlayer(player, pile.removeTopContent().createStack());
             }
         });
         return InteractionResult.CONSUME;
@@ -104,8 +103,8 @@ public class PileBlock extends Block implements EntityBlock {
         boolean harvest = state.canHarvestBlock(level, pos, player);
         if (!player.isCreative() && harvest) {
             level.getBlockEntity(pos, ModBlockEntities.PILE.get()).ifPresent((pile) -> {
-                Item[] contents = pile.getAllContents();
-                for (Item item : contents) ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(item));
+                ItemDelegate[] contents = pile.getAllContents();
+                for (ItemDelegate item : contents) ItemHandlerHelper.giveItemToPlayer(player, item.createStack());
             });
         }
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);

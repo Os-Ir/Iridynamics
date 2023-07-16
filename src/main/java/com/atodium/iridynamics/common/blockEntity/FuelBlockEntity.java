@@ -10,14 +10,13 @@ import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.module.BlockHeatModule;
-import com.atodium.iridynamics.api.util.data.DataUtil;
+import com.atodium.iridynamics.api.util.data.ItemDelegate;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.FuelBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,7 +29,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     public static final double MAX_FUEL_ITEMS = 16.0;
     public static final int MAX_BLOW_VOLUME = 4000;
 
-    private Item fuelItem;
+    private ItemDelegate fuelItem;
     private FuelInfo fuelInfo;
     private boolean updateFlag, ignite;
     private double remainItems, starterTemperature, starterFlashPoint;
@@ -82,7 +81,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         }
     }
 
-    public void setup(Item fuelItem, double capacity, double resistance, double temperature, double remainItems) {
+    public void setup(ItemDelegate fuelItem, double capacity, double resistance, double temperature, double remainItems) {
         if (this.level != null && !this.level.isClientSide) {
             this.ignite = false;
             this.fuelItem = fuelItem;
@@ -109,13 +108,13 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     }
 
     public boolean addFuel(ItemStack stack) {
-        if (stack.getItem() != this.fuelItem || this.remainItems + 1.0 > MAX_FUEL_ITEMS) return false;
+        if (!this.fuelItem.is(stack) || this.remainItems + 1.0 > MAX_FUEL_ITEMS) return false;
         this.remainItems++;
         stack.shrink(1);
         return true;
     }
 
-    public Item getFuelItem() {
+    public ItemDelegate getFuelItem() {
         return this.fuelItem;
     }
 
@@ -190,7 +189,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     @Override
     protected CompoundTag writeSyncData(CompoundTag tag) {
-        tag.putString("fuelItem", DataUtil.writeItemToString(this.fuelItem));
+        tag.putString("fuelItem", this.fuelItem.toString());
         tag.putBoolean("ignite", this.ignite);
         tag.putDouble("remainItems", this.remainItems);
         tag.putInt("blowVolume", this.blowVolume);
@@ -201,7 +200,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     @Override
     protected void readSyncData(CompoundTag tag) {
-        this.fuelItem = DataUtil.readItemFromString(tag.getString("fuelItem"));
+        this.fuelItem = ItemDelegate.of(tag.getString("fuelItem"));
         this.fuelInfo = FuelInfo.getFuelInfoForItem(this.fuelItem);
         this.ignite = tag.getBoolean("ignite");
         this.remainItems = tag.getDouble("remainItems");
@@ -212,7 +211,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     @Override
     protected void saveToTag(CompoundTag tag) {
-        tag.putString("fuelItem", DataUtil.writeItemToString(this.fuelItem));
+        tag.putString("fuelItem", this.fuelItem.toString());
         tag.putBoolean("ignite", this.ignite);
         tag.putDouble("remainItems", this.remainItems);
         tag.putInt("blowVolume", this.blowVolume);
@@ -222,7 +221,7 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
-        this.fuelItem = DataUtil.readItemFromString(tag.getString("fuelItem"));
+        this.fuelItem = ItemDelegate.of(tag.getString("fuelItem"));
         this.fuelInfo = FuelInfo.getFuelInfoForItem(this.fuelItem);
         this.ignite = tag.getBoolean("ignite");
         this.remainItems = tag.getDouble("remainItems");

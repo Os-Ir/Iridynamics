@@ -64,11 +64,11 @@ public class ModItems {
         MaterialPhysicalInfo wood = ModMaterials.WOOD.getPhysicalInfo();
         MaterialPhysicalInfo charcoal = ModMaterials.CHARCOAL.getPhysicalInfo();
         MaterialPhysicalInfo coal = ModMaterials.COAL.getPhysicalInfo();
-        PileBlockEntity.PILE_ITEM.register(WOOD_BRICK.get(), new PileBlockEntity.PileItemInfo("wood_brick", wood.moleHeatCapacity(), wood.thermalConductivity()));
-        PileBlockEntity.PILE_ITEM.register(Items.CHARCOAL, new PileBlockEntity.PileItemInfo("charcoal", charcoal.moleHeatCapacity(), charcoal.thermalConductivity()));
-        PileBlockEntity.PILE_ITEM.register(Items.COAL, new PileBlockEntity.PileItemInfo("coal", coal.moleHeatCapacity(), coal.thermalConductivity()));
-        PileBlockEntity.PILE_ITEM.register(GRASS.get(), new PileBlockEntity.PileItemInfo("grass", wood.moleHeatCapacity(), wood.thermalConductivity()));
-        PileBlockEntity.PILE_ITEM.register(DRIED_GRASS.get(), new PileBlockEntity.PileItemInfo("dried_grass", wood.moleHeatCapacity(), wood.thermalConductivity()));
+        PileBlockEntity.registerPileItem(WOOD_BRICK.get(), new PileBlockEntity.PileItemInfo("wood_brick", wood.moleHeatCapacity(), wood.thermalConductivity()));
+        PileBlockEntity.registerPileItem(Items.CHARCOAL, new PileBlockEntity.PileItemInfo("charcoal", charcoal.moleHeatCapacity(), charcoal.thermalConductivity()));
+        PileBlockEntity.registerPileItem(Items.COAL, new PileBlockEntity.PileItemInfo("coal", coal.moleHeatCapacity(), coal.thermalConductivity()));
+        PileBlockEntity.registerPileItem(GRASS.get(), new PileBlockEntity.PileItemInfo("grass", wood.moleHeatCapacity(), wood.thermalConductivity()));
+        PileBlockEntity.registerPileItem(DRIED_GRASS.get(), new PileBlockEntity.PileItemInfo("dried_grass", wood.moleHeatCapacity(), wood.thermalConductivity()));
         FuelInfo.of("wood_brick", wood.moleCalorificValue(), 550.0, 1100.0).registerForItem(WOOD_BRICK.get());
         FuelInfo.of("charcoal", charcoal.moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.CHARCOAL);
         FuelInfo.of("coal", coal.moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.COAL);

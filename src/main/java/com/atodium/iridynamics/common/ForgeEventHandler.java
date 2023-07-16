@@ -12,9 +12,9 @@ import com.atodium.iridynamics.api.material.MaterialInfoLoader;
 import com.atodium.iridynamics.api.module.CarvingModule;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
-import com.atodium.iridynamics.api.research.ResearchNodeLoader;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
+import com.atodium.iridynamics.api.research.ResearchNodeLoader;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
@@ -151,7 +151,7 @@ public class ForgeEventHandler {
         BlockState state = level.getBlockState(pos);
         ItemStack stack = player.getItemInHand(event.getHand());
         Item item = stack.getItem();
-        if (state.getBlock() != ModBlocks.PILE.get() && PileBlockEntity.PILE_ITEM.containsKey(item) && state.isFaceSturdy(level, pos, Direction.UP)) {
+        if (state.getBlock() != ModBlocks.PILE.get() && PileBlockEntity.containsItemInfo(item) && state.isFaceSturdy(level, pos, Direction.UP)) {
             if (level.setBlockAndUpdate(posAbove, ModBlocks.PILE.get().defaultBlockState()))
                 level.getBlockEntity(posAbove, ModBlockEntities.PILE.get()).ifPresent((pile) -> {
                     if (pile.setup(item) && !player.isCreative()) stack.shrink(1);

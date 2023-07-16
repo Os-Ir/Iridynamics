@@ -216,7 +216,7 @@ public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, 
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            if (slot == 0) return FuelInfo.ITEM_FUEL.containsKey(stack.getItem());
+            if (slot == 0) return FuelInfo.containsItemInfo(stack.getItem());
             return stack.getCapability(HeatCapability.HEAT).isPresent();
         }
     }

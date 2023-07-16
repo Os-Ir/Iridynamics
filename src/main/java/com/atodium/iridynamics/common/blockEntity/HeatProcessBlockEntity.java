@@ -6,13 +6,12 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.HeatProcessCapability;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
 import com.atodium.iridynamics.api.module.BlockHeatModule;
-import com.atodium.iridynamics.api.util.data.DataUtil;
+import com.atodium.iridynamics.api.util.data.ItemDelegate;
 import com.atodium.iridynamics.common.block.HeatProcessBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +21,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickable {
     private boolean updateFlag;
-    private Item content;
+    private ItemDelegate content;
     private ItemStack output;
     private int height, outputCount;
     private SolidPhasePortrait portrait;
@@ -45,12 +44,12 @@ public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickab
     }
 
     public PileBlockEntity.PileItemInfo getContentInfo() {
-        Item item = this.isFinish() ? this.output.getItem() : this.content;
+        ItemDelegate item = this.isFinish() ? ItemDelegate.of(this.output.getItem()) : this.content;
         if (!PileBlockEntity.PILE_ITEM.containsKey(item)) return PileBlockEntity.EMPTY_INFO;
         return PileBlockEntity.PILE_ITEM.get(item);
     }
 
-    public Item getContent() {
+    public ItemDelegate getContent() {
         return this.content;
     }
 
@@ -70,7 +69,7 @@ public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickab
         return this.process.isFinish();
     }
 
-    public void setup(Item content, ItemStack output, int height, double capacity, double recipeTemperature, double recipeEnergy, double[] resistance, double temperature) {
+    public void setup(ItemDelegate content, ItemStack output, int height, double capacity, double recipeTemperature, double recipeEnergy, double[] resistance, double temperature) {
         if (this.level != null && !this.level.isClientSide) {
             this.content = content;
             this.output = output;
@@ -112,7 +111,7 @@ public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickab
 
     @Override
     protected CompoundTag writeSyncData(CompoundTag tag) {
-        tag.putString("content", DataUtil.writeItemToString(this.content));
+        tag.putString("content", this.content.toString());
         tag.put("output", this.output.serializeNBT());
         tag.putInt("height", this.height);
         tag.putDouble("capacity", this.portrait.getCapacity());
@@ -122,7 +121,7 @@ public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickab
 
     @Override
     protected void readSyncData(CompoundTag tag) {
-        this.content = DataUtil.readItemFromString(tag.getString("content"));
+        this.content = ItemDelegate.of(tag.getString("content"));
         this.output = ItemStack.of(tag);
         this.height = tag.getInt("height");
         this.portrait.setCapacity(tag.getDouble("capacity"));
@@ -131,7 +130,7 @@ public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickab
 
     @Override
     protected void saveToTag(CompoundTag tag) {
-        tag.putString("content", DataUtil.writeItemToString(this.content));
+        tag.putString("content", this.content.toString());
         tag.put("output", this.output.serializeNBT());
         tag.putInt("height", this.height);
         tag.putDouble("capacity", this.portrait.getCapacity());
@@ -140,7 +139,7 @@ public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickab
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
-        this.content = DataUtil.readItemFromString(tag.getString("content"));
+        this.content = ItemDelegate.of(tag.getString("content"));
         this.output = ItemStack.of(tag);
         this.height = tag.getInt("height");
         this.portrait.setCapacity(tag.getDouble("capacity"));

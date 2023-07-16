@@ -38,6 +38,13 @@ public record MaterialEntry(SolidShape shape, MaterialBase material) {
         return of(shape, material);
     }
 
+    public static MaterialEntry fromString(String id) {
+        int pos = id.indexOf('/');
+        SolidShape shape = SolidShape.getShapeByName(id.substring(0, pos));
+        MaterialBase material = MaterialBase.getMaterialByName(id.substring(pos + 1));
+        return of(shape, material);
+    }
+
     public static void register(SolidShape shape, MaterialBase material, Item item) {
         register(of(shape, material), item);
     }

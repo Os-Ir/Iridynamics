@@ -136,7 +136,7 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return PileBlockEntity.PILE_ITEM.containsKey(stack.getItem());
+            return PileBlockEntity.containsItemInfo(stack);
         }
     }
 }
