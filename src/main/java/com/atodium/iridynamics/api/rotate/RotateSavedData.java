@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.rotate;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.data.DirectionInfo;
 import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
@@ -47,13 +48,13 @@ public class RotateSavedData extends SavedData {
     @Override
     public CompoundTag save(CompoundTag tag) {
         ListTag networksTag = new ListTag();
-        for (int i = 0; i < this.allNetworks.size(); i++) networksTag.add(i, this.allNetworks.get(i).serializeNBT());
+        for (RotateNetwork allNetwork : this.allNetworks) networksTag.add(allNetwork.serializeNBT());
         tag.put("networks", networksTag);
         return tag;
     }
 
     public void tryTick(ServerLevel level, BlockPos pos, long tick) {
-        for (Direction to : RotateNetwork.ORDER) {
+        for (Direction to : DataUtil.DIRECTIONS) {
             RotateNetwork network = this.getPosNetwork(new DirectionInfo(pos, to));
             if (network != null) network.tryTick(level, tick);
         }
@@ -62,7 +63,7 @@ public class RotateSavedData extends SavedData {
     public void addNode(BlockPos pos, IRotateNode node) {
         EnumMap<Direction, RotateNetwork> relatives = Maps.newEnumMap(Direction.class);
         EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
-        for (Direction to : RotateNetwork.ORDER) {
+        for (Direction to : DataUtil.DIRECTIONS) {
             if (!node.isConnectable(to)) finish.put(to, true);
             else finish.put(to, false);
             DirectionInfo toInfo = new DirectionInfo(pos, to).relative();
@@ -86,12 +87,12 @@ public class RotateSavedData extends SavedData {
                 }
             }
         }
-        for (Direction direction : RotateNetwork.ORDER) {
+        for (Direction direction : DataUtil.DIRECTIONS) {
             if (finish.get(direction)) continue;
             RotateNetwork network = new RotateNetwork(this);
             network.addNode(new DirectionInfo(pos, direction), node);
             finish.put(direction, true);
-            for (Direction innerDirection : RotateNetwork.ORDER) {
+            for (Direction innerDirection : DataUtil.DIRECTIONS) {
                 if (finish.get(innerDirection) || !node.isRelated(direction, innerDirection)) continue;
                 network.addNode(new DirectionInfo(pos, innerDirection), node);
                 finish.put(innerDirection, true);
@@ -104,19 +105,19 @@ public class RotateSavedData extends SavedData {
     public void removeNode(BlockPos pos) {
         EnumMap<Direction, RotateNetwork> relatives = Maps.newEnumMap(Direction.class);
         EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
-        for (Direction to : RotateNetwork.ORDER) {
+        for (Direction to : DataUtil.DIRECTIONS) {
             DirectionInfo toInfo = new DirectionInfo(pos, to);
             RotateNetwork networkTo = this.getPosNetwork(toInfo);
             finish.put(to, networkTo == null);
             relatives.put(to, networkTo);
         }
-        for (Direction direction : RotateNetwork.ORDER) {
+        for (Direction direction : DataUtil.DIRECTIONS) {
             if (finish.get(direction)) continue;
             RotateNetwork network = relatives.get(direction);
             EnumSet<Direction> connected = EnumSet.noneOf(Direction.class);
             connected.add(direction);
             finish.put(direction, true);
-            for (Direction innerDirection : RotateNetwork.ORDER) {
+            for (Direction innerDirection : DataUtil.DIRECTIONS) {
                 if (finish.get(innerDirection) || network != relatives.get(innerDirection)) continue;
                 connected.add(innerDirection);
                 finish.put(innerDirection, true);

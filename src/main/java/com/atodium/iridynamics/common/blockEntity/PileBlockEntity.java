@@ -351,7 +351,6 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
-
         this.height = tag.getInt("height");
         ListTag contentTag = tag.getList("content", Tag.TAG_COMPOUND);
         for (int i = 0; i < this.height; i++) {

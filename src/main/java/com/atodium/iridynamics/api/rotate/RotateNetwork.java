@@ -1,10 +1,13 @@
 package com.atodium.iridynamics.api.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.data.DirectionInfo;
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import com.atodium.iridynamics.api.util.math.MathUtil;
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,8 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class RotateNetwork implements INBTSerializable<CompoundTag> {
-    protected static final Direction[] ORDER = Direction.values();
-
     private final RotateSavedData savedData;
     private final Map<DirectionInfo, IRotateNode> allNodes;
     private final Map<ChunkPos, Integer> chunkNodeCount;
@@ -37,10 +38,6 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         this.scaleMap = Maps.newHashMap();
     }
 
-    protected RotateSavedData getSavedData() {
-        return this.savedData;
-    }
-
     protected boolean isEmpty() {
         return this.allNodes.isEmpty();
     }
@@ -49,12 +46,8 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         return this.locked;
     }
 
-    protected ImmutableMap<DirectionInfo, IRotateNode> getAllNodes() {
-        return ImmutableMap.copyOf(this.allNodes);
-    }
-
-    protected ImmutableSet<ChunkPos> getAllChunks() {
-        return ImmutableSet.copyOf(this.chunkNodeCount.keySet());
+    protected Set<ChunkPos> getAllChunks() {
+        return this.chunkNodeCount.keySet();
     }
 
     protected boolean contains(DirectionInfo info) {
@@ -170,7 +163,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
             IRotateNode relativeNode = this.allNodes.get(relative);
             if (relativeNode == null || relative.pos().equals(origin) || relatives.containsKey(relative)) continue;
             relatives.put(relative, relativeNode);
-            for (Direction to : ORDER) {
+            for (Direction to : DataUtil.DIRECTIONS) {
                 if (to != relative.direction() && relativeNode.isRelated(relative.direction(), to)) {
                     DirectionInfo change = relative.change(to);
                     task.addLast(change);
@@ -218,9 +211,8 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
     protected RotateNetwork removeNode(DirectionInfo info) {
         if (!this.allNodes.containsKey(info)) return this;
         this.allNodes.remove(info);
-        if (this.allNodes.isEmpty()) {
-            this.savedData.removeNetwork(this);
-        } else {
+        if (this.allNodes.isEmpty()) this.savedData.removeNetwork(this);
+        else {
             if (this.center.equals(info)) {
                 this.center = this.allNodes.keySet().toArray(new DirectionInfo[0])[0];
                 IRotateNode centerNode = this.allNodes.get(this.center);
@@ -252,7 +244,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         Direction centerDirection = this.center.direction();
         task.addLast(this.center);
         this.scaleMap.put(this.center, IntFraction.ONE);
-        for (Direction to : ORDER) {
+        for (Direction to : DataUtil.DIRECTIONS) {
             if (to != centerDirection && centerNode.isRelated(centerDirection, to)) {
                 DirectionInfo change = this.center.change(to);
                 task.addLast(change);
@@ -274,7 +266,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
                 continue;
             }
             this.scaleMap.put(relative, relativeScale);
-            for (Direction to : ORDER) {
+            for (Direction to : DataUtil.DIRECTIONS) {
                 if (to != relative.direction() && relativeNode.isRelated(relative.direction(), to)) {
                     DirectionInfo change = relative.change(to);
                     task.addLast(change);
@@ -292,7 +284,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
             IRotateNode node = entry.getValue();
             CompoundTag nodeTag = RotateModule.writeRotateNode(node);
             nodeTag.put("pos", entry.getKey().save());
-            nodesTag.add(nodesTag.size(), nodeTag);
+            nodesTag.add(nodeTag);
         }
         tag.put("nodes", nodesTag);
         tag.putDouble("angularMomentum", this.angularMomentum);
@@ -311,7 +303,6 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
             nodes.put(DirectionInfo.load(nodeTag.getCompound("pos")), RotateModule.readRotateNode(nodeTag));
         }
         this.addAllNodes(nodes);
-        this.updateStructure();
         this.angularMomentum = tag.getDouble("angularMomentum");
         this.angle = tag.getDouble("angle");
     }
