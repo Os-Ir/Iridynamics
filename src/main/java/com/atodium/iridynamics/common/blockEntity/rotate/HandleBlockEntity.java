@@ -40,12 +40,12 @@ public class HandleBlockEntity extends SyncedBlockEntity implements ITickable, I
             this.handleTick--;
         } else this.rotate.setTorque(0.0);
         RotateModule.tryTick((ServerLevel) level, pos);
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public void setupRotate(ServerLevel level) {
         RotateModule.addRotateBlock(level, this.getBlockPos(), this.rotate);
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public double getRenderAngle(float partialTicks) {

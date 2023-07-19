@@ -20,7 +20,7 @@ public class HeatProcessRenderer implements BlockEntityRenderer<HeatProcessBlock
     public void render(HeatProcessBlockEntity process, float partialTick, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS);
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
-        TextureAtlasSprite texture = atlas.apply(process.getContentInfo().getTextureName());
+        TextureAtlasSprite texture = atlas.apply(process.getContentInfo().texture());
         for (int i = 0; i < process.getHeight(); i++) {
             transform.pushPose();
             transform.translate(0.0, 0.0625 * i, 0.0);

@@ -41,6 +41,7 @@ public class LiquidContainerSavedData extends SavedData {
         if (this.liquidContainerCount.containsKey(pos))
             this.liquidContainerCount.put(pos, this.liquidContainerCount.getInt(pos) + count);
         else this.liquidContainerCount.put(pos, count);
+        this.setDirty();
     }
 
     public void removeLiquidContainer(BlockPos pos) {
@@ -51,10 +52,12 @@ public class LiquidContainerSavedData extends SavedData {
         int remain = this.liquidContainerCount.getInt(pos) - count;
         if (remain <= 0) this.liquidContainerCount.removeInt(pos);
         else this.liquidContainerCount.put(pos, remain);
+        this.setDirty();
     }
 
     public void removeAllLiquidContainer(BlockPos pos) {
         this.liquidContainerCount.removeInt(pos);
+        this.setDirty();
     }
 
     public boolean hasLiquidContainer(BlockPos pos) {

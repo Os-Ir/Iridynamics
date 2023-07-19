@@ -2,7 +2,7 @@ package com.atodium.iridynamics.common.block.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
@@ -63,7 +63,7 @@ public class ForgeBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         level.getBlockEntity(pos, ModBlockEntities.FORGE.get()).ifPresent((forge) -> {
-            System.out.println("Forge: " + (forge.getTemperature() - ItemHeatModule.AMBIENT_TEMPERATURE) + "K");
+            System.out.println("Forge: " + (forge.getTemperature() - HeatModule.AMBIENT_TEMPERATURE) + "K");
             ItemStack stack = player.getItemInHand(hand);
             Item item = stack.getItem();
             Vec3 location = MathUtil.transformPosition(MathUtil.minus(result.getLocation(), pos), state.getValue(DIRECTION));
@@ -94,7 +94,7 @@ public class ForgeBlock extends Block implements EntityBlock {
                     if (take.isEmpty()) player.setItemInHand(hand, inventory.put(slot, stack));
                     else ItemHandlerHelper.giveItemToPlayer(player, take);
                     forge.markDirty();
-                    forge.markForSync();
+                    forge.sendSyncPacket();
                 }
             }
         });

@@ -4,7 +4,7 @@ import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.heat.impl.LiquidContainerPortrait;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.minecraft.core.Direction;
@@ -79,7 +79,7 @@ public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapa
 
     @Override
     public double getTemperature(double pressure) {
-        if (this.isEmpty()) return ItemHeatModule.AMBIENT_TEMPERATURE;
+        if (this.isEmpty()) return HeatModule.AMBIENT_TEMPERATURE;
         return this.getPhasePortrait().getTemperature(pressure, this.getEnergy());
     }
 

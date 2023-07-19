@@ -28,7 +28,7 @@ public class CarvingTableBlockEntity extends SyncedBlockEntity {
     public void markForItemChange() {
         this.updateBlockState();
         this.markDirty();
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public Inventory getInventory() {

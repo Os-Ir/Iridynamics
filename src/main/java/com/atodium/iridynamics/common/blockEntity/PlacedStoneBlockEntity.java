@@ -26,7 +26,7 @@ public class PlacedStoneBlockEntity extends SyncedBlockEntity {
     public MaterialBase getMaterial() {
         if (!this.level.isClientSide && this.material == null) {
             this.material = RESULT[MathUtil.getWeightedRandom(WEIGHTS)];
-            this.markForSync();
+            this.sendSyncPacket();
         }
         if (this.level.isClientSide && this.material == null) return ModMaterials.STONE;
         return this.material;

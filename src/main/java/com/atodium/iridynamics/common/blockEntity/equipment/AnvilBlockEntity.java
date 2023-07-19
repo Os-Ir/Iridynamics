@@ -38,7 +38,7 @@ public class AnvilBlockEntity extends SyncedBlockEntity implements ITickable {
     public void markForItemChange() {
         this.markItemUpdate();
         this.markDirty();
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public Inventory getInventory() {

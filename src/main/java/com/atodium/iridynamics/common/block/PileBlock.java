@@ -78,7 +78,7 @@ public class PileBlock extends Block implements EntityBlock {
     @Override
     @SuppressWarnings("deprecation")
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
-        level.getBlockEntity(pos, ModBlockEntities.PILE.get()).ifPresent(PileBlockEntity::markPileStateUpdate);
+        level.getBlockEntity(pos, ModBlockEntities.PILE.get()).ifPresent(PileBlockEntity::markPileShapeUpdate);
     }
 
     @Override

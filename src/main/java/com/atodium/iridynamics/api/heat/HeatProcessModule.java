@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.module;
+package com.atodium.iridynamics.api.heat;
 
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.IHeat;

@@ -3,10 +3,9 @@ package com.atodium.iridynamics.common.module;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.InventoryCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
-import com.atodium.iridynamics.api.heat.HeatUtil;
 import com.atodium.iridynamics.api.heat.MaterialHeatInfo;
 import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
 import com.atodium.iridynamics.common.blockEntity.equipment.SmallCrucibleBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;
@@ -36,14 +35,14 @@ public class SmallCrucibleModule {
     }
 
     public static void updateData(IItemHandlerModifiable inventory, LiquidContainerCapability container, HeatCapability heat) {
-        if (!container.isEmpty()) ItemHeatModule.heatExchange(heat, container, INVENTORY_RESISTANCE);
+        if (!container.isEmpty()) HeatModule.heatExchange(heat, container, INVENTORY_RESISTANCE);
         for (int i = 0; i < 4; i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (!validateItem(stack)) continue;
             MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
             MaterialHeatInfo info = MaterialEntry.getItemMaterialEntry(stack).material().getHeatInfo();
             HeatCapability itemHeat = (HeatCapability) stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new);
-            ItemHeatModule.heatExchange(heat, itemHeat, INVENTORY_RESISTANCE + itemHeat.getResistance());
+            HeatModule.heatExchange(heat, itemHeat, INVENTORY_RESISTANCE + itemHeat.getResistance());
             if (itemHeat.getTemperature() > info.getMeltingPoint()) {
                 container.addMaterial(entry.material(), entry.shape().getUnit());
                 container.increaseEnergy(itemHeat.getEnergy());
@@ -64,8 +63,8 @@ public class SmallCrucibleModule {
         if (stack.getItem() != ModItems.SMALL_CRUCIBLE.get())
             throw new IllegalArgumentException("ItemStack [ " + stack + " ] is not small crucible");
         LiquidContainerModule.addItemLiquidContainer(event, CAPACITY);
-        ItemHeatModule.addItemHeat(event, stack, HEAT_CAPACITY, ITEM_RESISTANCE);
-        HeatUtil.addItemInventory(event, 4);
+        HeatModule.addItemHeat(event, stack, HEAT_CAPACITY, ITEM_RESISTANCE);
+        HeatModule.addItemInventory(event, 4);
     }
 
     public static ItemStack createItem(SmallCrucibleBlockEntity block) {

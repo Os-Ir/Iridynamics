@@ -6,11 +6,10 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.capability.PotteryCapability;
 import com.atodium.iridynamics.api.capability.ResearchCapability;
-import com.atodium.iridynamics.api.heat.HeatUtil;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialInfoLoader;
 import com.atodium.iridynamics.api.module.CarvingModule;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
 import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
@@ -91,19 +90,19 @@ public class ForgeEventHandler {
     public static void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack stack = event.getObject();
         Item item = stack.getItem();
-        if (item == ModItems.IGNITER.get()) ItemHeatModule.addItemHeat(event, stack, 800.0, 0.4);
+        if (item == ModItems.IGNITER.get()) HeatModule.addItemHeat(event, stack, 800.0, 0.4);
         else if (item == ModItems.MOLD.get())
             LiquidContainerModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
         else if (item == ModItems.MOLD_TOOL.get())
             LiquidContainerModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
-        else if (item == Items.CHICKEN) ItemHeatModule.addItemHeat(event, stack, 16000.0, 0.2);
-        else if (item == ModItems.UNFIRED_SMALL_CRUCIBLE.get()) ItemHeatModule.addItemHeat(event, stack, 16000.0, 0.2);
+        else if (item == Items.CHICKEN) HeatModule.addItemHeat(event, stack, 16000.0, 0.2);
+        else if (item == ModItems.UNFIRED_SMALL_CRUCIBLE.get()) HeatModule.addItemHeat(event, stack, 16000.0, 0.2);
         else if (item == ModItems.SMALL_CRUCIBLE.get()) SmallCrucibleModule.initItem(event, stack);
         else if (item == ModItems.MOLD_CLAY_ADOBE.get()) CarvingModule.addItemCarving(event, stack, 3, 0x788c96);
         else if (item == ModItems.POT_CLAY_ADOBE.get())
             event.addCapability(PotteryCapability.KEY, new PotteryCapability());
         else if (MaterialEntry.containsMaterialEntry(stack))
-            HeatUtil.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
+            HeatModule.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
     }
 
     @SubscribeEvent
@@ -116,7 +115,7 @@ public class ForgeEventHandler {
     public static void updateItemTemperature(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntityLiving() instanceof Player player) {
             DataUtil.updateAllItems(player, (stack) -> {
-                stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> ItemHeatModule.heatExchange(heat, ItemHeatModule.AMBIENT_TEMPERATURE, heat.getResistance(Direction.UP) + ItemHeatModule.RESISTANCE_AIR_FLOW));
+                stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> HeatModule.heatExchange(heat, HeatModule.AMBIENT_TEMPERATURE, heat.getResistance(Direction.UP) + HeatModule.RESISTANCE_AIR_FLOW));
                 Item item = stack.getItem();
                 if (item == ModItems.SMALL_CRUCIBLE.get()) SmallCrucibleModule.updateData(stack);
                 else if (item == ModItems.MOLD.get())
@@ -171,10 +170,10 @@ public class ForgeEventHandler {
         BlockState state = level.getBlockState(pos);
         ItemStack stack = player.getItemInHand(event.getHand());
         Item item = stack.getItem();
-        if (state.getBlock() != ModBlocks.PILE.get() && PileBlockEntity.containsItemInfo(item) && state.isFaceSturdy(level, pos, Direction.UP)) {
+        if (state.getBlock() != ModBlocks.PILE.get() && PileBlockEntity.containsItemInfo(stack) && state.isFaceSturdy(level, pos, Direction.UP)) {
             if (level.setBlockAndUpdate(posAbove, ModBlocks.PILE.get().defaultBlockState()))
                 level.getBlockEntity(posAbove, ModBlockEntities.PILE.get()).ifPresent((pile) -> {
-                    if (pile.setup(item) && !player.isCreative()) stack.shrink(1);
+                    if (pile.setup(stack) && !player.isCreative()) stack.shrink(1);
                 });
         } else if (item == ModItems.SMALL_CRUCIBLE.get() && state.isFaceSturdy(level, pos, Direction.UP)) {
             if (level.setBlockAndUpdate(posAbove, ModBlocks.SMALL_CRUCIBLE.get().defaultBlockState()))

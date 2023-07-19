@@ -4,8 +4,8 @@ import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.HeatProcessCapability;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
-import com.atodium.iridynamics.api.module.BlockHeatModule;
 import com.atodium.iridynamics.api.util.data.ItemDelegate;
 import com.atodium.iridynamics.common.block.HeatProcessBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
@@ -37,8 +37,8 @@ public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickab
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide) {
             if (this.updateFlag) this.updateProcessCondition();
-            BlockHeatModule.blockHeatExchange(level, pos, state, this, false);
-            if (this.isFinish()) this.markForSync();
+            HeatModule.blockHeatExchange(level, pos, state, this, false);
+            if (this.isFinish()) this.sendSyncPacket();
             this.markDirty();
         }
     }

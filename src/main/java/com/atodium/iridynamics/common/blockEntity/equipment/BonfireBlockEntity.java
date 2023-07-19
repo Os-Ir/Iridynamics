@@ -13,9 +13,8 @@ import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
 import com.atodium.iridynamics.api.gui.widget.MoveType;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
-import com.atodium.iridynamics.api.module.BlockHeatModule;
-import com.atodium.iridynamics.api.module.HeatProcessModule;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
+import com.atodium.iridynamics.api.heat.HeatProcessModule;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.FuelBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
@@ -58,9 +57,9 @@ public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, 
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide) {
-            BlockHeatModule.blockHeatExchange(level, pos, state, this, false);
-            this.inventory.getStackInSlot(1).getCapability(HeatCapability.HEAT).ifPresent((item) -> ItemHeatModule.heatExchange(this.heat, item, INVENTORY_RESISTANCE));
-            this.inventory.getStackInSlot(2).getCapability(HeatCapability.HEAT).ifPresent((item) -> ItemHeatModule.heatExchange(this.heat, item, INVENTORY_RESISTANCE));
+            HeatModule.blockHeatExchange(level, pos, state, this, false);
+            this.inventory.getStackInSlot(1).getCapability(HeatCapability.HEAT).ifPresent((item) -> HeatModule.heatExchange(this.heat, item, INVENTORY_RESISTANCE));
+            this.inventory.getStackInSlot(2).getCapability(HeatCapability.HEAT).ifPresent((item) -> HeatModule.heatExchange(this.heat, item, INVENTORY_RESISTANCE));
             HeatProcessModule.updateHeatProcess(this.inventory);
             if (this.ignite) {
                 double maxConsume;

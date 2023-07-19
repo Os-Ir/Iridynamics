@@ -52,18 +52,18 @@ public class Smelter extends StructureInfo<Smelter.SmelterData> {
     @Override
     public void onStructureFinish(ServerLevel level, StructureData data, MultiblockStructure structure) {
         SmelterData smelterData = (SmelterData) data;
-        for (int x = 0; x < smelterData.sizeX; x++)
-            for (int y = 0; y < smelterData.sizeY; y++)
-                for (int z = 0; z < smelterData.sizeZ; z++)
+        for (int x = 1; x < smelterData.sizeX - 1; x++)
+            for (int y = 1; y < smelterData.sizeY; y++)
+                for (int z = 1; z < smelterData.sizeZ - 1; z++)
                     LiquidModule.addLiquidContainer(level, new BlockPos(smelterData.rx + x, smelterData.ry + y, smelterData.rz + z));
     }
 
     @Override
     public void onStructureDestroyed(ServerLevel level, StructureData data, MultiblockStructure structure) {
         SmelterData smelterData = (SmelterData) data;
-        for (int x = 0; x < smelterData.sizeX; x++)
-            for (int y = 0; y < smelterData.sizeY; y++)
-                for (int z = 0; z < smelterData.sizeZ; z++)
+        for (int x = 1; x < smelterData.sizeX - 1; x++)
+            for (int y = 1; y < smelterData.sizeY; y++)
+                for (int z = 1; z < smelterData.sizeZ - 1; z++)
                     LiquidModule.removeLiquidContainer(level, new BlockPos(smelterData.rx + x, smelterData.ry + y, smelterData.rz + z));
     }
 

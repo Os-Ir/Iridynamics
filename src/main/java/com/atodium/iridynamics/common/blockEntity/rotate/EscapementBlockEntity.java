@@ -29,12 +29,12 @@ public class EscapementBlockEntity extends SyncedBlockEntity implements ITickabl
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
         RotateModule.tryTick((ServerLevel) level, pos);
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public void setupRotate(ServerLevel level) {
         RotateModule.addRotateBlock(level, this.getBlockPos(), this.rotate);
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public double getRenderAngle(float partialTicks) {

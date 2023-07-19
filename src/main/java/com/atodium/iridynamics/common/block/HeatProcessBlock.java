@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.common.blockEntity.HeatProcessBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -86,7 +86,7 @@ public class HeatProcessBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         level.getBlockEntity(pos, ModBlockEntities.HEAT_PROCESS.get()).ifPresent((process) -> {
-            System.out.println("dT: " + (process.getHeatProcessCapability().getTemperature() - ItemHeatModule.AMBIENT_TEMPERATURE));
+            System.out.println("dT: " + (process.getHeatProcessCapability().getTemperature() - HeatModule.AMBIENT_TEMPERATURE));
             System.out.println((process.getHeatProcessCapability().process() * 100.0) + "%");
         });
         return InteractionResult.CONSUME;

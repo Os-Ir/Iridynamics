@@ -2,7 +2,7 @@ package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -65,7 +65,7 @@ public class HeatProcessCapability implements IHeatProcess, ICapabilitySerializa
 
     @Override
     public double increaseEnergy(double energy, double maxTemperature) {
-        return this.increaseEnergy(energy, ItemHeatModule.ATMOSPHERIC_PRESSURE, maxTemperature);
+        return this.increaseEnergy(energy, HeatModule.ATMOSPHERIC_PRESSURE, maxTemperature);
     }
 
     @Override

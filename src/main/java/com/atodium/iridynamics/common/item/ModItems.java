@@ -3,7 +3,6 @@ package com.atodium.iridynamics.common.item;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.ModCreativeTabs;
 import com.atodium.iridynamics.api.heat.FuelInfo;
-import com.atodium.iridynamics.api.material.MaterialPhysicalInfo;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.material.SolidShape;
@@ -61,17 +60,15 @@ public class ModItems {
         ToolModule.registerItem(ItemDelegate.of(Items.FLINT), ToolHammer.INSTANCE);
         ToolModule.registerItem(ItemDelegate.of(Items.STICK), ToolChisel.INSTANCE);
         ToolModule.registerItem(ItemDelegate.of(POLISHED_FLINT.get()), ToolKnife.INSTANCE);
-        MaterialPhysicalInfo wood = ModMaterials.WOOD.getPhysicalInfo();
-        MaterialPhysicalInfo charcoal = ModMaterials.CHARCOAL.getPhysicalInfo();
-        MaterialPhysicalInfo coal = ModMaterials.COAL.getPhysicalInfo();
-        PileBlockEntity.registerPileItem(WOOD_BRICK.get(), new PileBlockEntity.PileItemInfo("wood_brick", wood.moleHeatCapacity(), wood.thermalConductivity()));
-        PileBlockEntity.registerPileItem(Items.CHARCOAL, new PileBlockEntity.PileItemInfo("charcoal", charcoal.moleHeatCapacity(), charcoal.thermalConductivity()));
-        PileBlockEntity.registerPileItem(Items.COAL, new PileBlockEntity.PileItemInfo("coal", coal.moleHeatCapacity(), coal.thermalConductivity()));
-        PileBlockEntity.registerPileItem(GRASS.get(), new PileBlockEntity.PileItemInfo("grass", wood.moleHeatCapacity(), wood.thermalConductivity()));
-        PileBlockEntity.registerPileItem(DRIED_GRASS.get(), new PileBlockEntity.PileItemInfo("dried_grass", wood.moleHeatCapacity(), wood.thermalConductivity()));
-        FuelInfo.of("wood_brick", wood.moleCalorificValue(), 550.0, 1100.0).registerForItem(WOOD_BRICK.get());
-        FuelInfo.of("charcoal", charcoal.moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.CHARCOAL);
-        FuelInfo.of("coal", coal.moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.COAL);
-        FuelInfo.of("dried_grass", wood.moleCalorificValue(), 550.0, 1100.0).registerForItem(DRIED_GRASS.get());
+        PileBlockEntity.registerPileItem(WOOD_BRICK.get(), new PileBlockEntity.PileItemInfo("wood_brick", ModMaterials.WOOD));
+        PileBlockEntity.registerPileItem(Items.CHARCOAL, new PileBlockEntity.PileItemInfo("charcoal", ModMaterials.CHARCOAL));
+        PileBlockEntity.registerPileItem(Items.COAL, new PileBlockEntity.PileItemInfo("coal", ModMaterials.COAL));
+        PileBlockEntity.registerPileItem(GRASS.get(), new PileBlockEntity.PileItemInfo("grass", ModMaterials.WOOD));
+        PileBlockEntity.registerPileItem(DRIED_GRASS.get(), new PileBlockEntity.PileItemInfo("dried_grass", ModMaterials.WOOD));
+        PileBlockEntity.registerPileItem(ItemDelegate.of(ModSolidShapes.DUST, ModMaterials.TIN), new PileBlockEntity.PileItemInfo("tin_dust", ModMaterials.TIN));
+        FuelInfo.of("wood_brick", ModMaterials.WOOD.getPhysicalInfo().moleCalorificValue(), 550.0, 1100.0).registerForItem(WOOD_BRICK.get());
+        FuelInfo.of("charcoal", ModMaterials.CHARCOAL.getPhysicalInfo().moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.CHARCOAL);
+        FuelInfo.of("coal", ModMaterials.COAL.getPhysicalInfo().moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.COAL);
+        FuelInfo.of("dried_grass", ModMaterials.WOOD.getPhysicalInfo().moleCalorificValue(), 500.0, 1100.0).registerForItem(DRIED_GRASS.get());
     }
 }

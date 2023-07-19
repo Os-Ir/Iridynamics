@@ -23,7 +23,7 @@ public class PileRenderer implements BlockEntityRenderer<PileBlockEntity> {
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         transform.pushPose();
         for (int i = 0; i < pile.getHeight(); i++) {
-            TextureAtlasSprite texture = atlas.apply(pile.getPileItemInfo(i).getTextureName());
+            TextureAtlasSprite texture = atlas.apply(pile.getPileItemInfo(i).texture());
             RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.NORTH, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 0.0f, 0.0f, -1.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
             RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.SOUTH, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 0.0f, 0.0f, 1.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
             RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.WEST, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, -1.0f, 0.0f, 0.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);

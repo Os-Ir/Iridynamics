@@ -48,7 +48,7 @@ public class ClientModEventHandler {
     @SubscribeEvent
     public static void onTextureStitchPre(TextureStitchEvent.Pre event) {
         if (event.getAtlas().location().equals(RendererUtil.BLOCKS_ATLAS)) {
-            PileBlockEntity.PILE_ITEM.values().forEach((info) -> event.addSprite(info.getTextureName()));
+            PileBlockEntity.PILE_ITEM.values().forEach((info) -> event.addSprite(info.texture()));
             event.addSprite(Iridynamics.rl("block/white"));
             event.addSprite(Iridynamics.rl("block/axle_1"));
             event.addSprite(Iridynamics.rl("block/axle_2"));

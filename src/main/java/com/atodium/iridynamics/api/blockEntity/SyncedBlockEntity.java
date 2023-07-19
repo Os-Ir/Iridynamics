@@ -31,7 +31,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
         }
     }
 
-    public void markForSync() {
+    public void sendSyncPacket() {
         this.sendPacket();
         this.setChanged();
     }

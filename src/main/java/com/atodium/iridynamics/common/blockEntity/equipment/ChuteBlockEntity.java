@@ -45,7 +45,10 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
             if (targetEntity instanceof PileBlockEntity pile && this.isCooled()) {
                 for (int i = 0; i < this.inventory.getSlots(); i++) {
                     ItemStack stack = this.inventory.getStackInSlot(i);
-                    if (pile.addContent(stack)) this.resetCoolingTime();
+                    if (pile.addContent(stack)) {
+                        stack.shrink(1);
+                        this.resetCoolingTime();
+                    }
                 }
             } else if (targetEntity instanceof FuelBlockEntity fuel && this.isCooled()) {
                 for (int i = 0; i < this.inventory.getSlots(); i++) {

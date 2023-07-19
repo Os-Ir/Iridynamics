@@ -69,7 +69,7 @@ public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements IT
             if (this.checkRecipe(c))
                 this.inventory.setStackInSlot(0, this.recipes[this.plan].assemble(c));
             this.markDirty();
-            this.markForSync();
+            this.sendSyncPacket();
         });
     }
 
@@ -86,13 +86,13 @@ public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements IT
     private void markForItemChange() {
         this.markRecipeUpdate();
         this.markDirty();
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     private void updateRecipe() {
         if (!this.level.isClientSide) this.plan = -1;
         this.recipes = RecipeUtil.getAllValidRecipes(this.level, ModRecipeTypes.POTTERY.get(), RecipeUtil.container(this.inventory.getStackInSlot(0))).toArray(new PotteryRecipe[0]);
-        this.markForSync();
+        this.sendSyncPacket();
         this.markDirty();
     }
 
@@ -162,7 +162,7 @@ public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements IT
     public void callback(int count) {
         if (this.recipes.length <= count) return;
         this.plan = count;
-        this.markForSync();
+        this.sendSyncPacket();
         this.markDirty();
         ItemStackContainer c = RecipeUtil.container(this.inventory.getStackInSlot(0));
         if (this.checkRecipe(c)) this.inventory.setStackInSlot(0, this.recipes[this.plan].assemble(c));

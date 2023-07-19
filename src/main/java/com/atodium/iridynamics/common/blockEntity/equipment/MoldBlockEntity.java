@@ -7,7 +7,7 @@ import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.google.common.collect.ImmutableSet;
@@ -34,7 +34,7 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
     }
 
     public static void updateMold(LiquidContainerCapability container) {
-        if (!container.isEmpty()) ItemHeatModule.heatExchange(container, ItemHeatModule.AMBIENT_TEMPERATURE, RESISTANCE);
+        if (!container.isEmpty()) HeatModule.heatExchange(container, HeatModule.AMBIENT_TEMPERATURE, RESISTANCE);
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
@@ -65,7 +65,7 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
                 source.addMaterial(material, -add);
                 if (source.isEmpty()) source.setEnergy(0);
                 else source.setTemperature(temperature);
-                this.markForSync();
+                this.sendSyncPacket();
                 return true;
             }
             return false;
@@ -75,10 +75,10 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
         if (c == CAPACITY || !source.hasMaterial(material)) return false;
         int add = Math.min(source.getMaterialUnit(material), CAPACITY - c);
         this.container.addMaterial(material, add);
-        this.container.increaseEnergy(material.getHeatInfo().getMoleEnergy(ItemHeatModule.ATMOSPHERIC_PRESSURE, temperature) * add / 144.0);
+        this.container.increaseEnergy(material.getHeatInfo().getMoleEnergy(HeatModule.ATMOSPHERIC_PRESSURE, temperature) * add / 144.0);
         source.addMaterial(material, -add);
         if (!source.isEmpty()) source.setTemperature(temperature);
-        this.markForSync();
+        this.sendSyncPacket();
         return true;
     }
 
@@ -92,7 +92,7 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
         r.getCapability(HeatCapability.HEAT).ifPresent((heat) -> heat.setTemperature(temperature));
         this.container.clear();
         System.out.println("sync");
-        this.markForSync();
+        this.sendSyncPacket();
         return r;
     }
 

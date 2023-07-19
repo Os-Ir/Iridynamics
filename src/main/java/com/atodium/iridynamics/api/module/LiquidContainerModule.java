@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.module;
 
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +38,7 @@ public class LiquidContainerModule {
         if (exist == targetCapacity || !source.hasMaterial(material)) return 0;
         int add = Math.min(source.getMaterialUnit(material), targetCapacity - exist);
         target.addMaterial(material, add);
-        target.increaseEnergy(material.getHeatInfo().getMoleEnergy(ItemHeatModule.ATMOSPHERIC_PRESSURE, temperature) * add / 144.0);
+        target.increaseEnergy(material.getHeatInfo().getMoleEnergy(HeatModule.ATMOSPHERIC_PRESSURE, temperature) * add / 144.0);
         source.addMaterial(material, -add);
         if (!source.isEmpty()) source.setTemperature(temperature);
         return add;

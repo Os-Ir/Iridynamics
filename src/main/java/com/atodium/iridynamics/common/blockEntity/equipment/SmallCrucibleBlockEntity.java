@@ -10,8 +10,8 @@ import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
-import com.atodium.iridynamics.api.module.BlockHeatModule;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.module.SmallCrucibleModule;
 import net.minecraft.core.BlockPos;
@@ -45,10 +45,10 @@ public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITick
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!level.isClientSide) {
-            BlockHeatModule.blockHeatExchange(level, pos, state, this, false);
+            HeatModule.blockHeatExchange(level, pos, state, this, false);
             SmallCrucibleModule.updateData(this.inventory, this.container, this.heat);
             this.markDirty();
-            this.markForSync();
+            this.sendSyncPacket();
         }
     }
 

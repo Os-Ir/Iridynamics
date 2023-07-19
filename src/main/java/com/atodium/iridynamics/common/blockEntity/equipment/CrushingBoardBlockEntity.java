@@ -39,7 +39,7 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
     public void markForItemChange() {
         this.markRecipeUpdate();
         this.markDirty();
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public void updateRecipe() {

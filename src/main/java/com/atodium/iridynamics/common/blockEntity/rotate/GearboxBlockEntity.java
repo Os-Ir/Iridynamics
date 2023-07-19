@@ -48,12 +48,12 @@ public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
         RotateModule.tryTick((ServerLevel) level, pos);
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public void setupRotate(ServerLevel level) {
         RotateModule.addRotateBlock(level, this.getBlockPos(), this.rotate);
-        this.markForSync();
+        this.sendSyncPacket();
     }
 
     public boolean isDirectionValid(Direction direction) {

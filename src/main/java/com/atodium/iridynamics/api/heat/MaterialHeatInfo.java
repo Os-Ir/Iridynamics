@@ -1,7 +1,6 @@
 package com.atodium.iridynamics.api.heat;
 
 import com.atodium.iridynamics.api.material.Phase;
-import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.util.data.MonotonicMap;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -16,7 +15,7 @@ public abstract class MaterialHeatInfo {
     }
 
     public double getMeltingPoint() {
-        return this.getMeltingPoint(ItemHeatModule.ATMOSPHERIC_PRESSURE);
+        return this.getMeltingPoint(HeatModule.ATMOSPHERIC_PRESSURE);
     }
 
     public double getMeltingPoint(double pressure) {
@@ -24,7 +23,7 @@ public abstract class MaterialHeatInfo {
     }
 
     public double getBoilingPoint() {
-        return this.getBoilingPoint(ItemHeatModule.ATMOSPHERIC_PRESSURE);
+        return this.getBoilingPoint(HeatModule.ATMOSPHERIC_PRESSURE);
     }
 
     public double getBoilingPoint(double pressure) {
@@ -32,7 +31,7 @@ public abstract class MaterialHeatInfo {
     }
 
     public MonotonicMap<Phase> getCriticalPoints() {
-        return this.getCriticalPoints(ItemHeatModule.ATMOSPHERIC_PRESSURE);
+        return this.getCriticalPoints(HeatModule.ATMOSPHERIC_PRESSURE);
     }
 
     public MonotonicMap<Phase> getCriticalPoints(double pressure) {

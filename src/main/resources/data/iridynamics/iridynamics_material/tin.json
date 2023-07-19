@@ -1,0 +1,15 @@
+{
+  "type": "tin",
+  "render": {
+    "color": 14474460
+  },
+  "physical": {
+    "density": 7310.0,
+    "thermal_conductivity": 67.0,
+    "heat_capacity": 228.0
+  },
+  "heat": {
+    "type": "simple_solid_liquid",
+    "melting_point": 505.0
+  }
+}
