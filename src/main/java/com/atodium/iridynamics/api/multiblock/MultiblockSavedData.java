@@ -3,6 +3,7 @@ package com.atodium.iridynamics.api.multiblock;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,10 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.commons.compress.utils.Lists;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MultiblockSavedData extends SavedData {
     public static final String ID = Iridynamics.MODID + "_multiblock";
@@ -55,30 +53,40 @@ public class MultiblockSavedData extends SavedData {
 
     public void setBlock(ServerLevel level, BlockPos pos, Block block) {
         if (!MultiblockModule.validateBlock(block)) return;
-        List<MultiblockStructure> relatives = Lists.newArrayList();
+        Set<MultiblockStructure> relatives = Sets.newHashSet();
         for (Direction direction : DataUtil.DIRECTIONS) {
             BlockPos relative = pos.relative(direction);
             MultiblockStructure structureTo = this.getStructure(relative);
             if (structureTo != null) relatives.add(structureTo);
         }
         if (relatives.isEmpty()) this.allStructures.add(new MultiblockStructure(this).addBlock(level, pos, block));
+        else if (relatives.size() == 1) relatives.toArray(new MultiblockStructure[0])[0].addBlock(level, pos, block);
         else {
-            MultiblockStructure base = relatives.get(0);
-            base.combine(level, relatives.remove(0));
-            base.addBlock(level, pos, block);
+            MultiblockStructure[] relativesArray = relatives.toArray(new MultiblockStructure[0]);
+            MultiblockStructure[] combine = new MultiblockStructure[relativesArray.length - 1];
+            System.arraycopy(relativesArray, 1, combine, 0, relativesArray.length - 1);
+            relativesArray[0].combine(level, combine);
+            relativesArray[0].addBlock(level, pos, block);
         }
+        this.setDirty();
+        System.out.println("All structures:" + this.allStructures.size());
+        for (MultiblockStructure allStructure : this.allStructures)
+            System.out.println("-------------" + allStructure.allBlocks.size() + "   " + allStructure.allBlocks);
     }
 
     public void removeBlock(ServerLevel level, BlockPos pos) {
         if (this.getStructure(pos) == null) return;
         EnumMap<Direction, MultiblockStructure> relatives = Maps.newEnumMap(Direction.class);
         EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
+        boolean single = true;
         for (Direction direction : DataUtil.DIRECTIONS) {
             BlockPos relative = pos.relative(direction);
             MultiblockStructure networkTo = this.getStructure(relative);
+            if (networkTo != null) single = false;
             finish.put(direction, networkTo == null);
             relatives.put(direction, networkTo);
         }
+        if (single) this.removeStructure(this.getStructure(pos));
         for (Direction direction : DataUtil.DIRECTIONS) {
             if (finish.get(direction)) continue;
             MultiblockStructure structure = relatives.get(direction);
@@ -101,6 +109,10 @@ public class MultiblockSavedData extends SavedData {
                 }
             }
         }
+        this.setDirty();
+        System.out.println("All structures:" + this.allStructures.size());
+        for (MultiblockStructure allStructure : this.allStructures)
+            System.out.println("-------------" + allStructure.allBlocks.size() + "   " + allStructure.allBlocks);
     }
 
     public MultiblockStructure getStructure(BlockPos pos) {

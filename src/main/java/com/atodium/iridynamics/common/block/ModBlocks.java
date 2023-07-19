@@ -2,8 +2,10 @@ package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.ModCreativeTabs;
+import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.common.block.equipment.*;
 import com.atodium.iridynamics.common.block.rotate.*;
+import com.atodium.iridynamics.common.multiblock.Smelter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
@@ -43,5 +45,10 @@ public class ModBlocks {
 
     public static void init() {
 
+    }
+
+    public static void setup() {
+        MultiblockModule.registerBlock(Iridynamics.rl("smelter_wall"), SMELTER_WALL.get());
+        MultiblockModule.registerStructure(Smelter.INSTANCE);
     }
 }

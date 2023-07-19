@@ -58,7 +58,7 @@ public class MultiblockModule {
 
     public static StructureLayer[] allLayer(Map<BlockPos, Block> blocks, int dx, int dy, int dz) {
         StructureLayer[] layers = new StructureLayer[dy];
-        for (int y = 0; y < dy; y++) layers[y] = new StructureLayer(blocks, dy, dx, dz);
+        for (int y = 0; y < dy; y++) layers[y] = new StructureLayer(blocks, y, dx, dz);
         return layers;
     }
 

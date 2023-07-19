@@ -21,10 +21,10 @@ import java.util.Set;
 
 public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     private final MultiblockSavedData savedData;
-    private final Map<BlockPos, Block> allBlocks;
+    protected final Map<BlockPos, Block> allBlocks;
     private final Map<ChunkPos, Integer> chunkBlockCount;
     private Map<BlockPos, Block> structureBlocksCache;
-    private BlockPos root, range;
+    private BlockPos root, size;
     private StructureInfo<?> structureInfo;
     private StructureInfo.StructureData structureData;
 
@@ -56,8 +56,8 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         return this.root;
     }
 
-    public BlockPos range() {
-        return this.range;
+    public BlockPos size() {
+        return this.size;
     }
 
     public boolean isEmpty() {
@@ -75,13 +75,16 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     protected Map<BlockPos, Block> searchAllBlocks(BlockPos pos, Direction direction) {
         Map<BlockPos, Block> relatives = Maps.newHashMap();
         Deque<BlockPos> task = Lists.newLinkedList();
-        task.addLast(pos.relative(direction));
+        BlockPos start = pos.relative(direction);
+        task.addLast(start);
+        relatives.put(start, this.allBlocks.get(start));
         while (!task.isEmpty()) {
             BlockPos poll = task.pollFirst();
             if (!this.allBlocks.containsKey(poll)) continue;
             for (Direction to : DataUtil.DIRECTIONS) {
                 BlockPos relative = poll.relative(to);
-                if (relative.equals(pos) || !this.allBlocks.containsKey(relative)) continue;
+                if (relative.equals(pos) || !this.allBlocks.containsKey(relative) || relatives.containsKey(relative))
+                    continue;
                 task.addLast(relative);
                 relatives.put(relative, this.allBlocks.get(relative));
             }
@@ -172,7 +175,7 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
             maxZ = Math.max(maxZ, pos.getZ());
         }
         this.root = new BlockPos(minX, minY, minZ);
-        this.range = new BlockPos(maxX - minX, maxY - minY, maxZ - minZ);
+        this.size = new BlockPos(maxX - minX, maxY - minY, maxZ - minZ);
         this.structureBlocksCache = null;
         Pair<StructureInfo<?>, StructureInfo.StructureData> result = MultiblockModule.validateStructure(this);
         if (result != null) {
@@ -198,7 +201,7 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
             maxZ = Math.max(maxZ, pos.getZ());
         }
         this.root = new BlockPos(minX, minY, minZ);
-        this.range = new BlockPos(maxX - minX, maxY - minY, maxZ - minZ);
+        this.size = new BlockPos(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
         this.structureBlocksCache = null;
         Pair<StructureInfo<?>, StructureInfo.StructureData> result = MultiblockModule.validateStructure(this);
         if (result != null) {

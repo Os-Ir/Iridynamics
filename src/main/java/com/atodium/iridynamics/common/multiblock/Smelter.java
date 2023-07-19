@@ -35,70 +35,71 @@ public class Smelter extends StructureInfo<Smelter.SmelterData> {
     public Optional<SmelterData> validate(MultiblockStructure structure) {
         Map<BlockPos, Block> blocks = structure.structureBlocks();
         BlockPos root = structure.root();
-        int dx = structure.range().getX();
-        int dy = structure.range().getY();
-        int dz = structure.range().getZ();
-        if (!MathUtil.between(dx, 3, 7) || !MathUtil.between(dy, 2, 7) || !MathUtil.between(dz, 3, 7))
+        int sizeX = structure.size().getX();
+        int sizeY = structure.size().getY();
+        int sizeZ = structure.size().getZ();
+        if (!MathUtil.between(sizeX, 3, 7) || !MathUtil.between(sizeY, 2, 7) || !MathUtil.between(sizeZ, 3, 7))
             return Optional.empty();
         Block smelterWall = ModBlocks.SMELTER_WALL.get();
         for (Block block : blocks.values()) if (block != smelterWall) return Optional.empty();
-        StructureLayer[] allLayers = MultiblockModule.allLayer(blocks, dx, dy, dz);
+        StructureLayer[] allLayers = MultiblockModule.allLayer(blocks, sizeX, sizeY, sizeZ);
         if (!allLayers[0].isFilled(smelterWall)) return Optional.empty();
-        for (int y = 1; y < dy; y++) if (!allLayers[y].isSurrounded(smelterWall)) return Optional.empty();
-        return Optional.of(new SmelterData(root.getX(), root.getY(), root.getZ(), dx, dy, dz));
+        for (int y = 1; y < sizeY; y++) if (!allLayers[y].isSurrounded(smelterWall)) return Optional.empty();
+        System.out.println("Structure finish!");
+        return Optional.of(new SmelterData(root.getX(), root.getY(), root.getZ(), sizeX, sizeY, sizeZ));
     }
 
     @Override
     public void onStructureFinish(ServerLevel level, StructureData data, MultiblockStructure structure) {
         SmelterData smelterData = (SmelterData) data;
-        for (int x = 0; x < smelterData.dx; x++)
-            for (int y = 0; y < smelterData.dy; y++)
-                for (int z = 0; z < smelterData.dz; z++)
+        for (int x = 0; x < smelterData.sizeX; x++)
+            for (int y = 0; y < smelterData.sizeY; y++)
+                for (int z = 0; z < smelterData.sizeZ; z++)
                     LiquidModule.addLiquidContainer(level, new BlockPos(smelterData.rx + x, smelterData.ry + y, smelterData.rz + z));
     }
 
     @Override
     public void onStructureDestroyed(ServerLevel level, StructureData data, MultiblockStructure structure) {
         SmelterData smelterData = (SmelterData) data;
-        for (int x = 0; x < smelterData.dx; x++)
-            for (int y = 0; y < smelterData.dy; y++)
-                for (int z = 0; z < smelterData.dz; z++)
+        for (int x = 0; x < smelterData.sizeX; x++)
+            for (int y = 0; y < smelterData.sizeY; y++)
+                for (int z = 0; z < smelterData.sizeZ; z++)
                     LiquidModule.removeLiquidContainer(level, new BlockPos(smelterData.rx + x, smelterData.ry + y, smelterData.rz + z));
     }
 
     public static class SmelterData extends StructureData {
-        private int rx, ry, rz, dx, dy, dz;
+        private int rx, ry, rz, sizeX, sizeY, sizeZ;
 
         public SmelterData() {
 
         }
 
-        public SmelterData(int rx, int ry, int rz, int dx, int dy, int dz) {
+        public SmelterData(int rx, int ry, int rz, int sizeX, int sizeY, int sizeZ) {
             this.rx = rx;
             this.ry = ry;
             this.rz = rz;
-            this.dx = dx;
-            this.dy = dy;
-            this.dz = dz;
+            this.sizeX = sizeX;
+            this.sizeY = sizeY;
+            this.sizeZ = sizeZ;
         }
 
         @Override
         public CompoundTag serializeNBT() {
             CompoundTag tag = new CompoundTag();
-            tag.putInt("dx", this.dx);
-            tag.putInt("dy", this.dy);
-            tag.putInt("dz", this.dz);
+            tag.putInt("sizeX", this.sizeX);
+            tag.putInt("sizeY", this.sizeY);
+            tag.putInt("sizeZ", this.sizeZ);
             tag.putInt("rx", this.rx);
             tag.putInt("ry", this.ry);
             tag.putInt("rz", this.rz);
-            return null;
+            return tag;
         }
 
         @Override
         public void deserializeNBT(CompoundTag tag) {
-            this.dx = tag.getInt("dx");
-            this.dy = tag.getInt("dy");
-            this.dz = tag.getInt("dz");
+            this.sizeX = tag.getInt("sizeX");
+            this.sizeY = tag.getInt("sizeY");
+            this.sizeZ = tag.getInt("sizeZ");
             this.rx = tag.getInt("rx");
             this.ry = tag.getInt("ry");
             this.rz = tag.getInt("rz");

@@ -3,12 +3,12 @@ package com.atodium.iridynamics;
 import com.atodium.iridynamics.api.gui.plan.PlanGuiCodec;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
-import com.atodium.iridynamics.api.research.ResearchModule;
-import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.api.recipe.ModOutputDecorators;
 import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.registry.ModRegistry;
+import com.atodium.iridynamics.api.research.ResearchModule;
+import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.entity.ModEntities;
@@ -59,6 +59,7 @@ public class Iridynamics {
     }
 
     public void setup(FMLCommonSetupEvent event) {
+        ModBlocks.setup();
         ModItems.setup();
         ModFeatures.setup();
     }
