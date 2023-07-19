@@ -15,6 +15,7 @@
 
   "block.iridynamics.pile": "物料堆",
   "block.iridynamics.fuel": "燃料",
+  "block.iridynamics.smelter_wall": "冶炼炉墙",
   "block.iridynamics.chute": "料斗",
   "block.iridynamics.forge": "锻造炉",
   "block.iridynamics.anvil": "砧",

@@ -12,6 +12,7 @@ import com.atodium.iridynamics.api.material.MaterialInfoLoader;
 import com.atodium.iridynamics.api.module.CarvingModule;
 import com.atodium.iridynamics.api.module.ItemHeatModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
+import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.research.ResearchNodeLoader;
@@ -29,12 +30,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -48,6 +52,7 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -120,6 +125,21 @@ public class ForgeEventHandler {
                     MoldToolBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
             });
         }
+    }
+
+    @SubscribeEvent
+    public static void placeMultiblock(BlockEvent.EntityPlaceEvent event) {
+        LevelAccessor level = event.getWorld();
+        Block block = event.getPlacedBlock().getBlock();
+        if (!event.getWorld().isClientSide() && MultiblockModule.validateBlock(block))
+            MultiblockModule.setBlock((ServerLevel) level, event.getPos(), block);
+    }
+
+    @SubscribeEvent
+    public static void breakMultiblock(BlockEvent.BreakEvent event) {
+        LevelAccessor level = event.getWorld();
+        Block block = event.getState().getBlock();
+        if (!event.getWorld().isClientSide()) MultiblockModule.removeBlock((ServerLevel) level, event.getPos());
     }
 
     @SubscribeEvent

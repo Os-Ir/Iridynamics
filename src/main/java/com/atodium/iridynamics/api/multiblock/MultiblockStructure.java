@@ -9,9 +9,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Deque;
 import java.util.Map;
@@ -21,7 +23,10 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     private final MultiblockSavedData savedData;
     private final Map<BlockPos, Block> allBlocks;
     private final Map<ChunkPos, Integer> chunkBlockCount;
-    private BlockPos root;
+    private Map<BlockPos, Block> structureBlocksCache;
+    private BlockPos root, range;
+    private StructureInfo<?> structureInfo;
+    private StructureInfo.StructureData structureData;
 
     public MultiblockStructure(MultiblockSavedData savedData) {
         this.savedData = savedData;
@@ -29,19 +34,41 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         this.chunkBlockCount = Maps.newHashMap();
     }
 
-    protected BlockPos root() {
+    @SuppressWarnings("unchecked")
+    public <T extends StructureInfo.StructureData> StructureInfo<T> structureInfo() {
+        return (StructureInfo<T>) this.structureInfo;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends StructureInfo.StructureData> T structureData() {
+        return (T) this.structureData;
+    }
+
+    public Map<BlockPos, Block> structureBlocks() {
+        if (this.structureBlocksCache == null) {
+            this.structureBlocksCache = Maps.newHashMap();
+            this.allBlocks.forEach((pos, block) -> this.structureBlocksCache.put(pos.subtract(this.root), block));
+        }
+        return this.structureBlocksCache;
+    }
+
+    public BlockPos root() {
         return this.root;
     }
 
-    protected boolean isEmpty() {
+    public BlockPos range() {
+        return this.range;
+    }
+
+    public boolean isEmpty() {
         return this.allBlocks.isEmpty();
     }
 
-    protected Set<ChunkPos> getAllChunks() {
+    public Set<ChunkPos> getAllChunks() {
         return this.chunkBlockCount.keySet();
     }
 
-    protected boolean contains(BlockPos pos) {
+    public boolean contains(BlockPos pos) {
         return this.allBlocks.containsKey(pos);
     }
 
@@ -62,7 +89,7 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         return relatives;
     }
 
-    protected void combine(MultiblockStructure... structures) {
+    protected void combine(ServerLevel level, MultiblockStructure... structures) {
         for (MultiblockStructure structure : structures) {
             this.allBlocks.putAll(structure.allBlocks);
             this.savedData.removeStructure(structure);
@@ -72,35 +99,46 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
                 else this.chunkBlockCount.put(chunk, count);
             });
         }
-        this.updateStructure();
+        this.updateStructure(level);
     }
 
-    protected MultiblockStructure addAllBlocks(Map<BlockPos, Block> blocks) {
+    protected MultiblockStructure addAllBlocks(ServerLevel level, Map<BlockPos, Block> blocks) {
         for (Map.Entry<BlockPos, Block> entry : blocks.entrySet()) {
             BlockPos pos = entry.getKey();
             if (this.allBlocks.containsKey(pos)) continue;
             this.allBlocks.put(pos, entry.getValue());
             this.addChunkCount(new ChunkPos(pos));
         }
-        this.updateStructure();
+        this.updateStructure(level);
         return this;
     }
 
-    protected MultiblockStructure addNode(BlockPos pos, Block block) {
+    private MultiblockStructure addAllBlocksInternal(Map<BlockPos, Block> blocks) {
+        for (Map.Entry<BlockPos, Block> entry : blocks.entrySet()) {
+            BlockPos pos = entry.getKey();
+            if (this.allBlocks.containsKey(pos)) continue;
+            this.allBlocks.put(pos, entry.getValue());
+            this.addChunkCount(new ChunkPos(pos));
+        }
+        this.updateStructureInternal();
+        return this;
+    }
+
+    protected MultiblockStructure addBlock(ServerLevel level, BlockPos pos, Block block) {
         if (this.allBlocks.containsKey(pos)) return this;
         this.allBlocks.put(pos, block);
         this.addChunkCount(new ChunkPos(pos));
-        this.updateStructure();
+        this.updateStructure(level);
         return this;
     }
 
-    protected MultiblockStructure removeNode(BlockPos pos) {
+    protected MultiblockStructure addBlock(ServerLevel level, BlockPos pos) {
         if (!this.allBlocks.containsKey(pos)) return this;
         this.allBlocks.remove(pos);
         if (this.allBlocks.isEmpty()) this.savedData.removeStructure(this);
         else {
             this.removeChunkCount(new ChunkPos(pos));
-            this.updateStructure();
+            this.updateStructure(level);
         }
         return this;
     }
@@ -118,16 +156,56 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         }
     }
 
-    private void updateStructure() {
-        int mx = Integer.MAX_VALUE;
-        int my = Integer.MAX_VALUE;
-        int mz = Integer.MAX_VALUE;
+    private void updateStructureInternal() {
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int minZ = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        int maxZ = Integer.MIN_VALUE;
         for (BlockPos pos : this.allBlocks.keySet()) {
-            mx = Math.min(mx, pos.getX());
-            my = Math.min(my, pos.getY());
-            mz = Math.min(mz, pos.getZ());
+            minX = Math.min(minX, pos.getX());
+            minY = Math.min(minY, pos.getY());
+            minZ = Math.min(minZ, pos.getZ());
+            maxX = Math.max(maxX, pos.getX());
+            maxY = Math.max(maxY, pos.getY());
+            maxZ = Math.max(maxZ, pos.getZ());
         }
-        this.root = new BlockPos(mx, my, mz);
+        this.root = new BlockPos(minX, minY, minZ);
+        this.range = new BlockPos(maxX - minX, maxY - minY, maxZ - minZ);
+        this.structureBlocksCache = null;
+        Pair<StructureInfo<?>, StructureInfo.StructureData> result = MultiblockModule.validateStructure(this);
+        if (result != null) {
+            this.structureInfo = result.getKey();
+            this.structureData = result.getValue();
+        }
+    }
+
+    private void updateStructure(ServerLevel level) {
+        if (this.structureInfo != null) this.structureInfo.onStructureDestroyed(level, this.structureData, this);
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int minZ = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        int maxZ = Integer.MIN_VALUE;
+        for (BlockPos pos : this.allBlocks.keySet()) {
+            minX = Math.min(minX, pos.getX());
+            minY = Math.min(minY, pos.getY());
+            minZ = Math.min(minZ, pos.getZ());
+            maxX = Math.max(maxX, pos.getX());
+            maxY = Math.max(maxY, pos.getY());
+            maxZ = Math.max(maxZ, pos.getZ());
+        }
+        this.root = new BlockPos(minX, minY, minZ);
+        this.range = new BlockPos(maxX - minX, maxY - minY, maxZ - minZ);
+        this.structureBlocksCache = null;
+        Pair<StructureInfo<?>, StructureInfo.StructureData> result = MultiblockModule.validateStructure(this);
+        if (result != null) {
+            this.structureInfo = result.getKey();
+            this.structureData = result.getValue();
+            this.structureInfo.onStructureFinish(level, this.structureData, this);
+        }
     }
 
     @Override
@@ -144,6 +222,8 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
             blocksTag.add(blockTag);
         }
         tag.put("blocks", blocksTag);
+        if (this.structureInfo != null) tag.putString("info", this.structureInfo.id().toString());
+        if (this.structureData != null) tag.put("data", this.structureData.serializeNBT());
         return tag;
     }
 
@@ -156,6 +236,10 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
             CompoundTag blockTag = blocksTag.getCompound(i);
             blocks.put(new BlockPos(blockTag.getInt("x"), blockTag.getInt("y"), blockTag.getInt("z")), MultiblockModule.getBlock(new ResourceLocation(blockTag.getString("block"))));
         }
-        this.addAllBlocks(blocks);
+        this.addAllBlocksInternal(blocks);
+        if (tag.contains("info"))
+            this.structureInfo = MultiblockModule.getStructureInfo(new ResourceLocation(tag.getString("info")));
+        if (this.structureInfo != null) this.structureData = this.structureInfo.createEmptyData();
+        if (tag.contains("data")) this.structureData.deserializeNBT(tag.getCompound("data"));
     }
 }

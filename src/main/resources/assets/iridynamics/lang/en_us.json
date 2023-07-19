@@ -15,6 +15,7 @@
 
   "block.iridynamics.pile": "Pile",
   "block.iridynamics.fuel": "Fuel",
+  "block.iridynamics.smelter_wall": "Smelter Wall",
   "block.iridynamics.chute": "Chute",
   "block.iridynamics.forge": "Forge",
   "block.iridynamics.anvil": "Anvil",
