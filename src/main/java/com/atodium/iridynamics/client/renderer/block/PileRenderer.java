@@ -23,15 +23,27 @@ public class PileRenderer implements BlockEntityRenderer<PileBlockEntity> {
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         transform.pushPose();
         for (int i = 0; i < pile.getHeight(); i++) {
-            TextureAtlasSprite texture = atlas.apply(pile.getPileItemInfo(i).texture());
-            RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.NORTH, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 0.0f, 0.0f, -1.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
-            RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.SOUTH, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 0.0f, 0.0f, 1.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
-            RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.WEST, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, -1.0f, 0.0f, 0.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
-            RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.EAST, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 1.0f, 0.0f, 0.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
-            if (i == 0)
-                RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.UP, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 16.0f, 16.0f);
-            if (i == pile.getHeight() - 1)
-                RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.UP, 0.0f, 0.0625f * pile.getHeight(), 0.0f, 1.0f, 0.0625f * pile.getHeight(), 1.0f, 0.0f, 1.0f, 0.0f, 16.0f, 16.0f);
+            if (pile.isLiquid(i)) {
+                int color = pile.getPileItemInfo(i).materialColor();
+                RendererUtil.renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.NORTH, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 0.0f, 0.0f, -1.0f);
+                RendererUtil.renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.SOUTH, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 0.0f, 0.0f, 1.0f);
+                RendererUtil.renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.WEST, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, -1.0f, 0.0f, 0.0f);
+                RendererUtil.renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.EAST, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 1.0f, 0.0f, 0.0f);
+                if (i == 0)
+                    RendererUtil.renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.UP, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f);
+                if (i == pile.getHeight() - 1)
+                    RendererUtil.renderColorFace(transform, consumer, color, combinedLight, combinedOverlay, Direction.UP, 0.0f, 0.0625f * pile.getHeight(), 0.0f, 1.0f, 0.0625f * pile.getHeight(), 1.0f, 0.0f, 1.0f, 0.0f);
+            } else {
+                TextureAtlasSprite texture = atlas.apply(pile.getPileItemInfo(i).texture());
+                RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.NORTH, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 0.0f, 0.0f, -1.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
+                RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.SOUTH, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 0.0f, 0.0f, 1.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
+                RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.WEST, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, -1.0f, 0.0f, 0.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
+                RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.EAST, 0.0f, 0.0625f * i, 0.0f, 1.0f, 0.0625f * (i + 1), 1.0f, 1.0f, 0.0f, 0.0f, 16.0f, 1.0f, 0.0f, 15.0f - i);
+                if (i == 0)
+                    RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.UP, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 16.0f, 16.0f);
+                if (i == pile.getHeight() - 1)
+                    RendererUtil.renderFace(transform, consumer, texture, combinedLight, combinedOverlay, Direction.UP, 0.0f, 0.0625f * pile.getHeight(), 0.0f, 1.0f, 0.0625f * pile.getHeight(), 1.0f, 0.0f, 1.0f, 0.0f, 16.0f, 16.0f);
+            }
         }
         transform.popPose();
     }

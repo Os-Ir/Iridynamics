@@ -45,7 +45,6 @@ public class Smelter extends StructureInfo<Smelter.SmelterData> {
         StructureLayer[] allLayers = MultiblockModule.allLayer(blocks, sizeX, sizeY, sizeZ);
         if (!allLayers[0].isFilled(smelterWall)) return Optional.empty();
         for (int y = 1; y < sizeY; y++) if (!allLayers[y].isSurrounded(smelterWall)) return Optional.empty();
-        System.out.println("Structure finish!");
         return Optional.of(new SmelterData(root.getX(), root.getY(), root.getZ(), sizeX, sizeY, sizeZ));
     }
 

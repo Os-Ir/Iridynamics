@@ -69,9 +69,6 @@ public class MultiblockSavedData extends SavedData {
             relativesArray[0].addBlock(level, pos, block);
         }
         this.setDirty();
-        System.out.println("All structures:" + this.allStructures.size());
-        for (MultiblockStructure allStructure : this.allStructures)
-            System.out.println("-------------" + allStructure.allBlocks.size() + "   " + allStructure.allBlocks);
     }
 
     public void removeBlock(ServerLevel level, BlockPos pos) {
@@ -86,7 +83,11 @@ public class MultiblockSavedData extends SavedData {
             finish.put(direction, networkTo == null);
             relatives.put(direction, networkTo);
         }
-        if (single) this.removeStructure(this.getStructure(pos));
+        if (single) {
+            MultiblockStructure structure = this.getStructure(pos);
+            structure.destroyStructure(level);
+            this.removeStructure(structure);
+        }
         for (Direction direction : DataUtil.DIRECTIONS) {
             if (finish.get(direction)) continue;
             MultiblockStructure structure = relatives.get(direction);
@@ -99,6 +100,7 @@ public class MultiblockSavedData extends SavedData {
                 finish.put(innerDirection, true);
             }
             if (structure.isEmpty()) continue;
+            structure.destroyStructure(level);
             this.removeStructure(structure);
             for (Direction toSearch : connected) {
                 Map<BlockPos, Block> subBlocks = structure.searchAllBlocks(pos, toSearch);
@@ -110,9 +112,6 @@ public class MultiblockSavedData extends SavedData {
             }
         }
         this.setDirty();
-        System.out.println("All structures:" + this.allStructures.size());
-        for (MultiblockStructure allStructure : this.allStructures)
-            System.out.println("-------------" + allStructure.allBlocks.size() + "   " + allStructure.allBlocks);
     }
 
     public MultiblockStructure getStructure(BlockPos pos) {

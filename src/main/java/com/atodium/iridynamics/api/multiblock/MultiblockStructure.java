@@ -135,11 +135,13 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         return this;
     }
 
-    protected MultiblockStructure addBlock(ServerLevel level, BlockPos pos) {
+    protected MultiblockStructure removeBlock(ServerLevel level, BlockPos pos) {
         if (!this.allBlocks.containsKey(pos)) return this;
         this.allBlocks.remove(pos);
-        if (this.allBlocks.isEmpty()) this.savedData.removeStructure(this);
-        else {
+        if (this.allBlocks.isEmpty()) {
+            this.savedData.removeStructure(this);
+            this.destroyStructure(level);
+        } else {
             this.removeChunkCount(new ChunkPos(pos));
             this.updateStructure(level);
         }
@@ -160,6 +162,7 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     }
 
     private void updateStructureInternal() {
+        System.out.println(this.structureInfo);
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
         int minZ = Integer.MAX_VALUE;
@@ -175,7 +178,7 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
             maxZ = Math.max(maxZ, pos.getZ());
         }
         this.root = new BlockPos(minX, minY, minZ);
-        this.size = new BlockPos(maxX - minX, maxY - minY, maxZ - minZ);
+        this.size = new BlockPos(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
         this.structureBlocksCache = null;
         Pair<StructureInfo<?>, StructureInfo.StructureData> result = MultiblockModule.validateStructure(this);
         if (result != null) {
@@ -184,8 +187,8 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         }
     }
 
-    private void updateStructure(ServerLevel level) {
-        if (this.structureInfo != null) this.structureInfo.onStructureDestroyed(level, this.structureData, this);
+    protected void updateStructure(ServerLevel level) {
+        this.destroyStructure(level);
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
         int minZ = Integer.MAX_VALUE;
@@ -211,6 +214,10 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         }
     }
 
+    protected void destroyStructure(ServerLevel level) {
+        if (this.structureInfo != null) this.structureInfo.onStructureDestroyed(level, this.structureData, this);
+    }
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
@@ -233,6 +240,7 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag tag) {
         this.allBlocks.clear();
+        System.out.println("load structure");
         ListTag blocksTag = tag.getList("blocks", Tag.TAG_COMPOUND);
         Map<BlockPos, Block> blocks = Maps.newHashMap();
         for (int i = 0; i < blocksTag.size(); i++) {

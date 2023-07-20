@@ -6,12 +6,19 @@ import com.atodium.iridynamics.common.item.ModItems;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 
 public class ModCreativeTabs {
     public static final CreativeModeTab BLOCK = new CreativeModeTab(Iridynamics.MODID + "_block") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ModBlocks.FORGE.get());
+            return new ItemStack(ModBlocks.SMELTER_WALL.get());
+        }
+    };
+    public static final CreativeModeTab EQUIPMENT = new CreativeModeTab(Iridynamics.MODID + "_equipment") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ModBlocks.GEARBOX.get());
         }
     };
 

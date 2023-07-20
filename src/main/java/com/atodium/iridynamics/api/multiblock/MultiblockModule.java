@@ -52,13 +52,13 @@ public class MultiblockModule {
         return MultiblockSavedData.get(level).getStructure(pos);
     }
 
-    public static StructureLayer layer(Map<BlockPos, Block> blocks, int layer, int dx, int dz) {
-        return new StructureLayer(blocks, layer, dx, dz);
+    public static StructureLayer layer(Map<BlockPos, Block> blocks, int layer, int sizeX, int sizeZ) {
+        return new StructureLayer(blocks, layer, sizeX, sizeZ);
     }
 
-    public static StructureLayer[] allLayer(Map<BlockPos, Block> blocks, int dx, int dy, int dz) {
-        StructureLayer[] layers = new StructureLayer[dy];
-        for (int y = 0; y < dy; y++) layers[y] = new StructureLayer(blocks, y, dx, dz);
+    public static StructureLayer[] allLayer(Map<BlockPos, Block> blocks, int sizeX, int sizeY, int sizeZ) {
+        StructureLayer[] layers = new StructureLayer[sizeY];
+        for (int y = 0; y < sizeY; y++) layers[y] = new StructureLayer(blocks, y, sizeX, sizeZ);
         return layers;
     }
 

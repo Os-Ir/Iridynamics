@@ -139,6 +139,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
                 this.markSync();
             }
         }
+        if (this.level.getGameTime() % 20 == 0) System.out.println(this.heat.getTemperature());
         if (!LiquidModule.hasLiquidContainer((ServerLevel) this.level, this.getBlockPos())) {
             int index = 0;
             boolean flag = false;
@@ -194,10 +195,14 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         return true;
     }
 
-    public PileItemInfo getPileItemInfo(int count) {
-        if (!MathUtil.between(count, 0, this.height - 1) || !PILE_ITEM.containsKey(this.content[count]))
+    public PileItemInfo getPileItemInfo(int index) {
+        if (!MathUtil.between(index, 0, this.height - 1) || !PILE_ITEM.containsKey(this.content[index]))
             return EMPTY_INFO;
-        return PILE_ITEM.get(this.content[count]);
+        return PILE_ITEM.get(this.content[index]);
+    }
+
+    public boolean isLiquid(int index) {
+        return this.isLiquid[index];
     }
 
     public void markAllChange() {
@@ -439,10 +444,12 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     public static class PileItemInfo {
         private final ResourceLocation texture;
+        private final int materialColor;
         private final double meltingPoint, capacity, conductivity;
 
         private PileItemInfo(String name) {
             this.texture = Iridynamics.rl("block/pile/" + name);
+            this.materialColor = 0xffffff;
             this.meltingPoint = 0.0;
             this.capacity = 1.0;
             this.conductivity = 1.0;
@@ -450,6 +457,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
         public PileItemInfo(String name, MaterialBase material) {
             this.texture = Iridynamics.rl("block/pile/" + name);
+            this.materialColor = material.getRenderInfo().color();
             this.meltingPoint = material.getHeatInfo().getMeltingPoint();
             this.capacity = material.getHeatInfo().getMoleCapacity(HeatModule.ATMOSPHERIC_PRESSURE, Phase.SOLID);
             this.conductivity = material.getPhysicalInfo().thermalConductivity();
@@ -457,6 +465,10 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
         public ResourceLocation texture() {
             return this.texture;
+        }
+
+        public int materialColor() {
+            return this.materialColor;
         }
 
         public double meltingPoint() {
