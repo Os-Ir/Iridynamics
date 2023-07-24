@@ -4,10 +4,10 @@ import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
-import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.google.common.collect.ImmutableSet;
@@ -115,9 +115,7 @@ public class MoldBlockEntity extends SyncedBlockEntity implements ITickable {
 
     @Override
     protected void readSyncData(CompoundTag tag) {
-        System.out.println("Reading sync data");
         this.container.deserializeNBT(tag.getCompound("container"));
-
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.capability;
+package com.atodium.iridynamics.api.heat;
 
 public interface IHeatProcess extends IHeat {
     double getRecipeEnergy();

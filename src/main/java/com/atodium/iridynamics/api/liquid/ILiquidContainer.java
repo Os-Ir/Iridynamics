@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.capability;
+package com.atodium.iridynamics.api.liquid;
 
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.google.common.collect.ImmutableMap;

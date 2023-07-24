@@ -240,7 +240,6 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag tag) {
         this.allBlocks.clear();
-        System.out.println("load structure");
         ListTag blocksTag = tag.getList("blocks", Tag.TAG_COMPOUND);
         Map<BlockPos, Block> blocks = Maps.newHashMap();
         for (int i = 0; i < blocksTag.size(); i++) {

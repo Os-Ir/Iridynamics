@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.capability;
+package com.atodium.iridynamics.api.heat;
 
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.heat.HeatModule;

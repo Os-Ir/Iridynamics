@@ -1,8 +1,6 @@
 package com.atodium.iridynamics.api.heat;
 
 import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.capability.IHeat;
-import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.heat.impl.HeatProcessPhasePortrait;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;

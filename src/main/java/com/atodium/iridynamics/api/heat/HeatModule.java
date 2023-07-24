@@ -2,7 +2,6 @@ package com.atodium.iridynamics.api.heat;
 
 import com.atodium.iridynamics.api.capability.ForgingCapability;
 import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.capability.IHeat;
 import com.atodium.iridynamics.api.capability.InventoryCapability;
 import com.atodium.iridynamics.api.heat.impl.MaterialPhasePortrait;
 import com.atodium.iridynamics.api.material.MaterialEntry;

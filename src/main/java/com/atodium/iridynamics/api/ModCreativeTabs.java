@@ -6,7 +6,6 @@ import com.atodium.iridynamics.common.item.ModItems;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 
 public class ModCreativeTabs {
     public static final CreativeModeTab BLOCK = new CreativeModeTab(Iridynamics.MODID + "_block") {

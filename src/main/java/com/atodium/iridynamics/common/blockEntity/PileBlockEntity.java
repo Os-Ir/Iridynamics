@@ -266,7 +266,6 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     @Override
     public boolean ignite(Direction direction, double temperature) {
         if (!this.isFuelBlock()) return false;
-        System.out.println(this.isFuelBlock());
         FuelInfo fuelInfo = FuelInfo.ITEM_FUEL.get(this.content[0]);
         PileItemInfo pileItemInfo = PILE_ITEM.get(this.content[0]);
         BlockPos pos = this.getBlockPos();

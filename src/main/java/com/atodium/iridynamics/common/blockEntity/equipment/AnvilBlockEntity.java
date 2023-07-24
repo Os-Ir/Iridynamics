@@ -5,7 +5,7 @@ import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.capability.ForgingCapability;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.IForging;
-import com.atodium.iridynamics.api.capability.IHeat;
+import com.atodium.iridynamics.api.heat.IHeat;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.common.block.equipment.AnvilBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;

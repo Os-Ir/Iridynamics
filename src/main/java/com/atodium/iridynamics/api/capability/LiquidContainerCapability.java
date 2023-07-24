@@ -1,16 +1,16 @@
 package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.heat.HeatModule;
+import com.atodium.iridynamics.api.heat.IHeat;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.heat.impl.LiquidContainerPortrait;
+import com.atodium.iridynamics.api.liquid.ILiquidContainer;
+import com.atodium.iridynamics.api.liquid.SimpleLiquidContainer;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
-import com.atodium.iridynamics.api.heat.HeatModule;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -18,22 +18,18 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-import java.util.Map;
-
 public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapabilitySerializable<CompoundTag> {
     public static final ResourceLocation KEY = Iridynamics.rl("liquid_container");
     public static final Capability<ILiquidContainer> LIQUID_CONTAINER = CapabilityManager.get(new CapabilityToken<>() {
     });
 
-    private int liquidCapacity;
     private double energy;
     private final LiquidContainerPortrait portrait;
-    private final Map<MaterialBase, Integer> materials;
+    private final SimpleLiquidContainer container;
 
     public LiquidContainerCapability(int liquidCapacity) {
-        this.liquidCapacity = liquidCapacity;
         this.portrait = new LiquidContainerPortrait(this);
-        this.materials = Maps.newHashMap();
+        this.container = new SimpleLiquidContainer(liquidCapacity);
     }
 
     @SuppressWarnings("unchecked")
@@ -85,67 +81,51 @@ public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapa
 
     @Override
     public boolean isEmpty() {
-        return this.materials.isEmpty();
+        return this.container.isEmpty();
     }
 
     @Override
     public void clear() {
-        this.materials.clear();
+        this.container.clear();
         this.energy = 0.0;
         this.portrait.updatePointEnergy();
     }
 
     @Override
     public int getMaterialTypes() {
-        return this.materials.size();
+        return this.container.getMaterialTypes();
     }
 
     @Override
     public ImmutableMap<MaterialBase, Integer> getAllMaterials() {
-        return ImmutableMap.copyOf(this.materials);
+        return this.container.getAllMaterials();
     }
 
     @Override
     public int usedCapacity() {
-        int used = 0;
-        for (Map.Entry<MaterialBase, Integer> entry : this.materials.entrySet()) used += entry.getValue();
-        return used;
+        return this.container.usedCapacity();
     }
 
     @Override
     public int liquidCapacity() {
-        return this.liquidCapacity;
+        return this.container.liquidCapacity();
     }
 
     @Override
     public boolean hasMaterial(MaterialBase material) {
-        return this.materials.containsKey(material);
+        return this.container.hasMaterial(material);
     }
 
     @Override
     public int addMaterial(MaterialBase material, int add) {
-        if (add < 0) {
-            int unit = this.getMaterialUnit(material) + add;
-            if (unit <= 0) this.materials.remove(material);
-            else this.materials.put(material, unit);
-            this.portrait.updatePointEnergy();
-            return 0;
-        }
-        int remainSpace = this.liquidCapacity - this.usedCapacity();
-        if (remainSpace >= add) {
-            this.materials.put(material, this.getMaterialUnit(material) + add);
-            this.portrait.updatePointEnergy();
-            return 0;
-        }
-        this.materials.put(material, this.getMaterialUnit(material) + remainSpace);
+        int remain = this.container.addMaterial(material, add);
         this.portrait.updatePointEnergy();
-        return add - remainSpace;
+        return remain;
     }
 
     @Override
     public int getMaterialUnit(MaterialBase material) {
-        if (this.materials.containsKey(material)) return this.materials.get(material);
-        return 0;
+        return this.container.getMaterialUnit(material);
     }
 
     @Override
@@ -157,29 +137,15 @@ public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapa
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("liquid_capacity", this.liquidCapacity);
         tag.putDouble("energy", this.energy);
-        ListTag materials = new ListTag();
-        this.materials.forEach((material, unit) -> {
-            CompoundTag t = new CompoundTag();
-            t.putString("material", material.getName());
-            t.putInt("unit", unit);
-            materials.add(t);
-        });
-        tag.put("materials", materials);
+        tag.put("container", this.container.serializeNBT());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        this.liquidCapacity = tag.getInt("liquid_capacity");
         this.energy = tag.getDouble("energy");
-        ListTag materials = tag.getList("materials", Tag.TAG_COMPOUND);
-        this.materials.clear();
-        for (int i = 0; i < materials.size(); i++) {
-            CompoundTag t = materials.getCompound(i);
-            this.materials.put(MaterialBase.getMaterialByName(t.getString("material")), t.getInt("unit"));
-        }
+        this.container.deserializeNBT(tag.getCompound("container"));
         this.portrait.updatePointEnergy();
     }
 }

@@ -18,7 +18,6 @@ public class MoldRenderer implements BlockEntityRenderer<MoldBlockEntity> {
         VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
         LiquidContainerCapability container = mold.getLiquidContainer();
         if (container.isEmpty()) return;
-        System.out.println(1);
         transform.pushPose();
         transform.translate(0.3125, 0.125 + ((double) container.usedCapacity()) / container.liquidCapacity() * 0.125, 0.1875);
         RendererUtil.renderColorFace(transform, consumer, container.getAllMaterials().keySet().stream().toList().get(0).getRenderInfo().color(), combinedLight, combinedOverlay, Direction.UP, 0.0f, 0.0f, 0.0f, 0.375f, 0.0f, 0.625f, 0.0f, 1.0f, 0.0f);
