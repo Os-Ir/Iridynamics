@@ -40,20 +40,29 @@ public class Alloy {
         return this.sumUnits;
     }
 
-    public int maxAlloyUnits(ILiquidContainer container) {
+    public int maxAlloyUnits(ILiquidContainer container, double temperature, boolean consume) {
         int k = Integer.MAX_VALUE;
+        for (MaterialBase material : this.composition().keySet())
+            if (!container.hasLiquidMaterial(material, temperature)) return 0;
         for (Object2IntMap.Entry<MaterialBase> entry : this.composition.object2IntEntrySet())
-            k = Math.min(k, container.getMaterialUnit(entry.getKey()) / entry.getIntValue());
+            k = Math.min(k, container.getLiquidMaterialUnit(entry.getKey(), temperature) / entry.getIntValue());
+        if (consume) {
+            for (Object2IntMap.Entry<MaterialBase> entry : this.composition.object2IntEntrySet())
+                container.addMaterial(entry.getKey(), -k * entry.getIntValue());
+            container.addMaterial(this.material, k * this.sumUnits);
+        }
         return k * this.sumUnits;
     }
 
-    public boolean validate(ILiquidContainer container) {
+    public boolean validate(ILiquidContainer container, double temperature) {
         if (this.composition.size() != container.getMaterialTypes()) return false;
-        for (MaterialBase material : this.composition().keySet()) if (!container.hasMaterial(material)) return false;
+        for (MaterialBase material : this.composition().keySet())
+            if (!container.hasLiquidMaterial(material, temperature)) return false;
         int k = 0;
         for (Object2IntMap.Entry<MaterialBase> entry : this.composition().object2IntEntrySet()) {
-            if (k == 0) k = container.getMaterialUnit(entry.getKey()) / entry.getIntValue();
-            else if (k != container.getMaterialUnit(entry.getKey()) / entry.getIntValue()) return false;
+            if (k == 0) k = container.getLiquidMaterialUnit(entry.getKey(), temperature) / entry.getIntValue();
+            else if (k != container.getLiquidMaterialUnit(entry.getKey(), temperature) / entry.getIntValue())
+                return false;
         }
         return true;
     }

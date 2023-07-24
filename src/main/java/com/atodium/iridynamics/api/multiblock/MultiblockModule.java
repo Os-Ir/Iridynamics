@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
@@ -62,12 +63,11 @@ public class MultiblockModule {
         return layers;
     }
 
-    @SuppressWarnings("unchecked")
-    public static Pair<StructureInfo<?>, StructureInfo.StructureData> validateStructure(MultiblockStructure structure) {
+    public static Optional<Pair<StructureInfo<?>, LazyOptional<StructureInfo.StructureData>>> validateStructure(MultiblockStructure structure) {
         for (StructureInfo<?> info : STRUCTURES.values()) {
-            Optional<StructureInfo.StructureData> optional = (Optional<StructureInfo.StructureData>) info.validate(structure);
-            if (optional.isPresent()) return Pair.of(info, optional.get());
+            LazyOptional<StructureInfo.StructureData> optional = info.validate(structure).cast();
+            if (optional.isPresent()) return Optional.of(Pair.of(info, optional));
         }
-        return null;
+        return Optional.empty();
     }
 }

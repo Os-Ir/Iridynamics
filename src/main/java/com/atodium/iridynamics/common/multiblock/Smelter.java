@@ -13,9 +13,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Map;
-import java.util.Optional;
 
 public class Smelter extends StructureInfo<Smelter.SmelterData> {
     public static final ResourceLocation ID = Iridynamics.rl("smelter");
@@ -32,20 +32,20 @@ public class Smelter extends StructureInfo<Smelter.SmelterData> {
     }
 
     @Override
-    public Optional<SmelterData> validate(MultiblockStructure structure) {
+    public LazyOptional<SmelterData> validate(MultiblockStructure structure) {
         Map<BlockPos, Block> blocks = structure.structureBlocks();
         BlockPos root = structure.root();
         int sizeX = structure.size().getX();
         int sizeY = structure.size().getY();
         int sizeZ = structure.size().getZ();
         if (!MathUtil.between(sizeX, 3, 7) || !MathUtil.between(sizeY, 2, 7) || !MathUtil.between(sizeZ, 3, 7))
-            return Optional.empty();
+            return LazyOptional.empty();
         Block smelterWall = ModBlocks.SMELTER_WALL.get();
-        for (Block block : blocks.values()) if (block != smelterWall) return Optional.empty();
+        for (Block block : blocks.values()) if (block != smelterWall) return LazyOptional.empty();
         StructureLayer[] allLayers = MultiblockModule.allLayer(blocks, sizeX, sizeY, sizeZ);
-        if (!allLayers[0].isFilled(smelterWall)) return Optional.empty();
-        for (int y = 1; y < sizeY; y++) if (!allLayers[y].isSurrounded(smelterWall)) return Optional.empty();
-        return Optional.of(new SmelterData(root.getX(), root.getY(), root.getZ(), sizeX, sizeY, sizeZ));
+        if (!allLayers[0].isFilled(smelterWall)) return LazyOptional.empty();
+        for (int y = 1; y < sizeY; y++) if (!allLayers[y].isSurrounded(smelterWall)) return LazyOptional.empty();
+        return LazyOptional.of(() -> new SmelterData(root.getX(), root.getY(), root.getZ(), sizeX, sizeY, sizeZ));
     }
 
     @Override

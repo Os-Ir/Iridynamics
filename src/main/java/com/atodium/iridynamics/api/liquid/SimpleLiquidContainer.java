@@ -43,6 +43,16 @@ public class SimpleLiquidContainer implements ILiquidContainer, INBTSerializable
     }
 
     @Override
+    public ImmutableMap<MaterialBase, Integer> getAllLiquidMaterials(double temperature) {
+        Object2IntMap<MaterialBase> filter = new Object2IntOpenHashMap<>();
+        for (Object2IntMap.Entry<MaterialBase> entry : this.materials.object2IntEntrySet()) {
+            MaterialBase material = entry.getKey();
+            if (temperature >= material.getHeatInfo().getMeltingPoint()) filter.put(material, entry.getIntValue());
+        }
+        return ImmutableMap.copyOf(filter);
+    }
+
+    @Override
     public int usedCapacity() {
         int used = 0;
         for (Object2IntMap.Entry<MaterialBase> entry : this.materials.object2IntEntrySet()) used += entry.getIntValue();
@@ -60,8 +70,13 @@ public class SimpleLiquidContainer implements ILiquidContainer, INBTSerializable
     }
 
     @Override
+    public boolean hasLiquidMaterial(MaterialBase material, double temperature) {
+        return temperature >= material.getHeatInfo().getMeltingPoint() && this.materials.containsKey(material);
+    }
+
+    @Override
     public int addMaterial(MaterialBase material, int add) {
-        if (add < 0) {
+        if (add <= 0) {
             int unit = this.getMaterialUnit(material) + add;
             if (unit <= 0) this.materials.removeInt(material);
             else this.materials.put(material, unit);
@@ -69,16 +84,26 @@ public class SimpleLiquidContainer implements ILiquidContainer, INBTSerializable
         }
         int remainSpace = this.liquidCapacity - this.usedCapacity();
         if (remainSpace >= add) {
-            this.materials.put(material, this.getMaterialUnit(material) + add);
+            int unit = this.getMaterialUnit(material) + add;
+            if (unit <= 0) this.materials.removeInt(material);
+            else this.materials.put(material, this.getMaterialUnit(material) + add);
             return 0;
         }
-        this.materials.put(material, this.getMaterialUnit(material) + remainSpace);
+        int unit = this.getMaterialUnit(material) + add;
+        if (unit <= 0) this.materials.removeInt(material);
+        else this.materials.put(material, this.getMaterialUnit(material) + remainSpace);
         return add - remainSpace;
     }
 
     @Override
     public int getMaterialUnit(MaterialBase material) {
         return this.materials.getInt(material);
+    }
+
+    @Override
+    public int getLiquidMaterialUnit(MaterialBase material, double temperature) {
+        if (temperature >= material.getHeatInfo().getMeltingPoint()) return this.materials.getInt(material);
+        return 0;
     }
 
     @Override

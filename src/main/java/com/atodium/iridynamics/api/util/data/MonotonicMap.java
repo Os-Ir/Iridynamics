@@ -22,7 +22,7 @@ public class MonotonicMap<T> {
         return this.map;
     }
 
-    public double getCriticalPoint(T value) {
+    public double getKey(T value) {
         for (Pair<Double, T> pair : this.map) if (pair.getRight().equals(value)) return pair.getLeft();
         return 0.0;
     }
@@ -55,7 +55,7 @@ public class MonotonicMap<T> {
             this.map = Lists.newArrayList();
         }
 
-        public Builder<T> addCriticalPoint(double num, T value) {
+        public Builder<T> addData(double num, T value) {
             if (this.criticalPoints.contains(num))
                 throw new IllegalArgumentException("Critical Points of MonotonicMap can not be repetitive");
             this.criticalPoints.add(num);

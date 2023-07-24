@@ -3,11 +3,15 @@ package com.atodium.iridynamics.api.material;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.heat.MaterialHeatInfo;
 import com.atodium.iridynamics.api.heat.SubMaterialHeatInfo;
+import com.atodium.iridynamics.api.material.alloy.AlloyModule;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.util.data.MonotonicMap;
 import com.atodium.iridynamics.api.util.data.SimpleJsonLoader;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -59,9 +63,18 @@ public class MaterialInfoLoader extends SimpleJsonLoader {
                     String type = heatJson.get("type").getAsString();
                     if (type.equals("simple_solid_liquid")) {
                         double moleCapacity = heatCapacity * density / 9.0;
-                        material.setHeatInfo(MaterialHeatInfo.getSimplified(SubMaterialHeatInfo.builder().putCapacity(Phase.SOLID, moleCapacity).putCapacity(Phase.LIQUID, moleCapacity).setCriticalPoints(MonotonicMap.<Phase>builder().addCriticalPoint(0.0, Phase.SOLID).addCriticalPoint(heatJson.get("melting_point").getAsDouble(), Phase.LIQUID).build()).build()));
+                        material.setHeatInfo(MaterialHeatInfo.getSimplified(SubMaterialHeatInfo.builder().putCapacity(Phase.SOLID, moleCapacity).putCapacity(Phase.LIQUID, moleCapacity).setCriticalPoints(MonotonicMap.<Phase>builder().addData(0.0, Phase.SOLID).addData(heatJson.get("melting_point").getAsDouble(), Phase.LIQUID).build()).build()));
                     }
                 }
+            }
+            if (json.has("alloy")) {
+                JsonArray alloyJson = json.getAsJsonArray("alloy");
+                Object2IntMap<MaterialBase> composition = new Object2IntOpenHashMap<>();
+                alloyJson.forEach((element) -> {
+                    JsonObject obj = element.getAsJsonObject();
+                    composition.put(MaterialBase.getMaterialByName(obj.get("material").getAsString()), obj.get("weight").getAsInt());
+                });
+                AlloyModule.registerAlloy(material, composition);
             }
         }
     }

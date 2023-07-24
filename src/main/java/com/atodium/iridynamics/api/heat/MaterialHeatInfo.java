@@ -19,7 +19,7 @@ public abstract class MaterialHeatInfo {
     }
 
     public double getMeltingPoint(double pressure) {
-        return this.getSubHeatInfo(pressure).getCriticalPoints().getCriticalPoint(Phase.LIQUID);
+        return this.getSubHeatInfo(pressure).getCriticalPoints().getKey(Phase.LIQUID);
     }
 
     public double getBoilingPoint() {
@@ -27,7 +27,7 @@ public abstract class MaterialHeatInfo {
     }
 
     public double getBoilingPoint(double pressure) {
-        return this.getSubHeatInfo(pressure).getCriticalPoints().getCriticalPoint(Phase.GAS);
+        return this.getSubHeatInfo(pressure).getCriticalPoints().getKey(Phase.GAS);
     }
 
     public MonotonicMap<Phase> getCriticalPoints() {
@@ -119,7 +119,7 @@ public abstract class MaterialHeatInfo {
                 sum += lastCapacity * (pair.getLeft() - lastTemp);
                 lastCapacity = sub.getMoleCapacity(phase);
                 lastTemp = pair.getLeft();
-                builder.addCriticalPoint(sum, phase);
+                builder.addData(sum, phase);
             }
             this.phaseEnergy = builder.build();
         }
@@ -132,13 +132,13 @@ public abstract class MaterialHeatInfo {
         @Override
         public double getTemperature(double pressure, double moleEnergy) {
             Phase phase = this.phaseEnergy.getData(moleEnergy);
-            return this.sub.getCriticalPoints().getCriticalPoint(phase) + (moleEnergy - this.phaseEnergy.getCriticalPoint(phase)) / this.sub.getMoleCapacity(phase);
+            return this.sub.getCriticalPoints().getKey(phase) + (moleEnergy - this.phaseEnergy.getKey(phase)) / this.sub.getMoleCapacity(phase);
         }
 
         @Override
         public double getMoleEnergy(double pressure, double temperature) {
             Phase phase = this.sub.getCriticalPoints().getData(temperature);
-            return this.phaseEnergy.getCriticalPoint(phase) + (temperature - this.sub.getCriticalPoints().getCriticalPoint(phase)) * this.sub.getMoleCapacity(phase);
+            return this.phaseEnergy.getKey(phase) + (temperature - this.sub.getCriticalPoints().getKey(phase)) * this.sub.getMoleCapacity(phase);
         }
     }
 }

@@ -13,10 +13,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Deque;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class MultiblockStructure implements INBTSerializable<CompoundTag> {
@@ -25,8 +27,8 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     private final Map<ChunkPos, Integer> chunkBlockCount;
     private Map<BlockPos, Block> structureBlocksCache;
     private BlockPos root, size;
-    private StructureInfo<?> structureInfo;
-    private StructureInfo.StructureData structureData;
+    private LazyOptional<StructureInfo<?>> structureInfo;
+    private LazyOptional<StructureInfo.StructureData> structureData;
 
     public MultiblockStructure(MultiblockSavedData savedData) {
         this.savedData = savedData;
@@ -34,14 +36,12 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         this.chunkBlockCount = Maps.newHashMap();
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends StructureInfo.StructureData> StructureInfo<T> structureInfo() {
-        return (StructureInfo<T>) this.structureInfo;
+        return this.structureInfo.isPresent() ? this.structureInfo.<StructureInfo<T>>cast().orElseThrow(NullPointerException::new) : null;
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends StructureInfo.StructureData> T structureData() {
-        return (T) this.structureData;
+        return this.structureData.isPresent() ? this.structureData.<T>cast().orElseThrow(NullPointerException::new) : null;
     }
 
     public Map<BlockPos, Block> structureBlocks() {
@@ -180,10 +180,10 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         this.root = new BlockPos(minX, minY, minZ);
         this.size = new BlockPos(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
         this.structureBlocksCache = null;
-        Pair<StructureInfo<?>, StructureInfo.StructureData> result = MultiblockModule.validateStructure(this);
-        if (result != null) {
-            this.structureInfo = result.getKey();
-            this.structureData = result.getValue();
+        Optional<Pair<StructureInfo<?>, LazyOptional<StructureInfo.StructureData>>> result = MultiblockModule.validateStructure(this);
+        if (result.isPresent()) {
+            this.structureInfo = LazyOptional.of(() -> result.get().getLeft());
+            this.structureData = result.get().getRight();
         }
     }
 
@@ -206,16 +206,17 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         this.root = new BlockPos(minX, minY, minZ);
         this.size = new BlockPos(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
         this.structureBlocksCache = null;
-        Pair<StructureInfo<?>, StructureInfo.StructureData> result = MultiblockModule.validateStructure(this);
-        if (result != null) {
-            this.structureInfo = result.getKey();
-            this.structureData = result.getValue();
-            this.structureInfo.onStructureFinish(level, this.structureData, this);
+        Optional<Pair<StructureInfo<?>, LazyOptional<StructureInfo.StructureData>>> result = MultiblockModule.validateStructure(this);
+        if (result.isPresent()) {
+            this.structureInfo = LazyOptional.of(() -> result.get().getLeft());
+            this.structureData = result.get().getRight();
+            this.structureInfo.orElseThrow(NullPointerException::new).onStructureFinish(level, this.structureData.orElse(null), this);
         }
     }
 
     protected void destroyStructure(ServerLevel level) {
-        if (this.structureInfo != null) this.structureInfo.onStructureDestroyed(level, this.structureData, this);
+        if (this.structureInfo != null)
+            this.structureInfo.orElseThrow(NullPointerException::new).onStructureDestroyed(level, this.structureData.orElse(null), this);
     }
 
     @Override
@@ -232,8 +233,10 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
             blocksTag.add(blockTag);
         }
         tag.put("blocks", blocksTag);
-        if (this.structureInfo != null) tag.putString("info", this.structureInfo.id().toString());
-        if (this.structureData != null) tag.put("data", this.structureData.serializeNBT());
+        if (this.structureInfo.isPresent())
+            tag.putString("info", this.structureInfo.orElseThrow(NullPointerException::new).id().toString());
+        if (this.structureData.isPresent())
+            tag.put("data", this.structureData.orElseThrow(NullPointerException::new).serializeNBT());
         return tag;
     }
 
@@ -248,8 +251,10 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         }
         this.addAllBlocksInternal(blocks);
         if (tag.contains("info"))
-            this.structureInfo = MultiblockModule.getStructureInfo(new ResourceLocation(tag.getString("info")));
-        if (this.structureInfo != null) this.structureData = this.structureInfo.createEmptyData();
-        if (tag.contains("data")) this.structureData.deserializeNBT(tag.getCompound("data"));
+            this.structureInfo = LazyOptional.of(() -> MultiblockModule.getStructureInfo(new ResourceLocation(tag.getString("info"))));
+        if (this.structureInfo.isPresent())
+            this.structureData = LazyOptional.of(this.structureInfo.orElseThrow(NullPointerException::new)::createEmptyData);
+        if (tag.contains("data"))
+            this.structureData.orElseThrow(NullPointerException::new).deserializeNBT(tag.getCompound("data"));
     }
 }

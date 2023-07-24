@@ -443,23 +443,24 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     public static class PileItemInfo {
         private final ResourceLocation texture;
-        private final int materialColor;
-        private final double meltingPoint, capacity, conductivity;
+        private final MaterialBase material;
+        private int materialColor;
+        private double meltingPoint, capacity, conductivity;
 
         private PileItemInfo(String name) {
             this.texture = Iridynamics.rl("block/pile/" + name);
+            this.material = null;
             this.materialColor = 0xffffff;
-            this.meltingPoint = 0.0;
+            this.meltingPoint = 1.0;
             this.capacity = 1.0;
             this.conductivity = 1.0;
         }
 
         public PileItemInfo(String name, MaterialBase material) {
             this.texture = Iridynamics.rl("block/pile/" + name);
-            this.materialColor = material.getRenderInfo().color();
-            this.meltingPoint = material.getHeatInfo().getMeltingPoint();
-            this.capacity = material.getHeatInfo().getMoleCapacity(HeatModule.ATMOSPHERIC_PRESSURE, Phase.SOLID);
-            this.conductivity = material.getPhysicalInfo().thermalConductivity();
+            this.material = material;
+            this.materialColor = -1;
+            this.meltingPoint = this.capacity = this.conductivity = -1.0;
         }
 
         public ResourceLocation texture() {
@@ -467,18 +468,23 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         }
 
         public int materialColor() {
+            if (this.materialColor == -1) this.materialColor = material.getRenderInfo().color();
             return this.materialColor;
         }
 
         public double meltingPoint() {
+            if (this.meltingPoint < 0.0) this.meltingPoint = material.getHeatInfo().getMeltingPoint();
             return this.meltingPoint;
         }
 
         public double capacity() {
+            if (this.capacity < 0.0)
+                this.capacity = material.getHeatInfo().getMoleCapacity(HeatModule.ATMOSPHERIC_PRESSURE, Phase.SOLID);
             return this.capacity;
         }
 
         public double conductivity() {
+            if (this.conductivity < 0.0) this.conductivity = material.getPhysicalInfo().thermalConductivity();
             return this.conductivity;
         }
     }

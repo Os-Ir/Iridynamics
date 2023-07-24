@@ -12,13 +12,19 @@ public interface ILiquidContainer {
 
     ImmutableMap<MaterialBase, Integer> getAllMaterials();
 
+    ImmutableMap<MaterialBase, Integer> getAllLiquidMaterials(double temperature);
+
     int usedCapacity();
 
     int liquidCapacity();
 
     boolean hasMaterial(MaterialBase material);
 
+    boolean hasLiquidMaterial(MaterialBase material, double temperature);
+
     int addMaterial(MaterialBase material, int add);
 
     int getMaterialUnit(MaterialBase material);
+
+    int getLiquidMaterialUnit(MaterialBase material, double temperature);
 }

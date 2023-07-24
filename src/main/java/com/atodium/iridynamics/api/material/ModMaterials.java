@@ -60,7 +60,7 @@ public class ModMaterials {
     public static final PlasticityMaterial SILVER = new PlasticityMaterial("silver").color(0xdcdcf0).cast();
     public static final PlasticityMaterial CADMIUM = new PlasticityMaterial("cadmium").color(0xaaaaaa).cast();
     public static final PlasticityMaterial INDIUM = new PlasticityMaterial("indium").color(0xaaaaaa).cast();
-    public static final PlasticityMaterial TIN = new PlasticityMaterial("tin").color(0xdcdcdc).cast();
+    public static final PlasticityMaterial TIN = new PlasticityMaterial("tin");
     public static final PlasticityMaterial ANTIMONY = new PlasticityMaterial("antimony").color(0xdcdcc8).cast();
     public static final PlasticityMaterial TELLURIUM = new PlasticityMaterial("tellurium").color(0xaaaaaa).cast();
     public static final DustMaterial IODINE = new DustMaterial("iodine").color(0x8232a0).cast();
@@ -103,7 +103,7 @@ public class ModMaterials {
     public static final PlasticityMaterial WROUGHT_IRON = new PlasticityMaterial("wrought_iron").color(0xc8b4b4).setToolProperty(204800, 2, 6.0f).cast();
     public static final PlasticityMaterial PIG_IRON = new PlasticityMaterial("pig_iron").color(0xc8b4b4).setToolProperty(204800, 2, 6.0f).cast();
     public static final PlasticityMaterial STEEL = new PlasticityMaterial("steel").color(0x5a5a5a).setToolProperty(409600, 2, 8.0f).cast();
-    public static final PlasticityMaterial BRONZE = new PlasticityMaterial("bronze").color(0xb45a28).setToolProperty(102400, 2, 6.0f).cast();
+    public static final PlasticityMaterial BRONZE = new PlasticityMaterial("bronze");
     public static final PlasticityMaterial BRASS = new PlasticityMaterial("brass").color(0xf0b400).cast();
     public static final PlasticityMaterial CUPRONICKEL = new PlasticityMaterial("cupronickel").color(0xf0b400).cast();
     public static final PlasticityMaterial BLACK_BRONZE = new PlasticityMaterial("black_bronze").color(0x461e5a).setToolProperty(102400, 2, 6.0f).cast();
@@ -134,12 +134,10 @@ public class ModMaterials {
         MaterialBase.GENERATE_SCREW.setFlagForMaterial(WOOD);
         registerSolidInfo(GOLD, 19300.0, 318.0, 129.0, 1337.0);
         registerSolidInfo(SILVER, 10490.0, 420.0, 235.0, 1235.0);
-        registerSolidInfo(TIN, 7310.0, 67.0, 228.0, 505.0);
         registerSolidInfo(BISMUTH, 9780.0, 8.0, 122.0, 545.0);
         registerSolidInfo(WROUGHT_IRON, 7870.0, 80.0, 450.0, 1750.0);
         registerSolidInfo(PIG_IRON, 7870.0, 80.0, 450.0, 1400.0);
         registerSolidInfo(STEEL, 7870.0, 80.0, 450.0, 1600.0);
-        registerSolidInfo(BRONZE, 8960.0, 401.0, 385.0, 1200.0);
         registerSolidInfo(BLACK_BRONZE, 8960.0, 401.0, 385.0, 1300.0);
         registerSolidInfo(BISMUTH_BRONZE, 8960.0, 401.0, 385.0, 1150.0);
         registerSolidInfo(COAL, 1350.0, 9950.0, 120.0, 3000.0, 3350000.0);
@@ -154,6 +152,6 @@ public class ModMaterials {
     public static void registerSolidInfo(MaterialBase material, double density, double thermalConductivity, double heatCapacity, double meltingPoint, double calorificValue) {
         material.setPhysicalInfo(new MaterialPhysicalInfo(density, thermalConductivity, heatCapacity, calorificValue));
         double capacity = heatCapacity * density / 9.0;
-        material.setHeatInfo(MaterialHeatInfo.getSimplified(SubMaterialHeatInfo.builder().putCapacity(Phase.SOLID, capacity).putCapacity(Phase.LIQUID, capacity).setCriticalPoints(MonotonicMap.<Phase>builder().addCriticalPoint(0.0, Phase.SOLID).addCriticalPoint(meltingPoint, Phase.LIQUID).build()).build()));
+        material.setHeatInfo(MaterialHeatInfo.getSimplified(SubMaterialHeatInfo.builder().putCapacity(Phase.SOLID, capacity).putCapacity(Phase.LIQUID, capacity).setCriticalPoints(MonotonicMap.<Phase>builder().addData(0.0, Phase.SOLID).addData(meltingPoint, Phase.LIQUID).build()).build()));
     }
 }

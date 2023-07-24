@@ -3,9 +3,10 @@ package com.atodium.iridynamics.common.module;
 import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.InventoryCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.MaterialHeatInfo;
 import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.api.heat.HeatModule;
+import com.atodium.iridynamics.api.material.alloy.AlloyModule;
 import com.atodium.iridynamics.api.module.LiquidContainerModule;
 import com.atodium.iridynamics.common.blockEntity.equipment.SmallCrucibleBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;
@@ -49,6 +50,7 @@ public class SmallCrucibleModule {
                 inventory.setStackInSlot(i, ItemStack.EMPTY);
             }
         }
+        while (true) if (AlloyModule.maxAlloyUnits(container, container.getTemperature(), true).isEmpty()) break;
     }
 
     public static void setupBlock(SmallCrucibleBlockEntity block, ItemStack item) {

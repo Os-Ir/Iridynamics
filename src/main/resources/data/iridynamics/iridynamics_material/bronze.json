@@ -1,0 +1,30 @@
+{
+  "type": "bronze",
+  "tool_property": {
+    "durability": 102400,
+    "harvest_level": 2,
+    "efficiency": 6.0
+  },
+  "render": {
+    "color": 11819560
+  },
+  "physical": {
+    "density": 8960.0,
+    "thermal_conductivity": 401.0,
+    "heat_capacity": 385.0
+  },
+  "heat": {
+    "type": "simple_solid_liquid",
+    "melting_point": 1200.0
+  },
+  "alloy": [
+    {
+      "material": "copper",
+      "weight": 3
+    },
+    {
+      "material": "tin",
+      "weight": 1
+    }
+  ]
+}

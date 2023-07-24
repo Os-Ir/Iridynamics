@@ -69,7 +69,7 @@ public abstract class SubMaterialHeatInfo {
         private final double moleCapacity;
 
         private SimplifiedSubPhasePortrait(Phase phase, double moleCapacity) {
-            this.criticalPoints = MonotonicMap.<Phase>builder().addCriticalPoint(0.0, phase).build();
+            this.criticalPoints = MonotonicMap.<Phase>builder().addData(0.0, phase).build();
             this.moleCapacity = moleCapacity;
         }
 

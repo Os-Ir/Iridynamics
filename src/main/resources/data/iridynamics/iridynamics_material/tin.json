@@ -5,7 +5,7 @@
   },
   "physical": {
     "density": 7310.0,
-    "thermal_conductivity": 67.0,
+    "thermal_conductivity": 70.0,
     "heat_capacity": 228.0
   },
   "heat": {

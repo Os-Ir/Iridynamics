@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ public abstract class StructureInfo<T extends StructureInfo.StructureData> {
 
     public abstract T createEmptyData();
 
-    public abstract Optional<T> validate(MultiblockStructure structure);
+    public abstract LazyOptional<T> validate(MultiblockStructure structure);
 
     public void onStructureFinish(ServerLevel level, StructureData data, MultiblockStructure structure) {
 

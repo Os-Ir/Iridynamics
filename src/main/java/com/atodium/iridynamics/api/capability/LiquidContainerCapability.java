@@ -102,6 +102,11 @@ public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapa
     }
 
     @Override
+    public ImmutableMap<MaterialBase, Integer> getAllLiquidMaterials(double temperature) {
+        return this.container.getAllLiquidMaterials(temperature);
+    }
+
+    @Override
     public int usedCapacity() {
         return this.container.usedCapacity();
     }
@@ -117,6 +122,11 @@ public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapa
     }
 
     @Override
+    public boolean hasLiquidMaterial(MaterialBase material, double temperature) {
+        return this.container.hasLiquidMaterial(material, temperature);
+    }
+
+    @Override
     public int addMaterial(MaterialBase material, int add) {
         int remain = this.container.addMaterial(material, add);
         this.portrait.updatePointEnergy();
@@ -126,6 +136,11 @@ public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapa
     @Override
     public int getMaterialUnit(MaterialBase material) {
         return this.container.getMaterialUnit(material);
+    }
+
+    @Override
+    public int getLiquidMaterialUnit(MaterialBase material, double temperature) {
+        return this.container.getLiquidMaterialUnit(material, temperature);
     }
 
     @Override
