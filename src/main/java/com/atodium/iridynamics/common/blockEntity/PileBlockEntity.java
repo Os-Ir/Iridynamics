@@ -8,7 +8,8 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
-import com.atodium.iridynamics.api.liquid.LiquidModule;
+import com.atodium.iridynamics.api.heat.liquid.LiquidModule;
+import com.atodium.iridynamics.api.heat.liquid.SimpleLiquidContainer;
 import com.atodium.iridynamics.api.material.Phase;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
@@ -21,6 +22,8 @@ import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.HeatProcessBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.block.PileBlock;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,12 +41,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIgnitable {
     public static final PileItemInfo EMPTY_INFO = new PileItemInfo("empty");
     public static final UnorderedRegistry<ItemDelegate, PileItemInfo> PILE_ITEM = new UnorderedRegistry<>();
+    public static final Comparator<ItemDelegate> LIQUID_COMPARATOR = (itemA, itemB) -> Double.compare(PILE_ITEM.get(itemB).density, PILE_ITEM.get(itemA).density);
 
-    private boolean pileShapeUpdateFlag, syncFlag, recipeUpdateFlag;
+    private boolean pileShapeUpdateFlag, recipeUpdateFlag;
     private int height;
     private ItemDelegate[] content;
     private boolean[] isLiquid;
@@ -92,15 +97,12 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
             this.tickDryingRecipe();
             this.tickContentState();
             this.markDirty();
-            if (this.syncFlag) {
-                this.sendSyncPacket();
-                this.syncFlag = false;
-            }
             if (this.recipeUpdateFlag) {
                 this.updateHeatRecipe();
                 this.updateDryingRecipe();
                 this.recipeUpdateFlag = false;
             }
+            this.sendSyncPacket();
         }
     }
 
@@ -126,20 +128,17 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
                 for (int i = 0; i < this.height; i++) this.content[i] = outputItem;
                 this.markAllChange();
                 this.heat.setTemperature(temperature);
-                this.markSync();
             } else this.dryingTick++;
         }
     }
 
     private void tickContentState() {
+        double temperature = this.heat.getTemperature();
         for (int i = 0; i < this.height; i++) {
-            boolean result = PILE_ITEM.get(this.content[i]).meltingPoint() <= this.heat.getTemperature();
-            if (result != this.isLiquid[i]) {
-                this.isLiquid[i] = result;
-                this.markSync();
-            }
+            boolean result = PILE_ITEM.get(this.content[i]).meltingPoint() <= temperature;
+            if (result != this.isLiquid[i]) this.isLiquid[i] = result;
         }
-        if (this.level.getGameTime() % 20 == 0) System.out.println(this.heat.getTemperature());
+        if (this.level.getGameTime() % 20 == 0) System.out.println(temperature);
         if (!LiquidModule.hasLiquidContainer((ServerLevel) this.level, this.getBlockPos())) {
             int index = 0;
             boolean flag = false;
@@ -152,9 +151,30 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
             if (this.height == 0) this.level.removeBlock(this.getBlockPos(), false);
             else if (flag) {
                 this.markAllChange();
-                this.markSync();
+                this.heat.setTemperature(temperature);
             }
+        } else {
+            int liquidCount = 0;
+            for (int i = 0; i < this.height; i++) if (this.isLiquid[i]) liquidCount++;
+            int solidCount = this.height - liquidCount;
+            ItemDelegate[] liquidContents = new ItemDelegate[liquidCount];
+            for (int i = 0, k = 0; i < this.height; i++) if (this.isLiquid[i]) liquidContents[k++] = this.content[i];
+            for (int i = 0, k = 0; i < this.height; i++) if (!this.isLiquid[i]) this.content[k++] = this.content[i];
+            for (int i = 0; i < solidCount; i++) this.isLiquid[i] = false;
+            for (int i = solidCount; i < this.height; i++) this.isLiquid[i] = true;
+            Arrays.sort(liquidContents, LIQUID_COMPARATOR);
+            System.arraycopy(liquidContents, 0, this.content, solidCount, liquidCount);
         }
+    }
+
+    private SimpleLiquidContainer buildLiquidContainer(ItemDelegate[] liquidContents) {
+        Object2IntMap<MaterialBase> materials = new Object2IntOpenHashMap<>();
+        for (ItemDelegate item : liquidContents) {
+            MaterialBase material = PILE_ITEM.get(item).material;
+            if (!materials.containsKey(material)) materials.put(material, 144);
+            else materials.put(material, materials.getInt(material) + 144);
+        }
+        return new SimpleLiquidContainer(materials);
     }
 
     private void removeContent(int index) {
@@ -167,10 +187,6 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     public void markPileShapeUpdate() {
         this.pileShapeUpdateFlag = true;
-    }
-
-    public void markSync() {
-        this.syncFlag = true;
     }
 
     public void markRecipeUpdate() {
@@ -244,7 +260,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         this.content[this.height] = item;
         this.height++;
         this.markAllChange();
-        this.heat.increaseEnergy(PILE_ITEM.get(item).capacity() * HeatModule.AMBIENT_TEMPERATURE);
+        HeatModule.increaseMaterialEnergy(this.heat, PILE_ITEM.get(item).material, 1.0, HeatModule.AMBIENT_TEMPERATURE);
         return true;
     }
 
@@ -283,7 +299,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     public void updateContentHeat() {
         double capacity = 0.0, average = 0.0;
         for (int i = 0; i < this.height; i++) {
-            PileItemInfo info = PILE_ITEM.get(this.content[this.height - 1]);
+            PileItemInfo info = PILE_ITEM.get(this.content[i]);
             capacity += info.capacity();
             average += info.conductivity();
         }
@@ -445,13 +461,14 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         private final ResourceLocation texture;
         private final MaterialBase material;
         private int materialColor;
-        private double meltingPoint, capacity, conductivity;
+        private double meltingPoint, density, capacity, conductivity;
 
         private PileItemInfo(String name) {
             this.texture = Iridynamics.rl("block/pile/" + name);
             this.material = null;
             this.materialColor = 0xffffff;
             this.meltingPoint = 1.0;
+            this.density = 1.0;
             this.capacity = 1.0;
             this.conductivity = 1.0;
         }
@@ -460,11 +477,15 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
             this.texture = Iridynamics.rl("block/pile/" + name);
             this.material = material;
             this.materialColor = -1;
-            this.meltingPoint = this.capacity = this.conductivity = -1.0;
+            this.meltingPoint = this.density = this.capacity = this.conductivity = -1.0;
         }
 
         public ResourceLocation texture() {
             return this.texture;
+        }
+
+        public MaterialBase material() {
+            return this.material;
         }
 
         public int materialColor() {
@@ -475,6 +496,11 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         public double meltingPoint() {
             if (this.meltingPoint < 0.0) this.meltingPoint = material.getHeatInfo().getMeltingPoint();
             return this.meltingPoint;
+        }
+
+        public double density() {
+            if (this.density < 0.0) this.density = material.getPhysicalInfo().density();
+            return this.density;
         }
 
         public double capacity() {

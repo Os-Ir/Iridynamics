@@ -33,17 +33,25 @@ public class HeatModule {
         event.addCapability(HeatCapability.KEY, new HeatCapability(HeatProcessModule.checkItemHeatProcess(stack, capacity), resistance));
     }
 
-    public static void heatExchange(IHeat cap, double temperature, double resistance) {
-        if (cap == null) return;
-        double exchange = (cap.getTemperature() - temperature) / resistance;
-        cap.increaseEnergy(-exchange);
+    public static void increaseMaterialEnergy(IHeat heat, MaterialBase material, double mole, double temperature) {
+        heat.increaseEnergy(material.getHeatInfo().getMoleEnergy(ATMOSPHERIC_PRESSURE, temperature) * mole);
     }
 
-    public static void heatExchange(IHeat capA, IHeat capB, double resistance) {
-        if (capA == null || capB == null) return;
-        double exchange = (capA.getTemperature() - capB.getTemperature()) / resistance;
-        capA.increaseEnergy(-exchange);
-        capB.increaseEnergy(exchange);
+    public static void decreaseMaterialEnergy(IHeat heat, MaterialBase material, double mole, double temperature) {
+        heat.increaseEnergy(-material.getHeatInfo().getMoleEnergy(ATMOSPHERIC_PRESSURE, temperature) * mole);
+    }
+
+    public static void heatExchange(IHeat heat, double temperature, double resistance) {
+        if (heat == null) return;
+        double exchange = (heat.getTemperature() - temperature) / resistance;
+        heat.increaseEnergy(-exchange);
+    }
+
+    public static void heatExchange(IHeat heatA, IHeat heatB, double resistance) {
+        if (heatA == null || heatB == null) return;
+        double exchange = (heatA.getTemperature() - heatB.getTemperature()) / resistance;
+        heatA.increaseEnergy(-exchange);
+        heatB.increaseEnergy(exchange);
     }
 
     public static void blockHeatExchange(Level level, BlockPos pos, BlockState state, BlockEntity entity, boolean withAllCapabilities) {

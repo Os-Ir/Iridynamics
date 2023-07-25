@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.common.multiblock;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.liquid.LiquidModule;
+import com.atodium.iridynamics.api.heat.liquid.LiquidModule;
 import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.api.multiblock.MultiblockStructure;
 import com.atodium.iridynamics.api.multiblock.StructureInfo;

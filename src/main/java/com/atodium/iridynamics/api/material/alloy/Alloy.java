@@ -1,6 +1,8 @@
 package com.atodium.iridynamics.api.material.alloy;
 
-import com.atodium.iridynamics.api.liquid.ILiquidContainer;
+import com.atodium.iridynamics.api.heat.HeatModule;
+import com.atodium.iridynamics.api.heat.IHeat;
+import com.atodium.iridynamics.api.heat.liquid.ILiquidContainer;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -40,16 +42,22 @@ public class Alloy {
         return this.sumUnits;
     }
 
-    public int maxAlloyUnits(ILiquidContainer container, double temperature, boolean consume) {
+    public int maxAlloyUnits(ILiquidContainer container, IHeat heat, double temperature, boolean consume) {
         int k = Integer.MAX_VALUE;
         for (MaterialBase material : this.composition().keySet())
             if (!container.hasLiquidMaterial(material, temperature)) return 0;
         for (Object2IntMap.Entry<MaterialBase> entry : this.composition.object2IntEntrySet())
             k = Math.min(k, container.getLiquidMaterialUnit(entry.getKey(), temperature) / entry.getIntValue());
         if (consume) {
-            for (Object2IntMap.Entry<MaterialBase> entry : this.composition.object2IntEntrySet())
-                container.addMaterial(entry.getKey(), -k * entry.getIntValue());
+            for (Object2IntMap.Entry<MaterialBase> entry : this.composition.object2IntEntrySet()) {
+                MaterialBase c = entry.getKey();
+                int unit = k * entry.getIntValue();
+                container.addMaterial(c, -unit);
+                if (heat != null) HeatModule.decreaseMaterialEnergy(heat, c, unit / 144.0, temperature);
+            }
+            int unit = k * this.sumUnits;
             container.addMaterial(this.material, k * this.sumUnits);
+            if (heat != null) HeatModule.increaseMaterialEnergy(heat, this.material, unit / 144.0, temperature);
         }
         return k * this.sumUnits;
     }

@@ -6,8 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-import java.util.Optional;
-
 public abstract class StructureInfo<T extends StructureInfo.StructureData> {
     public abstract ResourceLocation id();
 

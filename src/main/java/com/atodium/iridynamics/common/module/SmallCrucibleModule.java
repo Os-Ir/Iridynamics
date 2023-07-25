@@ -50,7 +50,8 @@ public class SmallCrucibleModule {
                 inventory.setStackInSlot(i, ItemStack.EMPTY);
             }
         }
-        while (true) if (AlloyModule.maxAlloyUnits(container, container.getTemperature(), true).isEmpty()) break;
+        while (true)
+            if (AlloyModule.maxAlloyUnits(container, container, container.getTemperature(), true).isEmpty()) break;
     }
 
     public static void setupBlock(SmallCrucibleBlockEntity block, ItemStack item) {

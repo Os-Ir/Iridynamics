@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.liquid;
+package com.atodium.iridynamics.api.heat.liquid;
 
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.google.common.collect.ImmutableMap;
@@ -20,6 +20,16 @@ public class SimpleLiquidContainer implements ILiquidContainer, INBTSerializable
     public SimpleLiquidContainer(int liquidCapacity) {
         this.liquidCapacity = liquidCapacity;
         this.materials = new Object2IntOpenHashMap<>();
+    }
+
+    public SimpleLiquidContainer(Object2IntMap<MaterialBase> materials) {
+        this.materials = materials;
+        this.liquidCapacity = this.usedCapacity();
+    }
+
+    public SimpleLiquidContainer(int liquidCapacity, Object2IntMap<MaterialBase> materials) {
+        this.materials = materials;
+        this.liquidCapacity = Math.max(this.usedCapacity(), liquidCapacity);
     }
 
     @Override

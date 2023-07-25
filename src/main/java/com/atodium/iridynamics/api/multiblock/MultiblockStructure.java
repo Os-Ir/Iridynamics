@@ -34,6 +34,8 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         this.savedData = savedData;
         this.allBlocks = Maps.newHashMap();
         this.chunkBlockCount = Maps.newHashMap();
+        this.structureInfo = LazyOptional.empty();
+        this.structureData = LazyOptional.empty();
     }
 
     public <T extends StructureInfo.StructureData> StructureInfo<T> structureInfo() {
@@ -215,7 +217,7 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     }
 
     protected void destroyStructure(ServerLevel level) {
-        if (this.structureInfo != null)
+        if (this.structureInfo.isPresent())
             this.structureInfo.orElseThrow(NullPointerException::new).onStructureDestroyed(level, this.structureData.orElse(null), this);
     }
 

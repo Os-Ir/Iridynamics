@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.material.alloy;
 
-import com.atodium.iridynamics.api.liquid.ILiquidContainer;
+import com.atodium.iridynamics.api.heat.IHeat;
+import com.atodium.iridynamics.api.heat.liquid.ILiquidContainer;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -28,18 +29,18 @@ public class AlloyModule {
         return Optional.empty();
     }
 
-    public static int maxAlloyUnits(MaterialBase alloy, ILiquidContainer container, double temperature, boolean consume) {
-        if (ALLOYS.containsKey(alloy)) return ALLOYS.get(alloy).maxAlloyUnits(container, temperature, consume);
+    public static int maxAlloyUnits(MaterialBase alloy, ILiquidContainer container, IHeat heat, double temperature, boolean consume) {
+        if (ALLOYS.containsKey(alloy)) return ALLOYS.get(alloy).maxAlloyUnits(container, heat, temperature, consume);
         return 0;
     }
 
-    public static int maxAlloyUnits(Alloy alloy, ILiquidContainer container, double temperature, boolean consume) {
-        return alloy.maxAlloyUnits(container, temperature, consume);
+    public static int maxAlloyUnits(Alloy alloy, ILiquidContainer container, IHeat heat, double temperature, boolean consume) {
+        return alloy.maxAlloyUnits(container, heat, temperature, consume);
     }
 
-    public static Optional<Pair<Alloy, Integer>> maxAlloyUnits(ILiquidContainer container, double temperature, boolean consume) {
+    public static Optional<Pair<Alloy, Integer>> maxAlloyUnits(ILiquidContainer container, IHeat heat, double temperature, boolean consume) {
         for (Alloy alloy : ALLOYS.values()) {
-            int unit = alloy.maxAlloyUnits(container, temperature, consume);
+            int unit = alloy.maxAlloyUnits(container, heat, temperature, consume);
             if (unit != 0) return Optional.of(Pair.of(alloy, unit));
         }
         return Optional.empty();

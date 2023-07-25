@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.liquid;
+package com.atodium.iridynamics.api.heat.liquid;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
