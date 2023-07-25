@@ -67,8 +67,8 @@ public class ModItems {
         PileBlockEntity.registerPileItem(DRIED_GRASS.get(), new PileBlockEntity.PileItemInfo("dried_grass", ModMaterials.WOOD));
         PileBlockEntity.registerPileItem(ItemDelegate.of(ModSolidShapes.DUST, ModMaterials.TIN), new PileBlockEntity.PileItemInfo("tin_dust", ModMaterials.TIN));
         FuelInfo.of("wood_brick", ModMaterials.WOOD.getPhysicalInfo().moleCalorificValue(), 550.0, 1100.0).registerForItem(WOOD_BRICK.get());
-        FuelInfo.of("charcoal", ModMaterials.CHARCOAL.getPhysicalInfo().moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.CHARCOAL);
-        FuelInfo.of("coal", ModMaterials.COAL.getPhysicalInfo().moleCalorificValue(), 900.0, 1400.0).registerForItem(Items.COAL);
+        FuelInfo.of("charcoal", ModMaterials.CHARCOAL.getPhysicalInfo().moleCalorificValue(), 900.0, 1500.0).registerForItem(Items.CHARCOAL);
+        FuelInfo.of("coal", ModMaterials.COAL.getPhysicalInfo().moleCalorificValue(), 900.0, 1500.0).registerForItem(Items.COAL);
         FuelInfo.of("dried_grass", ModMaterials.WOOD.getPhysicalInfo().moleCalorificValue(), 500.0, 1100.0).registerForItem(DRIED_GRASS.get());
     }
 }

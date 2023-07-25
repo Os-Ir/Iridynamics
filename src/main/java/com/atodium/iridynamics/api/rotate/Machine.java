@@ -5,19 +5,14 @@ import com.atodium.iridynamics.api.util.math.MathUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
-public class Handle implements IRotateNode {
+public class Machine implements IRotateNode {
     public static final Serializer SERIALIZER = new Serializer();
 
     private final Direction direction;
-    private double torque;
-    private double angle, angularVelocity;
+    private double inertia, friction, angle, angularVelocity;
 
-    public Handle(Direction direction) {
+    public Machine(Direction direction) {
         this.direction = direction;
-    }
-
-    public void setTorque(double torque) {
-        this.torque = torque;
     }
 
     @Override
@@ -62,19 +57,17 @@ public class Handle implements IRotateNode {
 
     @Override
     public double getInertia(Direction direction) {
-        if (this.isConnectable(direction)) return 20.0;
-        return 0.0;
+        return this.inertia;
     }
 
     @Override
     public double getTorque(Direction direction) {
-        return this.torque;
+        return 0.0;
     }
 
     @Override
     public double getFriction(Direction direction) {
-        if (this.isConnectable(direction)) return 0.4;
-        return 0.0;
+        return this.friction;
     }
 
     @Override
@@ -82,33 +75,39 @@ public class Handle implements IRotateNode {
         return 300.0;
     }
 
-    public static class Serializer implements IRotateNode.Serializer<Handle> {
+    public void setInertia(double inertia) {
+        this.inertia = inertia;
+    }
+
+    public void setFriction(double friction) {
+        this.friction = friction;
+    }
+
+    public static class Serializer implements IRotateNode.Serializer<Machine> {
         @Override
-        public Handle deserialize(CompoundTag tag) {
-            return new Handle(Direction.from3DDataValue(tag.getInt("direction")));
+        public Machine deserialize(CompoundTag tag) {
+            return new Machine(Direction.from3DDataValue(tag.getInt("direction")));
         }
 
         @Override
-        public CompoundTag serialize(Handle handle) {
+        public CompoundTag serialize(Machine machine) {
             CompoundTag tag = new CompoundTag();
-            tag.putInt("direction", handle.direction.get3DDataValue());
+            tag.putInt("direction", machine.direction.get3DDataValue());
             return tag;
         }
 
         @Override
-        public CompoundTag writeSyncTag(Handle handle) {
+        public CompoundTag writeSyncTag(Machine machine) {
             CompoundTag tag = new CompoundTag();
-            tag.putDouble("angle", handle.angle);
-            tag.putDouble("angularVelocity", handle.angularVelocity);
-            tag.putDouble("torque", handle.torque);
+            tag.putDouble("angle", machine.angle);
+            tag.putDouble("angularVelocity", machine.angularVelocity);
             return tag;
         }
 
         @Override
-        public void readSyncTag(Handle handle, CompoundTag tag) {
-            handle.angle = tag.getDouble("angle");
-            handle.angularVelocity = tag.getDouble("angularVelocity");
-            handle.torque = tag.getDouble("torque");
+        public void readSyncTag(Machine machine, CompoundTag tag) {
+            machine.angle = tag.getDouble("angle");
+            machine.angularVelocity = tag.getDouble("angularVelocity");
         }
     }
 }

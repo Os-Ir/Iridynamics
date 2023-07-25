@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
 public class RotateModule {
-    public static final UnorderedRegistry<ResourceLocation, IRotateNode.Serializer> SERIALIZERS = new UnorderedRegistry<>();
+    public static final UnorderedRegistry<ResourceLocation, IRotateNode.Serializer<?>> SERIALIZERS = new UnorderedRegistry<>();
 
     public static void init() {
         SERIALIZERS.register(Iridynamics.rl("axle"), Axle.SERIALIZER);
@@ -21,24 +21,24 @@ public class RotateModule {
 
     public static CompoundTag writeRotateNode(IRotateNode node) {
         CompoundTag tag = new CompoundTag();
-        IRotateNode.Serializer serializer = node.serializer();
+        IRotateNode.Serializer<?> serializer = node.serializer();
         tag.putString("id", RotateModule.SERIALIZERS.getKeyForValue(serializer).toString());
-        tag.put("node", serializer.serialize(node));
+        tag.put("node", serializer.serializeRaw(node));
         return tag;
     }
 
     public static IRotateNode readRotateNode(CompoundTag tag) {
         ResourceLocation id = new ResourceLocation(tag.getString("id"));
-        IRotateNode.Serializer serializer = SERIALIZERS.get(id);
+        IRotateNode.Serializer<?> serializer = SERIALIZERS.get(id);
         return serializer.deserialize(tag.getCompound("node"));
     }
 
     public static CompoundTag writeSyncTag(IRotateNode node) {
-        return node.serializer().writeSyncTag(node);
+        return node.serializer().writeSyncTagRaw(node);
     }
 
     public static void readSyncTag(IRotateNode node, CompoundTag tag) {
-        node.serializer().readSyncTag(node, tag);
+        node.serializer().readSyncTagRaw(node, tag);
     }
 
     public static void tryTick(ServerLevel level, BlockPos pos) {
@@ -78,5 +78,9 @@ public class RotateModule {
 
     public static Handle handle(Direction direction) {
         return new Handle(direction);
+    }
+
+    public static Machine machine(Direction direction) {
+        return new Machine(direction);
     }
 }

@@ -68,7 +68,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
                 node.setAngle(info.direction(), 0.0);
                 node.setAngularVelocity(info.direction(), 0.0);
                 if (!received.contains(pos)) {
-                    ((IRotateNodeHolder) level.getBlockEntity(pos)).receive(node);
+                    ((IRotateNodeHolder<?>) level.getBlockEntity(pos)).receiveRotateNodeRaw(node);
                     received.add(pos);
                 }
             }
@@ -84,7 +84,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
                 node.setAngle(info.direction(), MathUtil.castAngle(this.angle * scale));
                 node.setAngularVelocity(info.direction(), this.angularVelocity * scale);
                 if (!received.contains(pos)) {
-                    ((IRotateNodeHolder) level.getBlockEntity(pos)).receive(node);
+                    ((IRotateNodeHolder<?>) level.getBlockEntity(pos)).receiveRotateNodeRaw(node);
                     received.add(pos);
                 }
             }

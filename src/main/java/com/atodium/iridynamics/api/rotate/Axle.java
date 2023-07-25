@@ -83,36 +83,33 @@ public class Axle implements IRotateNode {
         return 300.0;
     }
 
-    public static class Serializer implements IRotateNode.Serializer {
+    public static class Serializer implements IRotateNode.Serializer<Axle> {
         @Override
-        public IRotateNode deserialize(CompoundTag tag) {
+        public Axle deserialize(CompoundTag tag) {
             return new Axle(Direction.from3DDataValue(tag.getInt("direction")), tag.getDouble("inertia"), tag.getDouble("friction"));
         }
 
         @Override
-        public CompoundTag serialize(IRotateNode node) {
+        public CompoundTag serialize(Axle node) {
             CompoundTag tag = new CompoundTag();
-            Axle axle = (Axle) node;
-            tag.putInt("direction", axle.direction.get3DDataValue());
-            tag.putDouble("inertia", axle.inertia);
-            tag.putDouble("friction", axle.friction);
+            tag.putInt("direction", node.direction.get3DDataValue());
+            tag.putDouble("inertia", node.inertia);
+            tag.putDouble("friction", node.friction);
             return tag;
         }
 
         @Override
-        public CompoundTag writeSyncTag(IRotateNode node) {
+        public CompoundTag writeSyncTag(Axle node) {
             CompoundTag tag = new CompoundTag();
-            Axle axle = (Axle) node;
-            tag.putDouble("angle", axle.angle);
-            tag.putDouble("angularVelocity", axle.angularVelocity);
+            tag.putDouble("angle", node.angle);
+            tag.putDouble("angularVelocity", node.angularVelocity);
             return tag;
         }
 
         @Override
-        public void readSyncTag(IRotateNode node, CompoundTag tag) {
-            Axle axle = (Axle) node;
-            axle.angle = tag.getDouble("angle");
-            axle.angularVelocity = tag.getDouble("angularVelocity");
+        public void readSyncTag(Axle node, CompoundTag tag) {
+            node.angle = tag.getDouble("angle");
+            node.angularVelocity = tag.getDouble("angularVelocity");
         }
     }
 }

@@ -4,7 +4,6 @@ import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.rotate.Escapement;
-import com.atodium.iridynamics.api.rotate.IRotateNode;
 import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.rotate.AxleBlock;
@@ -17,7 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class EscapementBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder {
+public class EscapementBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Escapement> {
     private Escapement rotate;
 
     public EscapementBlockEntity(BlockPos pos, BlockState state) {
@@ -43,8 +42,8 @@ public class EscapementBlockEntity extends SyncedBlockEntity implements ITickabl
     }
 
     @Override
-    public void receive(IRotateNode node) {
-        this.rotate = (Escapement) node;
+    public void receiveRotateNode(Escapement node) {
+        this.rotate = node;
     }
 
     @Override

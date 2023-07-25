@@ -71,7 +71,7 @@ public class Escapement implements IRotateNode {
 
     @Override
     public double getFriction(Direction direction) {
-        if (this.isConnectable(direction)) return 0.2;
+        if (this.isConnectable(direction)) return 1.0;
         return 0.0;
     }
 
@@ -80,34 +80,31 @@ public class Escapement implements IRotateNode {
         return MAX_ANGULAR_VELOCITY;
     }
 
-    public static class Serializer implements IRotateNode.Serializer {
+    public static class Serializer implements IRotateNode.Serializer<Escapement> {
         @Override
-        public IRotateNode deserialize(CompoundTag tag) {
+        public Escapement deserialize(CompoundTag tag) {
             return new Escapement(Direction.from3DDataValue(tag.getInt("direction")));
         }
 
         @Override
-        public CompoundTag serialize(IRotateNode node) {
+        public CompoundTag serialize(Escapement node) {
             CompoundTag tag = new CompoundTag();
-            Escapement escapement = ((Escapement) node);
-            tag.putInt("direction", escapement.direction.get3DDataValue());
+            tag.putInt("direction", node.direction.get3DDataValue());
             return tag;
         }
 
         @Override
-        public CompoundTag writeSyncTag(IRotateNode node) {
+        public CompoundTag writeSyncTag(Escapement node) {
             CompoundTag tag = new CompoundTag();
-            Escapement escapement = ((Escapement) node);
-            tag.putDouble("angle", escapement.angle);
-            tag.putDouble("angularVelocity", escapement.angularVelocity);
+            tag.putDouble("angle", node.angle);
+            tag.putDouble("angularVelocity", node.angularVelocity);
             return tag;
         }
 
         @Override
-        public void readSyncTag(IRotateNode node, CompoundTag tag) {
-            Escapement escapement = (Escapement) node;
-            escapement.angle = tag.getDouble("angle");
-            escapement.angularVelocity = tag.getDouble("angularVelocity");
+        public void readSyncTag(Escapement node, CompoundTag tag) {
+            node.angle = tag.getDouble("angle");
+            node.angularVelocity = tag.getDouble("angularVelocity");
         }
     }
 }

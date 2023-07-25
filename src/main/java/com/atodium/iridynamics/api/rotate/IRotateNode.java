@@ -5,7 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
 public interface IRotateNode {
-    Serializer serializer();
+    Serializer<?> serializer();
 
     boolean isConnectable(Direction direction);
 
@@ -29,13 +29,28 @@ public interface IRotateNode {
 
     double maxAngularVelocity(Direction direction);
 
-    interface Serializer {
-        IRotateNode deserialize(CompoundTag tag);
+    interface Serializer<T extends IRotateNode> {
+        T deserialize(CompoundTag tag);
 
-        CompoundTag serialize(IRotateNode node);
+        CompoundTag serialize(T node);
 
-        CompoundTag writeSyncTag(IRotateNode node);
+        CompoundTag writeSyncTag(T node);
 
-        void readSyncTag(IRotateNode node, CompoundTag tag);
+        void readSyncTag(T node, CompoundTag tag);
+
+        @SuppressWarnings("unchecked")
+        default CompoundTag serializeRaw(IRotateNode node) {
+            return this.serialize((T) node);
+        }
+
+        @SuppressWarnings("unchecked")
+        default CompoundTag writeSyncTagRaw(IRotateNode node) {
+            return this.writeSyncTag((T) node);
+        }
+
+        @SuppressWarnings("unchecked")
+        default void readSyncTagRaw(IRotateNode node, CompoundTag tag) {
+            this.readSyncTag((T) node, tag);
+        }
     }
 }

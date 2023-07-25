@@ -4,7 +4,6 @@ import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.rotate.Flywheel;
-import com.atodium.iridynamics.api.rotate.IRotateNode;
 import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.rotate.FlywheelBlock;
@@ -16,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FlywheelBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder {
+public class FlywheelBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Flywheel> {
     private Flywheel rotate;
 
     public FlywheelBlockEntity(BlockPos pos, BlockState state) {
@@ -42,8 +41,8 @@ public class FlywheelBlockEntity extends SyncedBlockEntity implements ITickable,
     }
 
     @Override
-    public void receive(IRotateNode node) {
-        this.rotate = (Flywheel) node;
+    public void receiveRotateNode(Flywheel node) {
+        this.rotate = node;
     }
 
     @Override

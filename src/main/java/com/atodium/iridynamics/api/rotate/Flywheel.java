@@ -71,7 +71,7 @@ public class Flywheel implements IRotateNode {
 
     @Override
     public double getFriction(Direction direction) {
-        if (this.isConnectable(direction)) return 0.1;
+        if (this.isConnectable(direction)) return 0.6;
         return 0.0;
     }
 
@@ -80,34 +80,31 @@ public class Flywheel implements IRotateNode {
         return 300.0;
     }
 
-    public static class Serializer implements IRotateNode.Serializer {
+    public static class Serializer implements IRotateNode.Serializer<Flywheel> {
         @Override
-        public IRotateNode deserialize(CompoundTag tag) {
+        public Flywheel deserialize(CompoundTag tag) {
             return new Flywheel(Direction.from3DDataValue(tag.getInt("direction")));
         }
 
         @Override
-        public CompoundTag serialize(IRotateNode node) {
+        public CompoundTag serialize(Flywheel node) {
             CompoundTag tag = new CompoundTag();
-            Flywheel flywheel = (Flywheel) node;
-            tag.putInt("direction", flywheel.direction.get3DDataValue());
+            tag.putInt("direction", node.direction.get3DDataValue());
             return tag;
         }
 
         @Override
-        public CompoundTag writeSyncTag(IRotateNode node) {
+        public CompoundTag writeSyncTag(Flywheel node) {
             CompoundTag tag = new CompoundTag();
-            Flywheel flywheel = (Flywheel) node;
-            tag.putDouble("angle", flywheel.angle);
-            tag.putDouble("angularVelocity", flywheel.angularVelocity);
+            tag.putDouble("angle", node.angle);
+            tag.putDouble("angularVelocity", node.angularVelocity);
             return tag;
         }
 
         @Override
-        public void readSyncTag(IRotateNode node, CompoundTag tag) {
-            Flywheel flywheel = (Flywheel) node;
-            flywheel.angle = tag.getDouble("angle");
-            flywheel.angularVelocity = tag.getDouble("angularVelocity");
+        public void readSyncTag(Flywheel node, CompoundTag tag) {
+            node.angle = tag.getDouble("angle");
+            node.angularVelocity = tag.getDouble("angularVelocity");
         }
     }
 }

@@ -4,7 +4,6 @@ import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.rotate.Handle;
-import com.atodium.iridynamics.api.rotate.IRotateNode;
 import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.rotate.HandleBlock;
@@ -16,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class HandleBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder {
+public class HandleBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Handle> {
     public static final double MAX_TORQUE = 400.0, MAX_POWER = 100.0;
 
     private Handle rotate;
@@ -59,8 +58,8 @@ public class HandleBlockEntity extends SyncedBlockEntity implements ITickable, I
     }
 
     @Override
-    public void receive(IRotateNode node) {
-        this.rotate = (Handle) node;
+    public void receiveRotateNode(Handle node) {
+        this.rotate = node;
     }
 
     @Override

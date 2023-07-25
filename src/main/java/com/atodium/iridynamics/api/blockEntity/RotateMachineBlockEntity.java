@@ -1,29 +1,28 @@
-package com.atodium.iridynamics.common.blockEntity.rotate;
+package com.atodium.iridynamics.api.blockEntity;
 
-import com.atodium.iridynamics.api.blockEntity.IRotateNodeHolder;
-import com.atodium.iridynamics.api.blockEntity.ITickable;
-import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
-import com.atodium.iridynamics.api.rotate.Axle;
+import com.atodium.iridynamics.api.rotate.Machine;
 import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
-import com.atodium.iridynamics.common.block.rotate.AxleBlock;
-import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class AxleBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Axle> {
-    public static final double INERTIA = 10.0;
-    public static final double FRICTION = 0.4;
+import java.util.function.Supplier;
 
-    private Axle rotate;
+public class RotateMachineBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Machine> {
+    protected Supplier<Direction> direction;
+    protected Machine rotate;
+    protected double inertia, friction;
 
-    public AxleBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.AXLE.get(), pos, state);
-        this.rotate = RotateModule.axle(this.getBlockState().getValue(AxleBlock.DIRECTION), INERTIA, FRICTION);
+    public RotateMachineBlockEntity(BlockEntityType<?> type, Supplier<Direction> direction, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+        this.direction = direction;
+        this.rotate = RotateModule.machine(direction.get());
+        this.inertia = 1.0;
     }
 
     @Override
@@ -33,19 +32,34 @@ public class AxleBlockEntity extends SyncedBlockEntity implements ITickable, IRo
         this.sendSyncPacket();
     }
 
+    @Override
+    public void receiveRotateNode(Machine node) {
+        this.rotate = node;
+    }
+
     public void setupRotate(ServerLevel level) {
         RotateModule.addRotateBlock(level, this.getBlockPos(), this.rotate);
         this.sendSyncPacket();
     }
 
     public double getRenderAngle(float partialTicks) {
-        Direction direction = this.getBlockState().getValue(AxleBlock.DIRECTION);
-        return MathUtil.castAngle(this.rotate.getAngle(direction));
+        return MathUtil.castAngle(this.rotate.getAngle(this.direction.get()));
     }
 
-    @Override
-    public void receiveRotateNode(Axle node) {
-        this.rotate = node;
+    public double inertia() {
+        return this.inertia;
+    }
+
+    public double friction() {
+        return this.friction;
+    }
+
+    protected void setInertia(double inertia) {
+        this.inertia = inertia;
+    }
+
+    public void setFriction(double friction) {
+        this.friction = friction;
     }
 
     @Override

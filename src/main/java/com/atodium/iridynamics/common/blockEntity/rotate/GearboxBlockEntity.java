@@ -7,7 +7,6 @@ import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.rotate.Gearbox;
-import com.atodium.iridynamics.api.rotate.IRotateNode;
 import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.data.ItemDelegate;
 import com.atodium.iridynamics.api.util.math.MathUtil;
@@ -30,7 +29,7 @@ import org.apache.commons.compress.utils.Lists;
 import java.util.EnumMap;
 import java.util.List;
 
-public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder, ITipInfoRenderer {
+public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Gearbox>, ITipInfoRenderer {
     public static final ItemDelegate SMALL_GEAR = ItemDelegate.of(ModSolidShapes.SMALL_GEAR, ModMaterials.IRON);
     public static final ItemDelegate GEAR = ItemDelegate.of(ModSolidShapes.GEAR, ModMaterials.IRON);
 
@@ -124,8 +123,8 @@ public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, 
     }
 
     @Override
-    public void receive(IRotateNode node) {
-        this.rotate = (Gearbox) node;
+    public void receiveRotateNode(Gearbox node) {
+        this.rotate = node;
     }
 
     @Override

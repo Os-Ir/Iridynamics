@@ -108,7 +108,7 @@ public class Gearbox implements IRotateNode {
 
     @Override
     public double getFriction(Direction direction) {
-        return 0.2;
+        return 0.4;
     }
 
     @Override
@@ -116,37 +116,34 @@ public class Gearbox implements IRotateNode {
         return 300.0;
     }
 
-    public static class Serializer implements IRotateNode.Serializer {
+    public static class Serializer implements IRotateNode.Serializer<Gearbox> {
         @Override
-        public IRotateNode deserialize(CompoundTag tag) {
+        public Gearbox deserialize(CompoundTag tag) {
             return new Gearbox(tag.contains("directionA") ? Direction.from3DDataValue(tag.getInt("directionA")) : null, tag.contains("directionB") ? Direction.from3DDataValue(tag.getInt("directionB")) : null, tag.getInt("gearA"), tag.getInt("gearB"));
         }
 
         @Override
-        public CompoundTag serialize(IRotateNode node) {
+        public CompoundTag serialize(Gearbox node) {
             CompoundTag tag = new CompoundTag();
-            Gearbox gearbox = (Gearbox) node;
-            if (gearbox.directionA != null) tag.putInt("directionA", gearbox.directionA.get3DDataValue());
-            if (gearbox.directionB != null) tag.putInt("directionB", gearbox.directionB.get3DDataValue());
-            tag.putInt("gearA", gearbox.gearA);
-            tag.putInt("gearB", gearbox.gearB);
+            if (node.directionA != null) tag.putInt("directionA", node.directionA.get3DDataValue());
+            if (node.directionB != null) tag.putInt("directionB", node.directionB.get3DDataValue());
+            tag.putInt("gearA", node.gearA);
+            tag.putInt("gearB", node.gearB);
             return tag;
         }
 
         @Override
-        public CompoundTag writeSyncTag(IRotateNode node) {
+        public CompoundTag writeSyncTag(Gearbox node) {
             CompoundTag tag = new CompoundTag();
-            Gearbox gearbox = (Gearbox) node;
-            tag.putDouble("angle", gearbox.angle);
-            tag.putDouble("angularVelocity", gearbox.angularVelocity);
+            tag.putDouble("angle", node.angle);
+            tag.putDouble("angularVelocity", node.angularVelocity);
             return tag;
         }
 
         @Override
-        public void readSyncTag(IRotateNode node, CompoundTag tag) {
-            Gearbox gearbox = (Gearbox) node;
-            gearbox.angle = tag.getDouble("angle");
-            gearbox.angularVelocity = tag.getDouble("angularVelocity");
+        public void readSyncTag(Gearbox node, CompoundTag tag) {
+            node.angle = tag.getDouble("angle");
+            node.angularVelocity = tag.getDouble("angularVelocity");
         }
     }
 }
