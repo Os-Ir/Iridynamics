@@ -86,10 +86,9 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
         tag.putInt("progress", this.progress);
-        return tag;
     }
 
     @Override

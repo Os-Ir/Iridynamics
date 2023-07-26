@@ -7,7 +7,7 @@ import com.atodium.iridynamics.api.gui.ModularContainer;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
-import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.api.gui.widget.ScaledDraggableWidget;
 import com.atodium.iridynamics.api.research.ResearchModule;
 import com.atodium.iridynamics.api.research.ResearchNetwork;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Map;
 
-public class ResearchTableBlockEntity extends SyncedBlockEntity implements IBlockEntityHolder<ResearchTableBlockEntity> {
+public class ResearchTableBlockEntity extends SyncedBlockEntity implements IBlockEntityGuiHolder<ResearchTableBlockEntity> {
     public static final BlockEntityCodec<ResearchTableBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("research_table_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.research_table.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/research/research_table_background.png"));
@@ -51,7 +51,7 @@ public class ResearchTableBlockEntity extends SyncedBlockEntity implements IBloc
     }
 
     @Override
-    public IGuiHolderCodec<IBlockEntityHolder<ResearchTableBlockEntity>> getCodec() {
+    public IGuiHolderCodec<IBlockEntityGuiHolder<ResearchTableBlockEntity>> getCodec() {
         return CODEC;
     }
 
@@ -68,8 +68,8 @@ public class ResearchTableBlockEntity extends SyncedBlockEntity implements IBloc
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
-        return tag;
+    protected void writeSyncData(CompoundTag tag) {
+
     }
 
     @Override

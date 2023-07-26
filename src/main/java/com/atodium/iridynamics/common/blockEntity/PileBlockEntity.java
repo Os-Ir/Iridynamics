@@ -394,7 +394,7 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.putInt("height", this.height);
         ListTag contentTag = new ListTag();
         for (int i = 0; i < this.height; i++) {
@@ -407,7 +407,6 @@ public class PileBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         tag.put("heat", this.heat.serializeNBT());
         tag.putDouble("capacity", this.portrait.getCapacity());
         tag.putInt("dryingTick", this.dryingTick);
-        return tag;
     }
 
     @Override

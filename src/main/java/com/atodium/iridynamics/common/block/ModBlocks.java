@@ -26,6 +26,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> MOLD = Iridynamics.REGISTRY.block("mold", MoldBlock::new, Material.STONE).strength(2.0f, 1.0f).sound(SoundType.STONE).noOcclusion().register();
     public static final RegistryObject<Block> MOLD_TOOL = Iridynamics.REGISTRY.block("mold_tool", MoldToolBlock::new, Material.STONE).strength(2.0f, 1.0f).sound(SoundType.STONE).noOcclusion().register();
     public static final RegistryObject<Block> SMALL_CRUCIBLE = Iridynamics.REGISTRY.block("small_crucible", SmallCrucibleBlock::new, Material.STONE).strength(2.0f, 1.0f).sound(SoundType.STONE).noOcclusion().register();
+    public static final RegistryObject<Block> CRUCIBLE = Iridynamics.REGISTRY.block("crucible", CrucibleBlock::new, Material.STONE).strength(4.0f, 2.0f).sound(SoundType.STONE).noOcclusion().register();
     public static final RegistryObject<Block> BASIN = Iridynamics.REGISTRY.block("basin", BasinBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
     public static final RegistryObject<Block> BENDING_ANVIL = Iridynamics.REGISTRY.block("bending_anvil", BendingAnvilBlock::new, Material.METAL).strength(6.0f, 3.0f).sound(SoundType.ANVIL).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
     public static final RegistryObject<Block> GRINDSTONE = Iridynamics.REGISTRY.block("grindstone", GrindstoneBlock::new, Material.STONE).strength(2.0f, 2.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);

@@ -7,8 +7,8 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.IForging;
 import com.atodium.iridynamics.api.heat.IHeat;
 import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.common.block.equipment.AnvilBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
+import com.atodium.iridynamics.common.block.equipment.AnvilBlock;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -115,9 +115,8 @@ public class AnvilBlockEntity extends SyncedBlockEntity implements ITickable {
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
-        return tag;
     }
 
     @Override

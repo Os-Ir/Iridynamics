@@ -9,7 +9,7 @@ import com.atodium.iridynamics.api.gui.ModularContainer;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
-import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.api.gui.plan.IPlanBlockEntity;
 import com.atodium.iridynamics.api.gui.plan.PlanGuiHolder;
 import com.atodium.iridynamics.api.gui.widget.ButtonWidget;
@@ -35,7 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<PotteryWorkTableBlockEntity>, IPlanBlockEntity {
+public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityGuiHolder<PotteryWorkTableBlockEntity>, IPlanBlockEntity {
     public static final BlockEntityCodec<PotteryWorkTableBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("pottery_work_table_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.pottery_work_table.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/pottery_work_table_background.png"));
@@ -120,7 +120,7 @@ public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements IT
     }
 
     @Override
-    public IGuiHolderCodec<IBlockEntityHolder<PotteryWorkTableBlockEntity>> getCodec() {
+    public IGuiHolderCodec<IBlockEntityGuiHolder<PotteryWorkTableBlockEntity>> getCodec() {
         return CODEC;
     }
 
@@ -169,10 +169,9 @@ public class PotteryWorkTableBlockEntity extends SyncedBlockEntity implements IT
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
         tag.putInt("plan", this.plan);
-        return tag;
     }
 
     @Override

@@ -76,9 +76,8 @@ public class CarvingTableBlockEntity extends SyncedBlockEntity {
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
-        return tag;
     }
 
     @Override

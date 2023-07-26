@@ -9,7 +9,7 @@ import com.atodium.iridynamics.api.gui.IGuiHolderCodec;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
-import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.api.gui.widget.MoveType;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
@@ -32,7 +32,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, IIgnitable, IBlockEntityHolder<BonfireBlockEntity> {
+public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, IIgnitable, IBlockEntityGuiHolder<BonfireBlockEntity> {
     public static final BlockEntityCodec<BonfireBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("bonfire_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.bonfire.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/bonfire_background.png"));
@@ -141,7 +141,7 @@ public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, 
     }
 
     @Override
-    public IGuiHolderCodec<IBlockEntityHolder<BonfireBlockEntity>> getCodec() {
+    public IGuiHolderCodec<IBlockEntityGuiHolder<BonfireBlockEntity>> getCodec() {
         return CODEC;
     }
 
@@ -167,10 +167,9 @@ public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, 
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
         tag.put("heat", this.heat.serializeNBT());
-        return tag;
     }
 
     @Override

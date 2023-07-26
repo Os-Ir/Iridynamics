@@ -13,17 +13,17 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Supplier;
 
-public class RotateMachineBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Machine> {
-    protected Supplier<Direction> direction;
+public abstract class RotateMachineBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Machine> {
     protected Machine rotate;
     protected double inertia, friction;
 
-    public RotateMachineBlockEntity(BlockEntityType<?> type, Supplier<Direction> direction, BlockPos pos, BlockState state) {
+    public RotateMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        this.direction = direction;
-        this.rotate = RotateModule.machine(direction.get());
+        this.rotate = RotateModule.machine(this.direction());
         this.inertia = 1.0;
     }
+
+    public abstract Direction direction();
 
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
@@ -43,7 +43,7 @@ public class RotateMachineBlockEntity extends SyncedBlockEntity implements ITick
     }
 
     public double getRenderAngle(float partialTicks) {
-        return MathUtil.castAngle(this.rotate.getAngle(this.direction.get()));
+        return MathUtil.castAngle(this.rotate.getAngle(this.direction()));
     }
 
     public double inertia() {
@@ -63,9 +63,8 @@ public class RotateMachineBlockEntity extends SyncedBlockEntity implements ITick
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("rotateSync", RotateModule.writeSyncTag(this.rotate));
-        return tag;
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.atodium.iridynamics.api.gui.IGuiHolderCodec;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
-import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.container.ToolInventoryContainer;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class GrindstoneBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<GrindstoneBlockEntity> {
+public class GrindstoneBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityGuiHolder<GrindstoneBlockEntity> {
     public static final BlockEntityCodec<GrindstoneBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("grindstone_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.grindstone.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/grindstone_background.png"));
@@ -72,7 +72,7 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements ITickabl
     }
 
     @Override
-    public IGuiHolderCodec<IBlockEntityHolder<GrindstoneBlockEntity>> getCodec() {
+    public IGuiHolderCodec<IBlockEntityGuiHolder<GrindstoneBlockEntity>> getCodec() {
         return CODEC;
     }
 
@@ -99,9 +99,8 @@ public class GrindstoneBlockEntity extends SyncedBlockEntity implements ITickabl
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
-        return tag;
     }
 
     @Override

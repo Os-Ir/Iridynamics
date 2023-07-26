@@ -188,14 +188,13 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.putString("fuelItem", this.fuelItem.toString());
         tag.putBoolean("ignite", this.ignite);
         tag.putDouble("remainItems", this.remainItems);
         tag.putInt("blowVolume", this.blowVolume);
         tag.putDouble("capacity", this.portrait.getCapacity());
         tag.put("heat", this.heat.serializeNBT());
-        return tag;
     }
 
     @Override

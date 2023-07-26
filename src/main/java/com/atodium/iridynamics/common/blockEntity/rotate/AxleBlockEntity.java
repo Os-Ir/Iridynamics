@@ -49,9 +49,8 @@ public class AxleBlockEntity extends SyncedBlockEntity implements ITickable, IRo
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("rotateSync", RotateModule.writeSyncTag(this.rotate));
-        return tag;
     }
 
     @Override

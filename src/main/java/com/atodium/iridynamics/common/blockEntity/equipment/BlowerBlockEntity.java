@@ -33,9 +33,8 @@ public class BlowerBlockEntity extends SyncedBlockEntity {
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.putLong("lastBlowTime", this.lastBlowTime);
-        return tag;
     }
 
     @Override

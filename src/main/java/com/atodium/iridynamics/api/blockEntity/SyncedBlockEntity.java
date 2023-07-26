@@ -15,7 +15,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
         super(type, pos, state);
     }
 
-    protected abstract CompoundTag writeSyncData(CompoundTag tag);
+    protected abstract void writeSyncData(CompoundTag tag);
 
     protected abstract void readSyncData(CompoundTag tag);
 
@@ -44,7 +44,8 @@ public abstract class SyncedBlockEntity extends BlockEntity {
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
         super.saveAdditional(tag);
-        return this.writeSyncData(tag);
+        this.writeSyncData(tag);
+        return tag;
     }
 
     @Override

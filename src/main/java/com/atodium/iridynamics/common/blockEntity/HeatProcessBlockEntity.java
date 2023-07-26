@@ -110,13 +110,12 @@ public class HeatProcessBlockEntity extends SyncedBlockEntity implements ITickab
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.putString("content", this.content.toString());
         tag.put("output", this.output.serializeNBT());
         tag.putInt("height", this.height);
         tag.putDouble("capacity", this.portrait.getCapacity());
         tag.put("process", this.process.serializeNBT());
-        return tag;
     }
 
     @Override

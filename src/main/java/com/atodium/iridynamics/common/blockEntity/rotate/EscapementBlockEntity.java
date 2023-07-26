@@ -47,9 +47,8 @@ public class EscapementBlockEntity extends SyncedBlockEntity implements ITickabl
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("rotateSync", RotateModule.writeSyncTag(this.rotate));
-        return tag;
     }
 
     @Override

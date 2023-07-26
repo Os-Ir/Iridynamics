@@ -128,10 +128,9 @@ public class GearboxBlockEntity extends SyncedBlockEntity implements ITickable, 
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("rotateStructure", RotateModule.writeRotateNode(this.rotate));
         tag.put("rotateSync", RotateModule.writeSyncTag(this.rotate));
-        return tag;
     }
 
     @Override

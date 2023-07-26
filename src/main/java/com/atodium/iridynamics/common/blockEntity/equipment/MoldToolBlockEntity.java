@@ -110,10 +110,9 @@ public class MoldToolBlockEntity extends SyncedBlockEntity implements ITickable 
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.putString("shape", this.shape.getName());
         tag.put("container", this.container.serializeNBT());
-        return tag;
     }
 
     @Override

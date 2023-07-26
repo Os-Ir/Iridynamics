@@ -40,9 +40,8 @@ public class PlacedStoneBlockEntity extends SyncedBlockEntity {
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.putString("material", this.getMaterial().getName());
-        return tag;
     }
 
     @Override

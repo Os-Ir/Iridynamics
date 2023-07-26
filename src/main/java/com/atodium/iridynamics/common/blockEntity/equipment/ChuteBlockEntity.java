@@ -7,7 +7,7 @@ import com.atodium.iridynamics.api.gui.IGuiHolderCodec;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
-import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.common.block.equipment.ChuteBlock;
 import com.atodium.iridynamics.common.blockEntity.FuelBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<ChuteBlockEntity> {
+public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityGuiHolder<ChuteBlockEntity> {
     public static final BlockEntityCodec<ChuteBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("chute_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.chute.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/chute_background.png"));
@@ -73,7 +73,7 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
     }
 
     @Override
-    public IGuiHolderCodec<IBlockEntityHolder<ChuteBlockEntity>> getCodec() {
+    public IGuiHolderCodec<IBlockEntityGuiHolder<ChuteBlockEntity>> getCodec() {
         return CODEC;
     }
 
@@ -93,10 +93,9 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
         tag.putInt("remainCoolingTime", this.remainCoolingTime);
-        return tag;
     }
 
     @Override

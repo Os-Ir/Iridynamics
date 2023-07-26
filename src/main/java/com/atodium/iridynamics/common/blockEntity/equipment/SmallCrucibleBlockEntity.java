@@ -9,7 +9,7 @@ import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
-import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
@@ -27,7 +27,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<SmallCrucibleBlockEntity> {
+public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityGuiHolder<SmallCrucibleBlockEntity> {
     public static final BlockEntityCodec<SmallCrucibleBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("small_crucible_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.small_crucible.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/small_crucible_background.png"));
@@ -94,11 +94,10 @@ public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITick
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
         tag.put("container", this.container.serializeNBT());
         tag.put("heat", this.heat.serializeNBT());
-        return tag;
     }
 
     @Override

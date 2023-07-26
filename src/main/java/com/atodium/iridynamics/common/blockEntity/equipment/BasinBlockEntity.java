@@ -27,8 +27,8 @@ public class BasinBlockEntity extends SyncedBlockEntity {
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
-        return tag;
+    protected void writeSyncData(CompoundTag tag) {
+
     }
 
     @Override

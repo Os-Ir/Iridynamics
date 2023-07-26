@@ -46,9 +46,8 @@ public class FlywheelBlockEntity extends SyncedBlockEntity implements ITickable,
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("rotateSync", RotateModule.writeSyncTag(this.rotate));
-        return tag;
     }
 
     @Override

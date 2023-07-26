@@ -63,9 +63,8 @@ public class HandleBlockEntity extends SyncedBlockEntity implements ITickable, I
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("rotateSync", RotateModule.writeSyncTag(this.rotate));
-        return tag;
     }
 
     @Override

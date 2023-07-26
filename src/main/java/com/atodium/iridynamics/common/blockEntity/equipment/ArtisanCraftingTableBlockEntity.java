@@ -7,7 +7,7 @@ import com.atodium.iridynamics.api.gui.IGuiHolderCodec;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
-import com.atodium.iridynamics.api.gui.impl.IBlockEntityHolder;
+import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.container.ToolInventoryContainer;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class ArtisanCraftingTableBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityHolder<ArtisanCraftingTableBlockEntity> {
+public class ArtisanCraftingTableBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityGuiHolder<ArtisanCraftingTableBlockEntity> {
     public static final BlockEntityCodec<ArtisanCraftingTableBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("artisan_crafting_table_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.artisan_crafting_table.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/artisan_crafting_table_background.png"));
@@ -72,7 +72,7 @@ public class ArtisanCraftingTableBlockEntity extends SyncedBlockEntity implement
     }
 
     @Override
-    public IGuiHolderCodec<IBlockEntityHolder<ArtisanCraftingTableBlockEntity>> getCodec() {
+    public IGuiHolderCodec<IBlockEntityGuiHolder<ArtisanCraftingTableBlockEntity>> getCodec() {
         return CODEC;
     }
 
@@ -119,9 +119,8 @@ public class ArtisanCraftingTableBlockEntity extends SyncedBlockEntity implement
     }
 
     @Override
-    protected CompoundTag writeSyncData(CompoundTag tag) {
+    protected void writeSyncData(CompoundTag tag) {
         tag.put("inventory", this.inventory.serializeNBT());
-        return tag;
     }
 
     @Override

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class BlockEntityCodec<T extends BlockEntity> implements IGuiHolderCodec<IBlockEntityHolder<T>> {
+public class BlockEntityCodec<T extends BlockEntity> implements IGuiHolderCodec<IBlockEntityGuiHolder<T>> {
     private final ResourceLocation registryName;
 
     private BlockEntityCodec(ResourceLocation registryName) {
@@ -36,7 +36,7 @@ public class BlockEntityCodec<T extends BlockEntity> implements IGuiHolderCodec<
     @SuppressWarnings("unchecked")
     @OnlyIn(Dist.CLIENT)
     @Override
-    public IBlockEntityHolder<T> readHolder(FriendlyByteBuf buf) {
-        return (IBlockEntityHolder<T>) Minecraft.getInstance().level.getBlockEntity(buf.readBlockPos());
+    public IBlockEntityGuiHolder<T> readHolder(FriendlyByteBuf buf) {
+        return (IBlockEntityGuiHolder<T>) Minecraft.getInstance().level.getBlockEntity(buf.readBlockPos());
     }
 }
