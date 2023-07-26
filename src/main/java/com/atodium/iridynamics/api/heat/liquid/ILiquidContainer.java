@@ -18,6 +18,10 @@ public interface ILiquidContainer {
 
     int liquidCapacity();
 
+    default int remainCapacity() {
+        return this.liquidCapacity() - this.usedCapacity();
+    }
+
     boolean hasMaterial(MaterialBase material);
 
     boolean hasLiquidMaterial(MaterialBase material, double temperature);

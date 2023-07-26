@@ -8,6 +8,9 @@ import java.util.function.Predicate;
 
 public class ModSolidShapes {
     public static final SolidShape DUST = new SolidShape("dust", 144, flag(MaterialBase.GENERATE_DUST));
+    public static final SolidShape SMALL_DUST = new SolidShape("small_dust", 36, flag(MaterialBase.GENERATE_DUST));
+    public static final SolidShape TINY_DUST = new SolidShape("tiny_dust", 16, flag(MaterialBase.GENERATE_DUST));
+    public static final SolidShape UNIT_DUST = new SolidShape("unit_dust", 2, flag(MaterialBase.GENERATE_DUST));
     public static final SolidShape DOUBLE_PLATE = new SolidShape("double_plate", 288, flag(MaterialBase.GENERATE_PLATE));
     public static final SolidShape PLATE = new SolidShape("plate", new int[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, 144, flag(MaterialBase.GENERATE_PLATE));
     public static final SolidShape CURVED_PLATE = new SolidShape("curved_plate", 144, flag(MaterialBase.GENERATE_PLATE));
@@ -31,6 +34,8 @@ public class ModSolidShapes {
     public static final SolidShape CHISEL_HEAD = new SolidShape("chisel_head", 144, flag(MaterialBase.GENERATE_TOOL));
 
     public static final SolidShape ORE_NUGGET = new SolidShape("ore_nugget", null, 36, flag(MaterialBase.GENERATE_ORE));
+
+    public static final SolidShape[] DUSTS = new SolidShape[]{DUST, SMALL_DUST, TINY_DUST, UNIT_DUST};
 
     public static Predicate<MaterialBase> flag(IMaterialFlag flag) {
         return (material) -> material.hasFlag(flag);

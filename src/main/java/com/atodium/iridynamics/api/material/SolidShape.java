@@ -78,6 +78,11 @@ public class SolidShape {
         return this.name;
     }
 
+    public boolean is(SolidShape... shapes) {
+        for (SolidShape shape : shapes) if (shape == this) return true;
+        return false;
+    }
+
     public boolean hasForgeShape() {
         return this.forgeShape != null;
     }
