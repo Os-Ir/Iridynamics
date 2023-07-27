@@ -3,6 +3,7 @@
   "parent": "forge:item/default",
   "shape": "ore_nugget",
   "textures": {
-    "texture": "iridynamics:item/material/ore_nugget"
+    "texture": "iridynamics:item/material/ore_nugget_1",
+    "layer1": "iridynamics:item/material/ore_nugget_2"
   }
 }

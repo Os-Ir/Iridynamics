@@ -13,15 +13,11 @@ public class TexturePixelFlag {
     }
 
     public boolean get(int x, int y) {
-        if (MathUtil.between(x, 0, this.width - 1) && MathUtil.between(y, 0, this.height - 1)) {
-            return this.flag[x][y];
-        }
+        if (MathUtil.between(x, 0, this.width - 1) && MathUtil.between(y, 0, this.height - 1)) return this.flag[x][y];
         return false;
     }
 
     public void set(int x, int y) {
-        if (MathUtil.between(x, 0, this.width - 1) && MathUtil.between(y, 0, this.height - 1)) {
-            this.flag[x][y] = true;
-        }
+        if (MathUtil.between(x, 0, this.width - 1) && MathUtil.between(y, 0, this.height - 1)) this.flag[x][y] = true;
     }
 }

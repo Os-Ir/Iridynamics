@@ -34,6 +34,8 @@ public class ModSolidShapes {
     public static final SolidShape CHISEL_HEAD = new SolidShape("chisel_head", 144, flag(MaterialBase.GENERATE_TOOL));
 
     public static final SolidShape ORE_NUGGET = new SolidShape("ore_nugget", null, 36, flag(MaterialBase.GENERATE_ORE));
+    public static final SolidShape CRUSHED_ORE = new SolidShape("crushed_ore", null, 144, flag(MaterialBase.GENERATE_ORE));
+    public static final SolidShape ORE_DUST = new SolidShape("ore_dust", null, 144, flag(MaterialBase.GENERATE_ORE));
 
     public static final SolidShape[] DUSTS = new SolidShape[]{DUST, SMALL_DUST, TINY_DUST, UNIT_DUST};
 

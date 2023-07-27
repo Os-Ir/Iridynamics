@@ -5,6 +5,7 @@ import com.atodium.iridynamics.api.material.SolidShape;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
 import com.atodium.iridynamics.client.model.ColoredItemLayerModel;
 import com.atodium.iridynamics.client.model.DynamicTextureLoader;
+import com.atodium.iridynamics.client.model.TexturePixelFlag;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -23,7 +24,6 @@ import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -47,8 +47,24 @@ public class MaterialModel implements IModelGeometry<MaterialModel> {
         } else {
             MaterialRenderInfo renderInfo = material.getRenderInfo();
             Material texture = renderInfo.specialTextureMaterial(shape);
-            sprite = spriteGetter.apply(Objects.requireNonNullElseGet(texture, () -> owner.resolveTexture("texture")));
-            quads = ColoredItemLayerModel.getQuadsForSprite(0, sprite, transform, renderInfo.argb(), renderInfo.light());
+            if (texture == null) {
+                sprite = spriteGetter.apply(owner.resolveTexture("texture"));
+                ImmutableList.Builder<BakedQuad> quadBuilder = ImmutableList.builder();
+                int layers = 1;
+                while (owner.isTexturePresent("layer" + layers)) layers++;
+                if (layers == 1) {
+                    quadBuilder.addAll(ColoredItemLayerModel.getQuadsForSprite(0, sprite, transform, renderInfo.argb(), renderInfo.light()));
+                } else {
+                    TexturePixelFlag pixels = new TexturePixelFlag(16, 16);
+                    quadBuilder.addAll(ColoredItemLayerModel.getQuadsForSprite(0, sprite, transform, renderInfo.argb(), renderInfo.light(), pixels));
+                    for (int i = 1; i < layers; i++)
+                        quadBuilder.addAll(ColoredItemLayerModel.getQuadsForSprite(i, spriteGetter.apply(owner.resolveTexture("layer" + i)), transform, 0xffffffff, 0, pixels));
+                }
+                quads = quadBuilder.build();
+            } else {
+                sprite = spriteGetter.apply(texture);
+                quads = ColoredItemLayerModel.getQuadsForSprite(0, sprite, transform, renderInfo.argb(), renderInfo.light());
+            }
         }
         return new BakedItemModel(quads, sprite, Maps.immutableEnumMap(transformMap), overrides, true, owner.isSideLit());
     }
@@ -63,8 +79,8 @@ public class MaterialModel implements IModelGeometry<MaterialModel> {
     @Override
     public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
         Collection<Material> textures = Sets.newHashSet();
-        Material texture = owner.resolveTexture("texture");
-        textures.add(texture);
+        textures.add(owner.resolveTexture("texture"));
+        for (int i = 1; owner.isTexturePresent("layer" + i); i++) textures.add(owner.resolveTexture("layer" + i));
         Predicate<Material> adder = DynamicTextureLoader.INSTANCE.getTextureAdder(textures);
         if (this.material == null) {
             MaterialBase.REGISTRY.values().forEach((material) -> {

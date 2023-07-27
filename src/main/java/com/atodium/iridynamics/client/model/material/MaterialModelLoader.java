@@ -16,15 +16,9 @@ public class MaterialModelLoader implements IModelLoader<MaterialModel> {
     public MaterialModel read(JsonDeserializationContext context, JsonObject obj) {
         SolidShape shape = null;
         MaterialBase material = null;
-        if (obj.has("shape")) {
-            shape = SolidShape.getShapeByName(GsonHelper.getAsString(obj, "shape"));
-        }
-        if (shape == null) {
-            shape = ModSolidShapes.INGOT;
-        }
-        if (obj.has("material")) {
-            material = MaterialBase.getMaterialByName(GsonHelper.getAsString(obj, "material"));
-        }
+        if (obj.has("shape")) shape = SolidShape.getShapeByName(GsonHelper.getAsString(obj, "shape"));
+        if (shape == null) shape = ModSolidShapes.INGOT;
+        if (obj.has("material")) material = MaterialBase.getMaterialByName(GsonHelper.getAsString(obj, "material"));
         return new MaterialModel(shape, material);
     }
 

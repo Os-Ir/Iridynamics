@@ -7,10 +7,12 @@ import com.atodium.iridynamics.api.heat.impl.MaterialPhasePortrait;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.SolidShape;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
+import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,6 +26,17 @@ public class HeatModule {
     public static final double RESISTANCE_BLOCK_DEFAULT = 3.0;
     public static final double RESISTANCE_AIR_FLOW = 0.1;
     public static final double RESISTANCE_AIR_STATIC = 10.0;
+
+    public static final UnorderedRegistry<Block, Double> BLOCK_HEAT_RESISTANCE = new UnorderedRegistry<>();
+
+    public static void registerBlockHeatResistance(Block block, double resistance) {
+        BLOCK_HEAT_RESISTANCE.register(block, resistance);
+    }
+
+    public static double getBlockResistance(Block block) {
+        if (BLOCK_HEAT_RESISTANCE.containsKey(block)) return BLOCK_HEAT_RESISTANCE.get(block);
+        return RESISTANCE_BLOCK_DEFAULT;
+    }
 
     public static void addItemHeat(AttachCapabilitiesEvent<ItemStack> event, ItemStack stack, double capacity) {
         addItemHeat(event, stack, capacity, 0.0);
@@ -69,11 +82,11 @@ public class HeatModule {
                     if (withAllCapabilities || direction == Direction.UP || direction == Direction.NORTH || direction == Direction.EAST)
                         heatExchange(heat, besideHeat, heat.getResistance(direction) + besideHeat.getResistance(direction.getOpposite()));
                 } else
-                    heatExchange(heat, AMBIENT_TEMPERATURE, heat.getResistance(direction) + RESISTANCE_BLOCK_DEFAULT);
+                    heatExchange(heat, AMBIENT_TEMPERATURE, heat.getResistance(direction) + getBlockResistance(besideState.getBlock()));
             } else if (besideState.isAir())
                 heatExchange(heat, AMBIENT_TEMPERATURE, heat.getResistance(direction) + RESISTANCE_AIR_FLOW);
             else
-                heatExchange(heat, AMBIENT_TEMPERATURE, heat.getResistance(direction) + RESISTANCE_BLOCK_DEFAULT);
+                heatExchange(heat, AMBIENT_TEMPERATURE, heat.getResistance(direction) + getBlockResistance(besideState.getBlock()));
         }
     }
 

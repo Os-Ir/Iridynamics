@@ -38,9 +38,7 @@ public class MaterialOverride extends ItemOverrides {
     public BakedModel resolve(BakedModel originalModel, ItemStack stack, ClientLevel level, LivingEntity entity, int seed) {
         Item item = stack.getItem();
         MaterialBase material = MaterialItem.getItemMaterial(stack);
-        if (material == null) {
-            material = ModMaterials.COPPER;
-        }
+        if (material == null) material = ModMaterials.COPPER;
         return this.cache.computeIfAbsent(material, this::bake);
     }
 }

@@ -90,7 +90,7 @@ public class ColoredItemLayerModel implements IModelGeometry<ColoredItemLayerMod
             for (int v = 0; v < vMax; v++) {
                 ptu = true;
                 for (int u = 0; u < uMax; u++) {
-                    int alpha = sprite.getPixelRGBA(i, u, vMax - v - 1) >> 24 & 0xff;
+                    int alpha = (sprite.getPixelRGBA(i, u, vMax - v - 1) >> 24) & 0xff;
                     boolean t = alpha / 255f <= 0.1f;
                     if (!t && alpha < 255) translucent = true;
                     if (ptu && !t) faceData.set(Direction.WEST, u, v);
@@ -188,17 +188,17 @@ public class ColoredItemLayerModel implements IModelGeometry<ColoredItemLayerMod
         float x0 = (float) u / width;
         float y0 = (float) v / height;
         float x1 = x0, y1 = y0;
-        float z0 = 7.5f / 16.0f, z1 = 8.5f / 16.0f;
+        float z0 = 0.46875f, z1 = 0.53125f;
         switch (direction) {
             case WEST:
-                z0 = 8.5f / 16f;
-                z1 = 7.5f / 16f;
+                z0 = 0.53125f;
+                z1 = 0.46875f;
             case EAST:
                 y1 = (float) (v + size) / height;
                 break;
             case DOWN:
-                z0 = 8.5f / 16f;
-                z1 = 7.5f / 16f;
+                z0 = 0.53125f;
+                z1 = 0.46875f;
             case UP:
                 x1 = (float) (u + size) / width;
                 break;
@@ -211,17 +211,11 @@ public class ColoredItemLayerModel implements IModelGeometry<ColoredItemLayerMod
         float u1 = 16f * (x1 - dx);
         float v0 = 16f * (1f - y0 - dy);
         float v1 = 16f * (1f - y1 - dy);
-        return buildQuad(transform, (direction.getAxis() == Direction.Axis.Y ? direction.getOpposite() : direction),
-                sprite, tint, color, light,
+        return buildQuad(transform, (direction.getAxis() == Direction.Axis.Y ? direction.getOpposite() : direction), sprite, tint, color, light,
                 x0, y0, z0, sprite.getU(u0), sprite.getV(v0),
                 x1, y1, z0, sprite.getU(u1), sprite.getV(v1),
                 x1, y1, z1, sprite.getU(u1), sprite.getV(v1),
                 x0, y0, z1, sprite.getU(u0), sprite.getV(v0));
-    }
-
-
-    public static Direction remap(Direction direction) {
-        return direction.getAxis() == Direction.Axis.Y ? direction.getOpposite() : direction;
     }
 
     public static BakedQuad buildQuad(Transformation transform, Direction direction, TextureAtlasSprite sprite, int tint, int color, int light,
@@ -245,8 +239,7 @@ public class ColoredItemLayerModel implements IModelGeometry<ColoredItemLayerMod
     public static void putVertex(IVertexConsumer consumer, Direction direction, float x, float y, float z, float u, float v, int color, int light) {
         VertexFormat format = consumer.getVertexFormat();
         ImmutableList<VertexFormatElement> elements = format.getElements();
-        int size = elements.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < elements.size(); i++) {
             VertexFormatElement element = elements.get(i);
             outer:
             switch (element.getUsage()) {
