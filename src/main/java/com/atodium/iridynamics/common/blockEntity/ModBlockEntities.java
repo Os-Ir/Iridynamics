@@ -35,6 +35,7 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<EscapementBlockEntity>> ESCAPEMENT = Iridynamics.REGISTRY.blockEntity("escapement", () -> BlockEntityType.Builder.of(EscapementBlockEntity::new, ModBlocks.ESCAPEMENT.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<FlywheelBlockEntity>> FLYWHEEL = Iridynamics.REGISTRY.blockEntity("flywheel", () -> BlockEntityType.Builder.of(FlywheelBlockEntity::new, ModBlocks.FLYWHEEL.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<HandleBlockEntity>> HANDLE = Iridynamics.REGISTRY.blockEntity("handle", () -> BlockEntityType.Builder.of(HandleBlockEntity::new, ModBlocks.HANDLE.get()).build(null)).register();
+    public static final RegistryObject<BlockEntityType<CentrifugeBlockEntity>> CENTRIFUGE = Iridynamics.REGISTRY.blockEntity("centrifuge", () -> BlockEntityType.Builder.of(CentrifugeBlockEntity::new, ModBlocks.CENTRIFUGE.get()).build(null)).register();
 
     public static void init() {
 

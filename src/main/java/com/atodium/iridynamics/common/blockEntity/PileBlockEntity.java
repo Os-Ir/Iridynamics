@@ -16,7 +16,7 @@ import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.impl.DryingRecipe;
 import com.atodium.iridynamics.api.recipe.impl.PileHeatRecipe;
-import com.atodium.iridynamics.api.util.data.ItemDelegate;
+import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.HeatProcessBlock;

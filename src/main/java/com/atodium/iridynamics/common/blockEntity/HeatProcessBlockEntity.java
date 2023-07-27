@@ -6,7 +6,7 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.capability.HeatProcessCapability;
 import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
-import com.atodium.iridynamics.api.util.data.ItemDelegate;
+import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.common.block.HeatProcessBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import net.minecraft.core.BlockPos;

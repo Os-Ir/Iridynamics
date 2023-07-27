@@ -43,6 +43,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> ESCAPEMENT = Iridynamics.REGISTRY.block("escapement", EscapementBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
     public static final RegistryObject<Block> FLYWHEEL = Iridynamics.REGISTRY.block("flywheel", FlywheelBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
     public static final RegistryObject<Block> HANDLE = Iridynamics.REGISTRY.block("handle", HandleBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
+    public static final RegistryObject<Block> CENTRIFUGE = Iridynamics.REGISTRY.block("centrifuge", CentrifugeBlock::new, Material.METAL).strength(6.0f, 4.0f).sound(SoundType.METAL).registerWithItem(ModCreativeTabs.EQUIPMENT);
 
     public static void init() {
 

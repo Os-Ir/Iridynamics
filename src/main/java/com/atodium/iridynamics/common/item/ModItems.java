@@ -9,7 +9,7 @@ import com.atodium.iridynamics.api.material.SolidShape;
 import com.atodium.iridynamics.api.module.ToolModule;
 import com.atodium.iridynamics.api.tool.MaterialToolItem;
 import com.atodium.iridynamics.api.tool.ToolItem;
-import com.atodium.iridynamics.api.util.data.ItemDelegate;
+import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.tool.ToolChisel;
 import com.atodium.iridynamics.common.tool.ToolHammer;

@@ -1,6 +1,6 @@
 package com.atodium.iridynamics.api.heat;
 
-import com.atodium.iridynamics.api.util.data.ItemDelegate;
+import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

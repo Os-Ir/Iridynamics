@@ -5,9 +5,9 @@ import com.atodium.iridynamics.api.capability.InventoryCapability;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
 import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.MaterialHeatInfo;
+import com.atodium.iridynamics.api.heat.liquid.LiquidModule;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.alloy.AlloyModule;
-import com.atodium.iridynamics.api.module.LiquidContainerModule;
 import com.atodium.iridynamics.common.blockEntity.equipment.SmallCrucibleBlockEntity;
 import com.atodium.iridynamics.common.item.ModItems;
 import net.minecraft.world.item.ItemStack;
@@ -65,7 +65,7 @@ public class SmallCrucibleModule {
     public static void initItem(AttachCapabilitiesEvent<ItemStack> event, ItemStack stack) {
         if (stack.getItem() != ModItems.SMALL_CRUCIBLE.get())
             throw new IllegalArgumentException("ItemStack [ " + stack + " ] is not small crucible");
-        LiquidContainerModule.addItemLiquidContainer(event, CAPACITY);
+        LiquidModule.addItemLiquidContainer(event, CAPACITY);
         HeatModule.addItemHeat(event, stack, HEAT_CAPACITY, ITEM_RESISTANCE);
         HeatModule.addItemInventory(event, 4);
     }

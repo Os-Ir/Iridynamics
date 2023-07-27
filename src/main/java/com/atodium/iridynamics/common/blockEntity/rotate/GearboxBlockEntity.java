@@ -8,7 +8,7 @@ import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.rotate.Gearbox;
 import com.atodium.iridynamics.api.rotate.RotateModule;
-import com.atodium.iridynamics.api.util.data.ItemDelegate;
+import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.google.common.collect.Maps;

@@ -1,9 +1,10 @@
-package com.atodium.iridynamics.api.util.data;
+package com.atodium.iridynamics.api.item;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.SolidShape;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

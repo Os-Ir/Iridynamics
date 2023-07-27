@@ -55,8 +55,10 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
         if (this.progress == this.recipe.count() - 1) {
             this.progress = 0;
             ItemStackContainer container = RecipeUtil.container(this.inventory.getStackInSlot(0));
-            ItemHandlerHelper.giveItemToPlayer(player, this.recipe.assemble(container));
+            ItemStack result = this.recipe.assemble(container);
             this.recipe.consume(container);
+            if (this.inventory.getStackInSlot(0).isEmpty()) this.inventory.setStackInSlot(0, result);
+            else ItemHandlerHelper.giveItemToPlayer(player, result);
             this.markForItemChange();
         } else {
             this.progress++;

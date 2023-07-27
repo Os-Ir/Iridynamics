@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.api.module;
 
 import com.atodium.iridynamics.api.capability.CarvingCapability;
-import com.atodium.iridynamics.api.util.data.ItemDelegate;
+import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.google.common.collect.Maps;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AttachCapabilitiesEvent;

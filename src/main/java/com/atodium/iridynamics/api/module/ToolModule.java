@@ -2,7 +2,7 @@ package com.atodium.iridynamics.api.module;
 
 import com.atodium.iridynamics.api.tool.IToolInfo;
 import com.atodium.iridynamics.api.tool.ToolItem;
-import com.atodium.iridynamics.api.util.data.ItemDelegate;
+import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
