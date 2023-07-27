@@ -6,6 +6,7 @@ import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.OutputProvider;
 import com.atodium.iridynamics.api.recipe.container.ToolInventoryContainer;
+import com.atodium.iridynamics.api.recipe.RecipeSerializerImpl;
 import com.atodium.iridynamics.api.tool.IToolInfo;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.google.common.collect.Maps;

@@ -4,6 +4,7 @@ import com.atodium.iridynamics.api.recipe.IngredientIndex;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.WeightedOutputProvider;
 import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
+import com.atodium.iridynamics.api.recipe.RecipeSerializerImpl;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

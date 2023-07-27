@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.recipe.impl;
+package com.atodium.iridynamics.api.recipe;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;

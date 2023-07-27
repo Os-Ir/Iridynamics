@@ -31,20 +31,24 @@ public class MaterialItem extends Item {
         });
     }
 
+    public static boolean isMaterialItem(ItemStack stack) {
+        return stack.getItem() instanceof MaterialItem;
+    }
+
+    public static void setItemMaterial(ItemStack stack, MaterialBase material) {
+        if (stack.getItem() instanceof MaterialItem)
+            stack.getOrCreateTagElement("material").putString("material", material.getName());
+    }
+
     public static SolidShape getItemShape(ItemStack stack) {
-        Item item = stack.getItem();
-        if (item instanceof MaterialItem materialItem) {
-            return materialItem.getShape();
-        }
+        if (stack.getItem() instanceof MaterialItem materialItem) return materialItem.getShape();
         return null;
     }
 
     public static MaterialBase getItemMaterial(ItemStack stack) {
         if (stack.getItem() instanceof MaterialItem) {
             CompoundTag tag = stack.getOrCreateTagElement("material");
-            if (!tag.contains("material")) {
-                tag.putString("material", ModMaterials.IRON.getName());
-            }
+            if (!tag.contains("material")) tag.putString("material", ModMaterials.IRON.getName());
             return MaterialBase.getMaterialByName(tag.getString("material"));
         }
         return null;

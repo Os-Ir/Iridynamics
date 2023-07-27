@@ -1,0 +1,21 @@
+{
+  "type": "iridynamics:crushing",
+  "input": {
+    "type": 1,
+    "ingredient": {
+      "shape": "crushed_ore"
+    }
+  },
+  "output": {
+    "base": {
+      "item": "iridynamics:material_item/ore_dust"
+    },
+    "decorators": [
+      {
+        "serializer": "iridynamics:material_item",
+        "source": 0
+      }
+    ]
+  },
+  "count": 10
+}

@@ -1,7 +1,6 @@
-package com.atodium.iridynamics.api.recipe.impl;
+package com.atodium.iridynamics.api.recipe.decorator;
 
 import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.recipe.OutputDecorator;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;

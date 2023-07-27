@@ -1,9 +1,6 @@
 package com.atodium.iridynamics.api.recipe.impl;
 
-import com.atodium.iridynamics.api.recipe.IngredientIndex;
-import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
-import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
-import com.atodium.iridynamics.api.recipe.OutputProvider;
+import com.atodium.iridynamics.api.recipe.*;
 import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,6 +12,10 @@ import net.minecraft.world.level.Level;
 
 public record CrushingRecipe(ResourceLocation id, IngredientIndex input, OutputProvider output,
                              int count) implements ISpecialRecipe<ItemStackContainer> {
+    public void consume(ItemStackContainer container) {
+        this.input.consume(container.getItem());
+    }
+
     @Override
     public boolean matches(ItemStackContainer inventory, Level level) {
         return this.input.test(inventory.getItem());

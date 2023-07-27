@@ -5,6 +5,7 @@ import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.OutputProvider;
 import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
+import com.atodium.iridynamics.api.recipe.RecipeSerializerImpl;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

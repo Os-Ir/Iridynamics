@@ -3,7 +3,7 @@ package com.atodium.iridynamics;
 import com.atodium.iridynamics.api.gui.plan.PlanGuiCodec;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
-import com.atodium.iridynamics.api.recipe.ModOutputDecorators;
+import com.atodium.iridynamics.api.recipe.decorator.ModOutputDecorators;
 import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.registry.ModRegistry;

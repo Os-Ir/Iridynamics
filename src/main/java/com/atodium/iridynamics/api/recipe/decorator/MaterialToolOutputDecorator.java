@@ -1,7 +1,6 @@
-package com.atodium.iridynamics.api.recipe.impl;
+package com.atodium.iridynamics.api.recipe.decorator;
 
 import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.api.recipe.OutputDecorator;
 import com.atodium.iridynamics.api.tool.MaterialToolItem;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
@@ -19,15 +18,6 @@ public class MaterialToolOutputDecorator implements OutputDecorator {
 
     public MaterialToolOutputDecorator(Map<Integer, Pair<String, Integer>> function) {
         this.function = function;
-    }
-
-    public void toNetwork(FriendlyByteBuf buf) {
-        buf.writeInt(this.function.size());
-        for (Map.Entry<Integer, Pair<String, Integer>> entry : this.function.entrySet()) {
-            buf.writeInt(entry.getKey());
-            buf.writeUtf(entry.getValue().getLeft());
-            buf.writeInt(entry.getValue().getRight());
-        }
     }
 
     @Override
@@ -70,7 +60,14 @@ public class MaterialToolOutputDecorator implements OutputDecorator {
 
         @Override
         public void toNetwork(OutputDecorator decorator, FriendlyByteBuf buf) {
-            if (decorator instanceof MaterialToolOutputDecorator tool) tool.toNetwork(buf);
+            if (decorator instanceof MaterialToolOutputDecorator tool) {
+                buf.writeInt(tool.function.size());
+                for (Map.Entry<Integer, Pair<String, Integer>> entry : tool.function.entrySet()) {
+                    buf.writeInt(entry.getKey());
+                    buf.writeUtf(entry.getValue().getLeft());
+                    buf.writeInt(entry.getValue().getRight());
+                }
+            }
         }
     }
 }

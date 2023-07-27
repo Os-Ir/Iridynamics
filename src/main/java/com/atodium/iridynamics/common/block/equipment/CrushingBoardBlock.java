@@ -55,7 +55,7 @@ public class CrushingBoardBlock extends Block implements EntityBlock {
             if (board.isEmpty()) player.setItemInHand(hand, board.addItem(stack));
             else {
                 if (result.getDirection() == Direction.UP && item instanceof MaterialToolItem toolItem && toolItem.getToolInfo() == ToolHammer.INSTANCE) {
-                    if (board.crush()) toolItem.damageItem(stack, ToolHammer.INSTANCE.getInteractionDamage());
+                    if (board.crush(player)) toolItem.damageItem(stack, ToolHammer.INSTANCE.getInteractionDamage());
                 } else ItemHandlerHelper.giveItemToPlayer(player, board.takeItem());
             }
         });

@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.recipe;
+package com.atodium.iridynamics.api.recipe.decorator;
 
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;

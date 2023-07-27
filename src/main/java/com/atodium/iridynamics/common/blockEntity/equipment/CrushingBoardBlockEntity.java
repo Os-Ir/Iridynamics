@@ -4,13 +4,16 @@ import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
+import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
 import com.atodium.iridynamics.api.recipe.impl.CrushingRecipe;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITickable {
@@ -47,11 +50,13 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
         if (this.recipe == null) this.progress = 0;
     }
 
-    public boolean crush() {
+    public boolean crush(Player player) {
         if (this.recipe == null) return false;
         if (this.progress == this.recipe.count() - 1) {
             this.progress = 0;
-            this.inventory.setStackInSlot(0, this.recipe.assemble(RecipeUtil.container(this.inventory.getStackInSlot(0))));
+            ItemStackContainer container = RecipeUtil.container(this.inventory.getStackInSlot(0));
+            ItemHandlerHelper.giveItemToPlayer(player, this.recipe.assemble(container));
+            this.recipe.consume(container);
             this.markForItemChange();
         } else {
             this.progress++;
@@ -121,11 +126,6 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
             ItemStack stack = this.getStackInSlot(slot);
             this.setStackInSlot(slot, ItemStack.EMPTY);
             return stack;
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
         }
     }
 }
