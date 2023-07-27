@@ -12,9 +12,10 @@ import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.api.gui.widget.MoveType;
 import com.atodium.iridynamics.api.heat.FuelInfo;
-import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
-import com.atodium.iridynamics.api.heat.HeatProcessModule;
 import com.atodium.iridynamics.api.heat.HeatModule;
+import com.atodium.iridynamics.api.heat.HeatProcessModule;
+import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
+import com.atodium.iridynamics.api.item.InventoryUtil;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.FuelBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
@@ -30,7 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, IIgnitable, IBlockEntityGuiHolder<BonfireBlockEntity> {
     public static final BlockEntityCodec<BonfireBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("bonfire_block_entity"));
@@ -41,7 +41,7 @@ public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, 
     public static final double POWER = 5000.0;
     public static final int MAX_BLOW_VOLUME = 4000;
 
-    private final Inventory inventory;
+    private final InventoryUtil.Inventory inventory;
     private final HeatCapability heat;
     private FuelInfo fuelInfo;
     private double remainEnergy;
@@ -50,7 +50,7 @@ public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, 
 
     public BonfireBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.BONFIRE.get(), pos, state);
-        this.inventory = new Inventory();
+        this.inventory = InventoryUtil.predicateInventory(3, (slot) -> slot == 0 ? 16 : 1, (slot, stack) -> slot == 0 ? FuelInfo.containsItemInfo(stack.getItem()) : stack.getCapability(HeatCapability.HEAT).isPresent());
         this.heat = new HeatCapability(new SolidPhasePortrait(16000.0), new double[]{0.1, 0.4, 0.2, 0.2, 0.2, 0.2});
     }
 
@@ -127,7 +127,7 @@ public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, 
         });
     }
 
-    public Inventory getInventory() {
+    public InventoryUtil.Inventory getInventory() {
         return this.inventory;
     }
 
@@ -188,34 +188,5 @@ public class BonfireBlockEntity extends SyncedBlockEntity implements ITickable, 
     protected void loadFromTag(CompoundTag tag) {
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
         this.heat.deserializeNBT(tag.getCompound("heat"));
-    }
-
-    public static class Inventory extends ItemStackHandler {
-        public Inventory() {
-            super(3);
-        }
-
-        public ItemStack take(int slot) {
-            this.validateSlotIndex(slot);
-            ItemStack stack = this.getStackInSlot(slot);
-            this.setStackInSlot(slot, ItemStack.EMPTY);
-            return stack;
-        }
-
-        public ItemStack put(int slot, ItemStack stack) {
-            return this.insertItem(slot, stack, false);
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            if (slot == 0) return 16;
-            return 1;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            if (slot == 0) return FuelInfo.containsItemInfo(stack.getItem());
-            return stack.getCapability(HeatCapability.HEAT).isPresent();
-        }
     }
 }

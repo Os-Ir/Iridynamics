@@ -77,7 +77,7 @@ public class ChuteBlock extends Block implements EntityBlock {
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.CHUTE.get()));
         level.getBlockEntity(pos, ModBlockEntities.CHUTE.get()).ifPresent((chute) -> {
             int slots = chute.getInventory().getSlots();
-            for (int i = 0; i < slots; i++) ItemHandlerHelper.giveItemToPlayer(player, chute.getInventory().get(i));
+            for (int i = 0; i < slots; i++) ItemHandlerHelper.giveItemToPlayer(player, chute.getInventory().getStackInSlot(i));
         });
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }

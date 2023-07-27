@@ -2,6 +2,7 @@ package com.atodium.iridynamics.common.blockEntity.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
+import com.atodium.iridynamics.api.item.InventoryUtil;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
@@ -14,17 +15,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITickable {
     private boolean recipeUpdateFlag;
     private CrushingRecipe recipe;
-    private final Inventory inventory;
+    private final InventoryUtil.Inventory inventory;
     private int progress;
 
     public CrushingBoardBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CRUSHING_BOARD.get(), pos, state);
-        this.inventory = new Inventory();
+        this.inventory = InventoryUtil.inventory(1);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
         return this.inventory.getStackInSlot(0).isEmpty();
     }
 
-    public Inventory getInventory() {
+    public InventoryUtil.Inventory getInventory() {
         return this.inventory;
     }
 
@@ -116,18 +116,5 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
         this.progress = tag.getInt("progress");
         this.markRecipeUpdate();
-    }
-
-    public static class Inventory extends ItemStackHandler {
-        public Inventory() {
-            super(1);
-        }
-
-        public ItemStack take(int slot) {
-            this.validateSlotIndex(slot);
-            ItemStack stack = this.getStackInSlot(slot);
-            this.setStackInSlot(slot, ItemStack.EMPTY);
-            return stack;
-        }
     }
 }

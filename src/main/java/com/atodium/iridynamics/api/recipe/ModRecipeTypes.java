@@ -16,6 +16,7 @@ public class ModRecipeTypes {
     public static final RegistryObject<RecipeType<GrindstoneRecipe>> GRINDSTONE = register("grindstone");
     public static final RegistryObject<RecipeType<CrushingRecipe>> CRUSHING = register("crushing");
     public static final RegistryObject<RecipeType<PotteryRecipe>> POTTERY = register("pottery");
+    public static final RegistryObject<RecipeType<CentrifugeRecipe>> CENTRIFUGE = register("centrifuge");
 
     public static void init() {
 

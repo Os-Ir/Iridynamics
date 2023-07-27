@@ -8,6 +8,7 @@ import com.atodium.iridynamics.api.gui.ModularGuiInfo;
 import com.atodium.iridynamics.api.gui.TextureArea;
 import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
+import com.atodium.iridynamics.api.item.InventoryUtil;
 import com.atodium.iridynamics.common.block.equipment.ChuteBlock;
 import com.atodium.iridynamics.common.blockEntity.FuelBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityGuiHolder<ChuteBlockEntity> {
     public static final BlockEntityCodec<ChuteBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("chute_block_entity"));
@@ -29,12 +29,12 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/chute_background.png"));
     public static final int COOLING_TIME = 20;
 
-    private final Inventory inventory;
+    private final InventoryUtil.Inventory inventory;
     private int remainCoolingTime;
 
     public ChuteBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CHUTE.get(), pos, state);
-        this.inventory = new Inventory();
+        this.inventory = InventoryUtil.predicateInventory(4, (slot, stack) -> PileBlockEntity.containsItemInfo(stack));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
         this.remainCoolingTime = COOLING_TIME;
     }
 
-    public Inventory getInventory() {
+    public InventoryUtil.Inventory getInventory() {
         return this.inventory;
     }
 
@@ -114,31 +114,5 @@ public class ChuteBlockEntity extends SyncedBlockEntity implements ITickable, IB
     protected void loadFromTag(CompoundTag tag) {
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
         this.remainCoolingTime = tag.getInt("remainCoolingTime");
-    }
-
-    public static class Inventory extends ItemStackHandler {
-        public Inventory() {
-            super(4);
-        }
-
-        public ItemStack get(int slot) {
-            return this.getStackInSlot(slot);
-        }
-
-        public ItemStack take(int slot) {
-            this.validateSlotIndex(slot);
-            ItemStack stack = this.getStackInSlot(slot);
-            this.setStackInSlot(slot, ItemStack.EMPTY);
-            return stack;
-        }
-
-        public ItemStack put(int slot, ItemStack stack) {
-            return this.insertItem(slot, stack, false);
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            return PileBlockEntity.containsItemInfo(stack);
-        }
     }
 }

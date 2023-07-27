@@ -3,7 +3,7 @@ package com.atodium.iridynamics.common.blockEntity.rotate;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.RotateMachineBlockEntity;
 import com.atodium.iridynamics.api.item.InventoryUtil;
-import com.atodium.iridynamics.api.recipe.impl.CrushingRecipe;
+import com.atodium.iridynamics.api.recipe.impl.CentrifugeRecipe;
 import com.atodium.iridynamics.common.block.rotate.CentrifugeBlock;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class CentrifugeBlockEntity extends RotateMachineBlockEntity implements ITickable {
     private boolean recipeUpdateFlag;
-    private CrushingRecipe recipe;
     private final InventoryUtil.Inventory inventory;
+    private CentrifugeRecipe recipe;
     private int progress;
 
     public CentrifugeBlockEntity(BlockPos pos, BlockState state) {

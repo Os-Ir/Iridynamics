@@ -39,6 +39,7 @@
   "block.iridynamics.escapement": "擒纵器",
   "block.iridynamics.flywheel": "飞轮",
   "block.iridynamics.handle": "摇杆",
+  "block.iridynamics.centrifuge": "离心机",
 
   "item.iridynamics.wood_brick": "木块",
   "item.iridynamics.crushed_stone": "碎石块",

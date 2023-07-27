@@ -12,6 +12,7 @@ import com.atodium.iridynamics.api.gui.impl.BlockEntityCodec;
 import com.atodium.iridynamics.api.gui.impl.IBlockEntityGuiHolder;
 import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
+import com.atodium.iridynamics.api.item.InventoryUtil;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.module.SmallCrucibleModule;
 import net.minecraft.core.BlockPos;
@@ -20,25 +21,23 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITickable, IBlockEntityGuiHolder<SmallCrucibleBlockEntity> {
     public static final BlockEntityCodec<SmallCrucibleBlockEntity> CODEC = BlockEntityCodec.createCodec(Iridynamics.rl("small_crucible_block_entity"));
     public static final Component TITLE = new TranslatableComponent("gui.iridynamics.small_crucible.title");
     public static final TextureArea BACKGROUND = TextureArea.createFullTexture(Iridynamics.rl("textures/gui/small_crucible_background.png"));
 
-    private final Inventory inventory;
+    private final InventoryUtil.Inventory inventory;
     private final LiquidContainerCapability container;
     private final HeatCapability heat;
 
     public SmallCrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.SMALL_CRUCIBLE.get(), pos, state);
-        this.inventory = new Inventory();
+        this.inventory = InventoryUtil.predicateInventory(4, 1, (slot, stack) -> SmallCrucibleModule.validateItem(stack));
         this.container = new LiquidContainerCapability(SmallCrucibleModule.CAPACITY);
         this.heat = new HeatCapability(new SolidPhasePortrait(SmallCrucibleModule.HEAT_CAPACITY), SmallCrucibleModule.RESISTANCE);
     }
@@ -52,7 +51,7 @@ public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITick
         }
     }
 
-    public Inventory getInventory() {
+    public InventoryUtil.Inventory getInventory() {
         return this.inventory;
     }
 
@@ -119,32 +118,5 @@ public class SmallCrucibleBlockEntity extends SyncedBlockEntity implements ITick
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
         this.container.deserializeNBT(tag.getCompound("container"));
         this.heat.deserializeNBT(tag.getCompound("heat"));
-    }
-
-    public static class Inventory extends ItemStackHandler {
-        public Inventory() {
-            super(4);
-        }
-
-        public ItemStack take(int slot) {
-            this.validateSlotIndex(slot);
-            ItemStack stack = this.getStackInSlot(slot);
-            this.setStackInSlot(slot, ItemStack.EMPTY);
-            return stack;
-        }
-
-        public ItemStack put(int slot, ItemStack stack) {
-            return this.insertItem(slot, stack, false);
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            return SmallCrucibleModule.validateItem(stack);
-        }
     }
 }
