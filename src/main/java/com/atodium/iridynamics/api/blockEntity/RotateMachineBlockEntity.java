@@ -11,16 +11,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.function.Supplier;
-
 public abstract class RotateMachineBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Machine> {
     protected Machine rotate;
-    protected double inertia, friction;
+    private double inertia, friction;
 
     public RotateMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.rotate = RotateModule.machine(this.direction());
-        this.inertia = 1.0;
+        this.setInertia(1.0);
     }
 
     public abstract Direction direction();
@@ -56,10 +54,12 @@ public abstract class RotateMachineBlockEntity extends SyncedBlockEntity impleme
 
     protected void setInertia(double inertia) {
         this.inertia = inertia;
+        this.rotate.setInertia(inertia);
     }
 
     public void setFriction(double friction) {
         this.friction = friction;
+        this.rotate.setFriction(friction);
     }
 
     @Override
@@ -70,15 +70,5 @@ public abstract class RotateMachineBlockEntity extends SyncedBlockEntity impleme
     @Override
     protected void readSyncData(CompoundTag tag) {
         RotateModule.readSyncTag(this.rotate, tag.getCompound("rotateSync"));
-    }
-
-    @Override
-    protected void saveToTag(CompoundTag tag) {
-
-    }
-
-    @Override
-    protected void loadFromTag(CompoundTag tag) {
-
     }
 }

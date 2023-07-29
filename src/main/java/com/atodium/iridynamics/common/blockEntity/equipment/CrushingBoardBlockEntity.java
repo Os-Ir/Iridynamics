@@ -29,7 +29,7 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
 
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (this.recipeUpdateFlag) {
+        if (!this.level.isClientSide && this.recipeUpdateFlag) {
             this.updateRecipe();
             this.recipeUpdateFlag = false;
         }
@@ -81,7 +81,6 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
         this.markForItemChange();
         return stack;
     }
-
 
     public ItemStack addItem(ItemStack stack) {
         if (this.inventory.getStackInSlot(0).isEmpty()) {

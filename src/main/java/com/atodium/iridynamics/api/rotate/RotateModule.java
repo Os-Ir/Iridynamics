@@ -17,6 +17,7 @@ public class RotateModule {
         SERIALIZERS.register(Iridynamics.rl("escapement"), Escapement.SERIALIZER);
         SERIALIZERS.register(Iridynamics.rl("flywheel"), Flywheel.SERIALIZER);
         SERIALIZERS.register(Iridynamics.rl("handle"), Handle.SERIALIZER);
+        SERIALIZERS.register(Iridynamics.rl("machine"), Machine.SERIALIZER);
     }
 
     public static CompoundTag writeRotateNode(IRotateNode node) {

@@ -1,0 +1,22 @@
+{
+  "type": "iridynamics:centrifuge",
+  "input": {
+    "type": 1,
+    "ingredient": {
+      "shape": "ore_dust"
+    }
+  },
+  "output": {
+    "base": {
+      "item": "iridynamics:material_item/dust"
+    },
+    "decorators": [
+      {
+        "serializer": "iridynamics:material_item",
+        "source": 0
+      }
+    ]
+  },
+  "torque": 200.0,
+  "turns": 20.0
+}

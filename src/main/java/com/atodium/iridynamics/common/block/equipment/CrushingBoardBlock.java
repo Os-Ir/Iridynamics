@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -50,11 +49,10 @@ public class CrushingBoardBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
-        Item item = stack.getItem();
         level.getBlockEntity(pos, ModBlockEntities.CRUSHING_BOARD.get()).ifPresent((board) -> {
             if (board.isEmpty()) player.setItemInHand(hand, board.addItem(stack));
             else {
-                if (result.getDirection() == Direction.UP && item instanceof MaterialToolItem toolItem && toolItem.getToolInfo() == ToolHammer.INSTANCE) {
+                if (result.getDirection() == Direction.UP && stack.getItem() instanceof MaterialToolItem toolItem && toolItem.getToolInfo() == ToolHammer.INSTANCE) {
                     if (board.crush(player)) toolItem.damageItem(stack, ToolHammer.INSTANCE.getInteractionDamage());
                 } else ItemHandlerHelper.giveItemToPlayer(player, board.takeItem());
             }
@@ -65,8 +63,7 @@ public class CrushingBoardBlock extends Block implements EntityBlock {
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-        boolean harvest = state.canHarvestBlock(level, pos, player);
-        if (!player.isCreative() && harvest)
+        if (!player.isCreative() && state.canHarvestBlock(level, pos, player))
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.CRUSHING_BOARD.get()));
         level.getBlockEntity(pos, ModBlockEntities.CRUSHING_BOARD.get()).ifPresent((board) -> ItemHandlerHelper.giveItemToPlayer(player, board.getInventory().getStackInSlot(0)));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);

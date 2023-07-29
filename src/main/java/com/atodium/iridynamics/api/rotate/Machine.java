@@ -75,6 +75,10 @@ public class Machine implements IRotateNode {
         return 300.0;
     }
 
+    public double tickAngleChange() {
+        return Math.abs(this.angularVelocity / 20.0);
+    }
+
     public void setInertia(double inertia) {
         this.inertia = inertia;
     }

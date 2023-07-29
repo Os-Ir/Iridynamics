@@ -18,7 +18,7 @@ public record CentrifugeRecipe(ResourceLocation id, IngredientIndex input, Outpu
 
     @Override
     public boolean matches(ItemStackContainer inventory, Level level) {
-        return this.input.testEqual(inventory.getItem());
+        return this.input.test(inventory.getItem());
     }
 
     @Override
@@ -49,7 +49,8 @@ public record CentrifugeRecipe(ResourceLocation id, IngredientIndex input, Outpu
     public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, CentrifugeRecipe> {
         @Override
         public CentrifugeRecipe fromJson(ResourceLocation id, JsonObject json) {
-            return new CentrifugeRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("torque").getAsDouble(), json.get("angle").getAsDouble());
+            System.out.println(new CentrifugeRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("torque").getAsDouble(), json.has("angle") ? json.get("angle").getAsDouble() : json.get("turns").getAsDouble()));
+            return new CentrifugeRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("torque").getAsDouble(), json.has("angle") ? json.get("angle").getAsDouble() : json.get("turns").getAsDouble());
         }
 
         @Override
