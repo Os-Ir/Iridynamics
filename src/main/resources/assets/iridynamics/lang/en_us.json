@@ -40,7 +40,9 @@
   "block.iridynamics.escapement": "Escapement",
   "block.iridynamics.flywheel": "Flywheel",
   "block.iridynamics.handle": "Handle",
+  "block.iridynamics.clockwork": "Clockwork",
   "block.iridynamics.centrifuge": "Centrifuge",
+  "block.iridynamics.grinder": "Grinder",
 
   "item.iridynamics.wood_brick": "Wood Brick",
   "item.iridynamics.crushed_stone": "Crushed Stone",

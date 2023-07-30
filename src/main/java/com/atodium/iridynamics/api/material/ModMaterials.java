@@ -152,7 +152,6 @@ public class ModMaterials {
 
 
     public static void register() {
-//        MaterialBase.GENERATE_ORE.setFlagForMaterial(IRON, COBALT, NICKEL, COPPER, ZINC, SILVER, TIN, ANTIMONY, GOLD, LEAD, BISMUTH, NETHERITE);
         MaterialBase.GENERATE_ORE.setFlagForMaterial(GOLD, SILVER, NETHERITE);
         MaterialBase.GENERATE_TOOL.setFlagForMaterial(IRON, COPPER, WROUGHT_IRON, PIG_IRON, STEEL, BRONZE, BLACK_BRONZE, BISMUTH_BRONZE, FLINT, STONE);
         MaterialBase.GENERATE_ROD.setFlagForMaterial(WOOD);

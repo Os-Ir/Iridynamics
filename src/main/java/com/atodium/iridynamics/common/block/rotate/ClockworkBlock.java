@@ -2,9 +2,10 @@ package com.atodium.iridynamics.common.block.rotate;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.rotate.RotateModule;
+import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
-import com.atodium.iridynamics.common.blockEntity.rotate.CentrifugeBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.rotate.ClockworkBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -28,39 +29,39 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class CentrifugeBlock extends Block implements EntityBlock {
-    public static final DirectionProperty DIRECTION = BlockStateProperties.HORIZONTAL_FACING;
+public class ClockworkBlock extends Block implements EntityBlock {
+    public static final DirectionProperty DIRECTION = BlockStateProperties.FACING;
 
-    public CentrifugeBlock(BlockBehaviour.Properties properties) {
+    public ClockworkBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(DIRECTION, Direction.NORTH));
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return type == ModBlockEntities.CENTRIFUGE.get() ? ITickable.ticker() : null;
+        return type == ModBlockEntities.CLOCKWORK.get() ? ITickable.ticker() : null;
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
-        ItemStack stack = player.getItemInHand(hand);
-        level.getBlockEntity(pos, ModBlockEntities.CENTRIFUGE.get()).ifPresent((centrifuge) -> {
-            if (centrifuge.isEmpty()) player.setItemInHand(hand, centrifuge.addItem(stack));
-            else ItemHandlerHelper.giveItemToPlayer(player, centrifuge.takeItem());
-        });
+        if (result.getDirection() == state.getValue(DIRECTION).getOpposite()) {
+            Vec3 location = MathUtil.transformPosition(MathUtil.minus(result.getLocation(), pos), Direction.NORTH, state.getValue(DIRECTION));
+            boolean isLeft = location.x <= 0.5;
+            level.getBlockEntity(pos, ModBlockEntities.CLOCKWORK.get()).ifPresent((clockwork) -> clockwork.handle(isLeft));
+        }
         return InteractionResult.CONSUME;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(DIRECTION, context.getHorizontalDirection().getOpposite());
+        return this.defaultBlockState().setValue(DIRECTION, context.getHorizontalDirection());
     }
 
     @Override
@@ -84,7 +85,7 @@ public class CentrifugeBlock extends Block implements EntityBlock {
     @Override
     @SuppressWarnings("deprecation")
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
-        level.getBlockEntity(pos, ModBlockEntities.CENTRIFUGE.get()).ifPresent((centrifuge) -> centrifuge.setupRotate(level));
+        level.getBlockEntity(pos, ModBlockEntities.CLOCKWORK.get()).ifPresent((clockwork) -> clockwork.setupRotate(level));
     }
 
     @Override
@@ -92,15 +93,13 @@ public class CentrifugeBlock extends Block implements EntityBlock {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         RotateModule.removeRotateBlock((ServerLevel) level, pos);
         if (!player.isCreative() && state.canHarvestBlock(level, pos, player))
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.CENTRIFUGE.get()));
-        level.getBlockEntity(pos, ModBlockEntities.CENTRIFUGE.get()).ifPresent((centrifuge) -> ItemHandlerHelper.giveItemToPlayer(player, centrifuge.getInventory().getStackInSlot(0)));
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.CLOCKWORK.get()));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
-    @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CentrifugeBlockEntity(pos, state);
+        return new ClockworkBlockEntity(pos, state);
     }
 
     @Override

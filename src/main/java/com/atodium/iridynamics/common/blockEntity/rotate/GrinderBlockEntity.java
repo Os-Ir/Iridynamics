@@ -7,7 +7,7 @@ import com.atodium.iridynamics.api.item.ItemUtil;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
-import com.atodium.iridynamics.api.recipe.impl.CentrifugeRecipe;
+import com.atodium.iridynamics.api.recipe.impl.GrinderRecipe;
 import com.atodium.iridynamics.common.block.rotate.CentrifugeBlock;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -17,15 +17,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CentrifugeBlockEntity extends RotateMachineBlockEntity implements ITickable {
-    public static final double INERTIA = 30.0, FRICTION = 1.0;
+public class GrinderBlockEntity extends RotateMachineBlockEntity implements ITickable {
+    public static final double INERTIA = 15.0, FRICTION = 2.0;
 
     private boolean recipeUpdateFlag;
     private final InventoryUtil.Inventory inventory;
-    private CentrifugeRecipe recipe;
+    private GrinderRecipe recipe;
     private double progress;
 
-    public CentrifugeBlockEntity(BlockPos pos, BlockState state) {
+    public GrinderBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CENTRIFUGE.get(), pos, state);
         this.inventory = InventoryUtil.inventory(1);
         this.setInertia(INERTIA);
@@ -68,7 +68,7 @@ public class CentrifugeBlockEntity extends RotateMachineBlockEntity implements I
     }
 
     public void updateRecipe() {
-        this.recipe = RecipeUtil.getRecipe(this.level, ModRecipeTypes.CENTRIFUGE.get(), RecipeUtil.container(this.inventory.getStackInSlot(0)));
+        this.recipe = RecipeUtil.getRecipe(this.level, ModRecipeTypes.GRINDER.get(), RecipeUtil.container(this.inventory.getStackInSlot(0)));
         if (this.recipe == null) {
             this.progress = 0.0;
             this.setFriction(FRICTION);

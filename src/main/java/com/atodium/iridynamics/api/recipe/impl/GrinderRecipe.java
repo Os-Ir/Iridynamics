@@ -10,8 +10,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-public record CentrifugeRecipe(ResourceLocation id, IngredientIndex input, OutputProvider output, double torque,
-                               double angle) implements ISpecialRecipe<ItemStackContainer> {
+public record GrinderRecipe(ResourceLocation id, IngredientIndex input, OutputProvider output, double torque,
+                            double angle) implements ISpecialRecipe<ItemStackContainer> {
     public void consume(ItemStackContainer container) {
         this.input.consume(container.getItem());
     }
@@ -37,28 +37,28 @@ public record CentrifugeRecipe(ResourceLocation id, IngredientIndex input, Outpu
     }
 
     @Override
-    public RecipeSerializer<CentrifugeRecipe> getSerializer() {
-        return ModRecipeSerializers.CENTRIFUGE.get();
+    public RecipeSerializer<GrinderRecipe> getSerializer() {
+        return ModRecipeSerializers.GRINDER.get();
     }
 
     @Override
-    public RecipeType<CentrifugeRecipe> getType() {
-        return ModRecipeTypes.CENTRIFUGE.get();
+    public RecipeType<GrinderRecipe> getType() {
+        return ModRecipeTypes.GRINDER.get();
     }
 
-    public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, CentrifugeRecipe> {
+    public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, GrinderRecipe> {
         @Override
-        public CentrifugeRecipe fromJson(ResourceLocation id, JsonObject json) {
-            return new CentrifugeRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("torque").getAsDouble(), json.has("angle") ? json.get("angle").getAsDouble() : json.get("turns").getAsDouble());
+        public GrinderRecipe fromJson(ResourceLocation id, JsonObject json) {
+            return new GrinderRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("torque").getAsDouble(), json.has("angle") ? json.get("angle").getAsDouble() : json.get("turns").getAsDouble());
         }
 
         @Override
-        public CentrifugeRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-            return new CentrifugeRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readDouble(), buf.readDouble());
+        public GrinderRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+            return new GrinderRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readDouble(), buf.readDouble());
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buf, CentrifugeRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf, GrinderRecipe recipe) {
             recipe.input.toNetwork(buf);
             recipe.output.toNetwork(buf);
             buf.writeDouble(recipe.torque);

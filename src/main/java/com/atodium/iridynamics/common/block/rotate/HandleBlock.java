@@ -61,8 +61,7 @@ public class HandleBlock extends Block implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        System.out.println(context.getHorizontalDirection());
-        return defaultBlockState().setValue(DIRECTION, context.getHorizontalDirection());
+        return this.defaultBlockState().setValue(DIRECTION, context.getHorizontalDirection());
     }
 
     @Override
@@ -93,8 +92,7 @@ public class HandleBlock extends Block implements EntityBlock {
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         RotateModule.removeRotateBlock((ServerLevel) level, pos);
-        boolean harvest = state.canHarvestBlock(level, pos, player);
-        if (!player.isCreative() && harvest)
+        if (!player.isCreative() && state.canHarvestBlock(level, pos, player))
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.HANDLE.get()));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }

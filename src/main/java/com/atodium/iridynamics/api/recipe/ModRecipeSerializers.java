@@ -15,6 +15,7 @@ public class ModRecipeSerializers {
     public static final RegistryObject<RecipeSerializer<CrushingRecipe>> CRUSHING = Iridynamics.REGISTRY.recipeSerializer("crushing", CrushingRecipe.Serializer::new).register();
     public static final RegistryObject<RecipeSerializer<PotteryRecipe>> POTTERY = Iridynamics.REGISTRY.recipeSerializer("pottery", PotteryRecipe.Serializer::new).register();
     public static final RegistryObject<RecipeSerializer<CentrifugeRecipe>> CENTRIFUGE = Iridynamics.REGISTRY.recipeSerializer("centrifuge", CentrifugeRecipe.Serializer::new).register();
+    public static final RegistryObject<RecipeSerializer<GrinderRecipe>> GRINDER = Iridynamics.REGISTRY.recipeSerializer("grinder", GrinderRecipe.Serializer::new).register();
 
     public static void init() {
 

@@ -18,6 +18,7 @@ public class RotateModule {
         SERIALIZERS.register(Iridynamics.rl("flywheel"), Flywheel.SERIALIZER);
         SERIALIZERS.register(Iridynamics.rl("handle"), Handle.SERIALIZER);
         SERIALIZERS.register(Iridynamics.rl("machine"), Machine.SERIALIZER);
+        SERIALIZERS.register(Iridynamics.rl("clockwork"), Clockwork.SERIALIZER);
     }
 
     public static CompoundTag writeRotateNode(IRotateNode node) {
@@ -79,6 +80,10 @@ public class RotateModule {
 
     public static Handle handle(Direction direction) {
         return new Handle(direction);
+    }
+
+    public static Clockwork clockwork(Direction direction) {
+        return new Clockwork(direction);
     }
 
     public static Machine machine(Direction direction) {

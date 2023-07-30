@@ -5,6 +5,7 @@ import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.rotate.CentrifugeBlockEntity;
+import com.atodium.iridynamics.common.blockEntity.rotate.GrinderBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -33,17 +34,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class CentrifugeBlock extends Block implements EntityBlock {
+public class GrinderBlock extends Block implements EntityBlock {
     public static final DirectionProperty DIRECTION = BlockStateProperties.HORIZONTAL_FACING;
 
-    public CentrifugeBlock(BlockBehaviour.Properties properties) {
+    public GrinderBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(DIRECTION, Direction.NORTH));
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return type == ModBlockEntities.CENTRIFUGE.get() ? ITickable.ticker() : null;
+        return type == ModBlockEntities.GRINDER.get() ? ITickable.ticker() : null;
     }
 
     @Override
@@ -51,9 +52,9 @@ public class CentrifugeBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         ItemStack stack = player.getItemInHand(hand);
-        level.getBlockEntity(pos, ModBlockEntities.CENTRIFUGE.get()).ifPresent((centrifuge) -> {
-            if (centrifuge.isEmpty()) player.setItemInHand(hand, centrifuge.addItem(stack));
-            else ItemHandlerHelper.giveItemToPlayer(player, centrifuge.takeItem());
+        level.getBlockEntity(pos, ModBlockEntities.GRINDER.get()).ifPresent((grinder) -> {
+            if (grinder.isEmpty()) player.setItemInHand(hand, grinder.addItem(stack));
+            else ItemHandlerHelper.giveItemToPlayer(player, grinder.takeItem());
         });
         return InteractionResult.CONSUME;
     }
@@ -84,7 +85,7 @@ public class CentrifugeBlock extends Block implements EntityBlock {
     @Override
     @SuppressWarnings("deprecation")
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
-        level.getBlockEntity(pos, ModBlockEntities.CENTRIFUGE.get()).ifPresent((centrifuge) -> centrifuge.setupRotate(level));
+        level.getBlockEntity(pos, ModBlockEntities.GRINDER.get()).ifPresent((grinder) -> grinder.setupRotate(level));
     }
 
     @Override
@@ -92,15 +93,15 @@ public class CentrifugeBlock extends Block implements EntityBlock {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         RotateModule.removeRotateBlock((ServerLevel) level, pos);
         if (!player.isCreative() && state.canHarvestBlock(level, pos, player))
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.CENTRIFUGE.get()));
-        level.getBlockEntity(pos, ModBlockEntities.CENTRIFUGE.get()).ifPresent((centrifuge) -> ItemHandlerHelper.giveItemToPlayer(player, centrifuge.getInventory().getStackInSlot(0)));
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.GRINDER.get()));
+        level.getBlockEntity(pos, ModBlockEntities.GRINDER.get()).ifPresent((grinder) -> ItemHandlerHelper.giveItemToPlayer(player, grinder.getInventory().getStackInSlot(0)));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CentrifugeBlockEntity(pos, state);
+        return new GrinderBlockEntity(pos, state);
     }
 
     @Override
