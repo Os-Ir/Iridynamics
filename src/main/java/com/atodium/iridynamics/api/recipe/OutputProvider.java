@@ -48,7 +48,7 @@ public class OutputProvider {
 
     public ItemStack apply(ItemStack... input) {
         ItemStack output = this.base.copy();
-        for (OutputDecorator decorator : this.decorators) decorator.apply(output, input);
+        for (OutputDecorator decorator : this.decorators) output = decorator.apply(output, input);
         return output;
     }
 

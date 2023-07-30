@@ -2,6 +2,8 @@ package com.atodium.iridynamics.common.blockEntity.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
+import com.atodium.iridynamics.api.capability.HeatCapability;
+import com.atodium.iridynamics.api.heat.IHeat;
 import com.atodium.iridynamics.api.item.InventoryUtil;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITickable {
@@ -51,7 +54,7 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
     }
 
     public boolean crush(Player player) {
-        if (this.recipe == null) return false;
+        if (this.recipe == null || this.recipe.temperature() > this.getContentTemperature()) return false;
         if (this.progress == this.recipe.count() - 1) {
             this.progress = 0;
             ItemStackContainer container = RecipeUtil.container(this.inventory.getStackInSlot(0));
@@ -65,6 +68,11 @@ public class CrushingBoardBlockEntity extends SyncedBlockEntity implements ITick
             this.markDirty();
         }
         return true;
+    }
+
+    public double getContentTemperature() {
+        LazyOptional<IHeat> optional = this.inventory.getStackInSlot(0).getCapability(HeatCapability.HEAT);
+        return optional.isPresent() ? optional.orElseThrow(NullPointerException::new).getTemperature() : 0.0;
     }
 
     public boolean isEmpty() {

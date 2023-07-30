@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public record CrushingRecipe(ResourceLocation id, IngredientIndex input, OutputProvider output,
-                             int count) implements ISpecialRecipe<ItemStackContainer> {
+                             int count, double temperature) implements ISpecialRecipe<ItemStackContainer> {
     public void consume(ItemStackContainer container) {
         this.input.consume(container.getItem());
     }
@@ -49,12 +49,12 @@ public record CrushingRecipe(ResourceLocation id, IngredientIndex input, OutputP
     public static class Serializer extends RecipeSerializerImpl<ItemStackContainer, CrushingRecipe> {
         @Override
         public CrushingRecipe fromJson(ResourceLocation id, JsonObject json) {
-            return new CrushingRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("count").getAsInt());
+            return new CrushingRecipe(id, IngredientIndex.fromJson(json.getAsJsonObject("input")), OutputProvider.fromJson(json.getAsJsonObject("output")), json.get("count").getAsInt(), json.has("temperature") ? json.get("temperature").getAsDouble() : -1.0);
         }
 
         @Override
         public CrushingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-            return new CrushingRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readInt());
+            return new CrushingRecipe(id, IngredientIndex.fromNetwork(buf), OutputProvider.fromNetwork(buf), buf.readInt(), buf.readDouble());
         }
 
         @Override
@@ -62,6 +62,7 @@ public record CrushingRecipe(ResourceLocation id, IngredientIndex input, OutputP
             recipe.input.toNetwork(buf);
             recipe.output.toNetwork(buf);
             buf.writeInt(recipe.count);
+            buf.writeDouble(recipe.temperature);
         }
     }
 }

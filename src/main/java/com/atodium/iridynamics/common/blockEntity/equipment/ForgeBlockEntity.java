@@ -30,14 +30,13 @@ public class ForgeBlockEntity extends SyncedBlockEntity implements ITickable {
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide) {
-            HeatModule.blockHeatExchange(level, pos, state, this, false);
-            this.inventory.left().getCapability(HeatCapability.HEAT).ifPresent((item) -> HeatModule.heatExchange(this.heat, item, RESISTANCE_ITEM));
-            this.inventory.right().getCapability(HeatCapability.HEAT).ifPresent((item) -> HeatModule.heatExchange(this.heat, item, RESISTANCE_ITEM));
-            HeatProcessModule.updateHeatProcess(this.inventory);
-            this.markDirty();
-            this.sendSyncPacket();
-        }
+        if (level.isClientSide) return;
+        HeatModule.blockHeatExchange(level, pos, state, this, false);
+        this.inventory.left().getCapability(HeatCapability.HEAT).ifPresent((item) -> HeatModule.heatExchange(this.heat, item, RESISTANCE_ITEM));
+        this.inventory.right().getCapability(HeatCapability.HEAT).ifPresent((item) -> HeatModule.heatExchange(this.heat, item, RESISTANCE_ITEM));
+        HeatProcessModule.updateHeatProcess(this.inventory);
+        this.markDirty();
+        this.sendSyncPacket();
     }
 
     public double getTemperature() {
@@ -50,9 +49,7 @@ public class ForgeBlockEntity extends SyncedBlockEntity implements ITickable {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction direction) {
-        if (capability == HeatCapability.HEAT) {
-            return LazyOptional.of(() -> this.heat).cast();
-        }
+        if (capability == HeatCapability.HEAT) return LazyOptional.of(() -> this.heat).cast();
         return super.getCapability(capability, direction);
     }
 

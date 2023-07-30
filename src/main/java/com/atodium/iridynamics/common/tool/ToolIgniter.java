@@ -3,9 +3,9 @@ package com.atodium.iridynamics.common.tool;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.capability.HeatCapability;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.IHeat;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
-import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.tool.IToolUsable;
 import com.atodium.iridynamics.api.tool.ToolHarvestDisable;
 import com.atodium.iridynamics.api.tool.ToolItem;
@@ -29,12 +29,15 @@ public class ToolIgniter extends ToolHarvestDisable implements IToolUsable {
     public static final ResourceLocation REGISTRY_NAME = new ResourceLocation(Iridynamics.MODID, "igniter");
     public static final ToolIgniter INSTANCE = new ToolIgniter();
 
-    public static void igniteBlock(ItemStack igniter, IIgnitable ignitable, Direction direction) {
+    public static boolean igniteBlock(ItemStack igniter, IIgnitable ignitable, Direction direction) {
         IHeat heat = igniter.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new);
         if (ignitable.ignite(direction, heat.getTemperature())) {
             heat.increaseEnergy(-160000.0);
-            if (heat.getTemperature() < HeatModule.AMBIENT_TEMPERATURE) heat.setTemperature(HeatModule.AMBIENT_TEMPERATURE);
+            if (heat.getTemperature() < HeatModule.AMBIENT_TEMPERATURE)
+                heat.setTemperature(HeatModule.AMBIENT_TEMPERATURE);
+            return true;
         }
+        return false;
     }
 
     @Override

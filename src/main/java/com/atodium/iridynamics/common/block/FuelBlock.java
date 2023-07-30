@@ -50,9 +50,7 @@ public class FuelBlock extends Block implements EntityBlock {
     @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
-        if (direction == Direction.DOWN) {
-            level.scheduleTick(currentPos, this, 1);
-        }
+        if (direction == Direction.DOWN) level.scheduleTick(currentPos, this, 1);
         return state;
     }
 
@@ -60,7 +58,6 @@ public class FuelBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
         FuelBlockEntity fuel = (FuelBlockEntity) level.getBlockEntity(pos);
-        assert fuel != null;
         fuel.markUpdate();
     }
 
@@ -80,13 +77,8 @@ public class FuelBlock extends Block implements EntityBlock {
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-        boolean harvest = state.canHarvestBlock(level, pos, player);
-        if (!player.isCreative() && harvest) {
-            level.getBlockEntity(pos, ModBlockEntities.FUEL.get()).ifPresent((fuel) -> {
-                int remain = (int) fuel.getRemainItems();
-                ItemHandlerHelper.giveItemToPlayer(player, fuel.getFuelItem().createStack(remain));
-            });
-        }
+        if (!player.isCreative() && state.canHarvestBlock(level, pos, player))
+            level.getBlockEntity(pos, ModBlockEntities.FUEL.get()).ifPresent((fuel) -> ItemHandlerHelper.giveItemToPlayer(player, fuel.getFuelItem().createStack((int) fuel.getRemainItems())));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 

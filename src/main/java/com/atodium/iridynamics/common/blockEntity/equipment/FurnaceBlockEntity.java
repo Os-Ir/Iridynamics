@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.common.blockEntity;
+package com.atodium.iridynamics.common.blockEntity.equipment;
 
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
 import com.atodium.iridynamics.api.blockEntity.ITickable;
@@ -7,40 +7,43 @@ import com.atodium.iridynamics.api.capability.HeatCapability;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
+import com.atodium.iridynamics.api.item.InventoryUtil;
 import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
 import com.atodium.iridynamics.api.util.math.MathUtil;
-import com.atodium.iridynamics.common.block.FuelBlock;
 import com.atodium.iridynamics.common.block.ModBlocks;
+import com.atodium.iridynamics.common.block.equipment.FurnaceBlock;
+import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIgnitable {
-    public static final double POWER = 80000.0;
-    public static final double MAX_FUEL_ITEMS = 16.0;
-    public static final int MAX_BLOW_VOLUME = 4000;
+public class FurnaceBlockEntity extends SyncedBlockEntity implements ITickable, IIgnitable {
+    public static final int MAX_FUEL_ITEMS = 64;
+    public static final int MAX_BLOW_VOLUME = 6000;
+    public static final double CAPACITY = 450000.0;
+    public static final double POWER = 240000.0;
+    public static final double[] RESISTANCE = new double[]{0.1, 0.01, 0.1, 0.1, 0.1, 0.1};
 
     private ItemDelegate fuelItem;
     private FuelInfo fuelInfo;
-    private boolean updateFlag, ignite;
+    private boolean ignite;
     private double remainItems, starterTemperature, starterFlashPoint;
     private int blowVolume;
-    private SolidPhasePortrait portrait;
-    private HeatCapability heat;
+    private final HeatCapability heat;
+    private final InventoryUtil.Inventory inventory;
 
-    public FuelBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.FUEL.get(), pos, state);
-        this.portrait = new SolidPhasePortrait(0.0);
-        this.heat = new HeatCapability(this.portrait);
+    public FurnaceBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.FURNACE.get(), pos, state);
+        this.heat = new HeatCapability(new SolidPhasePortrait(CAPACITY), RESISTANCE);
+        this.inventory = InventoryUtil.inventory(1);
     }
 
     public static boolean isIgniteStarter(ItemStack stack) {
@@ -59,9 +62,9 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         return 0.0;
     }
 
+    @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
-        if (this.updateFlag) this.updateFuelCondition();
         HeatModule.blockHeatExchange(level, pos, state, this, false);
         if (this.ignite) {
             double remainEnergy = this.remainItems * this.fuelInfo.calorificValue();
@@ -80,17 +83,11 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         this.markDirty();
     }
 
-    public void setup(ItemDelegate fuelItem, double capacity, double resistance, double temperature, double remainItems) {
-        if (this.level != null && !this.level.isClientSide) {
-            this.ignite = false;
-            this.fuelItem = fuelItem;
-            this.fuelInfo = FuelInfo.ITEM_FUEL.get(fuelItem);
-            this.portrait.setCapacity(capacity);
-            this.remainItems = remainItems;
-            this.heat.updateResistance(new double[]{resistance, resistance, resistance, resistance, resistance, resistance});
-            this.heat.setTemperature(temperature);
-            this.markDirty();
-        }
+    public void updateBlockState() {
+        this.level.getBlockEntity(this.getBlockPos(), ModBlockEntities.FURNACE.get()).ifPresent((furnace) -> {
+            this.level.setBlockAndUpdate(this.getBlockPos(), ModBlocks.FURNACE.get().defaultBlockState().setValue(FurnaceBlock.DIRECTION, furnace.getBlockState().getValue(FurnaceBlock.DIRECTION)).setValue(FurnaceBlock.IGNITE, furnace.ignite));
+            this.level.setBlockEntity(furnace);
+        });
     }
 
     public boolean addIgniteStarter(ItemStack stack) {
@@ -107,7 +104,11 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
     }
 
     public boolean addFuel(ItemStack stack) {
-        if (!this.fuelItem.is(stack) || this.remainItems + 1.0 > MAX_FUEL_ITEMS) return false;
+        if (this.fuelItem == null) {
+            if (!FuelInfo.containsItemInfo(stack)) return false;
+            this.fuelItem = ItemDelegate.of(stack);
+            this.fuelInfo = FuelInfo.getFuelInfoForItem(this.fuelItem);
+        } else if (!this.fuelItem.is(stack) || this.remainItems + 1.0 > MAX_FUEL_ITEMS) return false;
         this.remainItems++;
         stack.shrink(1);
         return true;
@@ -133,27 +134,6 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         return this.fuelInfo.maxTemperature() + this.blowVolume * 0.1;
     }
 
-    public void markUpdate() {
-        this.updateFlag = true;
-    }
-
-    public void updateFuelCondition() {
-        this.updateFlag = false;
-        BlockPos posBelow = this.getBlockPos().below();
-        BlockState stateBelow = this.level.getBlockState(posBelow);
-        if (stateBelow.isAir()) {
-            this.level.setBlock(posBelow, ModBlocks.FUEL.get().defaultBlockState().setValue(FuelBlock.IGNITE, this.ignite), Block.UPDATE_ALL);
-            FuelBlockEntity fuelBelow = (FuelBlockEntity) this.level.getBlockEntity(posBelow);
-            fuelBelow.fuelItem = this.fuelItem;
-            fuelBelow.fuelInfo = this.fuelInfo;
-            fuelBelow.ignite = this.ignite;
-            fuelBelow.portrait = this.portrait;
-            fuelBelow.heat = this.heat;
-            fuelBelow.markUpdate();
-            this.level.removeBlock(this.getBlockPos(), false);
-        }
-    }
-
     @Override
     public boolean ignite(Direction direction, double temperature) {
         if (!this.ignite && this.remainItems > 0.0 && (temperature >= this.fuelInfo.flashPoint() || (temperature >= this.starterFlashPoint && this.starterTemperature >= this.fuelInfo.flashPoint()))) {
@@ -171,13 +151,6 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
         System.out.println("Max temp:  " + this.getMaxTemperature());
     }
 
-    public void updateBlockState() {
-        this.level.getBlockEntity(this.getBlockPos(), ModBlockEntities.FUEL.get()).ifPresent((fuel) -> {
-            this.level.setBlockAndUpdate(this.getBlockPos(), ModBlocks.FUEL.get().defaultBlockState().setValue(FuelBlock.IGNITE, fuel.ignite));
-            this.level.setBlockEntity(fuel);
-        });
-    }
-
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction direction) {
         if (capability == HeatCapability.HEAT) return LazyOptional.of(() -> this.heat).cast();
@@ -186,43 +159,34 @@ public class FuelBlockEntity extends SyncedBlockEntity implements ITickable, IIg
 
     @Override
     protected void writeSyncData(CompoundTag tag) {
-        tag.putString("fuelItem", this.fuelItem.toString());
-        tag.putBoolean("ignite", this.ignite);
-        tag.putDouble("remainItems", this.remainItems);
-        tag.putInt("blowVolume", this.blowVolume);
-        tag.putDouble("capacity", this.portrait.getCapacity());
-        tag.put("heat", this.heat.serializeNBT());
+
     }
 
     @Override
     protected void readSyncData(CompoundTag tag) {
-        this.fuelItem = ItemDelegate.of(tag.getString("fuelItem"));
-        this.fuelInfo = FuelInfo.getFuelInfoForItem(this.fuelItem);
-        this.ignite = tag.getBoolean("ignite");
-        this.remainItems = tag.getDouble("remainItems");
-        this.blowVolume = tag.getInt("blowVolume");
-        this.portrait.setCapacity(tag.getDouble("capacity"));
-        this.heat.deserializeNBT(tag.getCompound("heat"));
+
     }
 
     @Override
     protected void saveToTag(CompoundTag tag) {
-        tag.putString("fuelItem", this.fuelItem.toString());
+        tag.put("heat", this.heat.serializeNBT());
+        tag.put("inventory", this.inventory.serializeNBT());
+        if (this.fuelItem != null) tag.putString("fuelItem", this.fuelItem.toString());
         tag.putBoolean("ignite", this.ignite);
         tag.putDouble("remainItems", this.remainItems);
         tag.putInt("blowVolume", this.blowVolume);
-        tag.putDouble("capacity", this.portrait.getCapacity());
-        tag.put("heat", this.heat.serializeNBT());
     }
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
-        this.fuelItem = ItemDelegate.of(tag.getString("fuelItem"));
-        this.fuelInfo = FuelInfo.getFuelInfoForItem(this.fuelItem);
+        this.heat.deserializeNBT(tag.getCompound("heat"));
+        this.inventory.deserializeNBT(tag.getCompound("inventory"));
+        if (tag.contains("fuelItem")) {
+            this.fuelItem = ItemDelegate.of(tag.getString("fuelItem"));
+            this.fuelInfo = FuelInfo.getFuelInfoForItem(this.fuelItem);
+        }
         this.ignite = tag.getBoolean("ignite");
         this.remainItems = tag.getDouble("remainItems");
         this.blowVolume = tag.getInt("blowVolume");
-        this.portrait.setCapacity(tag.getDouble("capacity"));
-        this.heat.deserializeNBT(tag.getCompound("heat"));
     }
 }

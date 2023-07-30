@@ -205,7 +205,7 @@ public class ForgeEventHandler {
         BlockState state = level.getBlockState(pos);
         BlockEntity entity = level.getBlockEntity(pos);
         ItemStack stack = player.getItemInHand(event.getHand());
-        if (entity instanceof IIgnitable ignitable && stack.getItem() == ModItems.IGNITER.get())
-            ToolIgniter.igniteBlock(stack, ignitable, direction);
+        if (entity instanceof IIgnitable ignitable && stack.getItem() == ModItems.IGNITER.get() && ToolIgniter.igniteBlock(stack, ignitable, direction))
+            event.setCanceled(true);
     }
 }

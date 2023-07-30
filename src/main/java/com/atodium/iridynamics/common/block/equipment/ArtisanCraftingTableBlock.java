@@ -53,8 +53,7 @@ public class ArtisanCraftingTableBlock extends Block implements EntityBlock {
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-        boolean harvest = state.canHarvestBlock(level, pos, player);
-        if (!player.isCreative() && harvest)
+        if (!player.isCreative() && state.canHarvestBlock(level, pos, player))
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.ARTISAN_CRAFTING_TABLE.get()));
         level.getBlockEntity(pos, ModBlockEntities.ARTISAN_CRAFTING_TABLE.get()).ifPresent((table) -> {
             for (int i = 0; i <= 29; i++)

@@ -64,8 +64,7 @@ public class BlowerBlock extends Block implements EntityBlock {
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (level.isClientSide) return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-        boolean harvest = state.canHarvestBlock(level, pos, player);
-        if (!player.isCreative() && harvest)
+        if (!player.isCreative() && state.canHarvestBlock(level, pos, player))
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.BLOWER.get()));
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }

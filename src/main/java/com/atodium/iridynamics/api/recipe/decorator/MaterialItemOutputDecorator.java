@@ -18,7 +18,7 @@ public class MaterialItemOutputDecorator implements OutputDecorator {
     @Override
     public ItemStack apply(ItemStack stack, ItemStack[] input) {
         if (MaterialItem.isMaterialItem(stack) && MaterialEntry.containsMaterialEntry(input[this.source]))
-            MaterialItem.setItemMaterial(stack, MaterialEntry.getItemMaterialEntry(input[this.source]).material());
+            return MaterialEntry.getMaterialItemStack(MaterialItem.getItemShape(stack), MaterialEntry.getItemMaterialEntry(input[this.source]).material(), stack.getCount());
         return stack;
     }
 

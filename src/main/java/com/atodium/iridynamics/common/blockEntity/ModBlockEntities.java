@@ -29,6 +29,7 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<CrushingBoardBlockEntity>> CRUSHING_BOARD = Iridynamics.REGISTRY.blockEntity("crushing_board", () -> BlockEntityType.Builder.of(CrushingBoardBlockEntity::new, ModBlocks.CRUSHING_BOARD.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<PotteryWorkTableBlockEntity>> POTTERY_WORK_TABLE = Iridynamics.REGISTRY.blockEntity("pottery_work_table", () -> BlockEntityType.Builder.of(PotteryWorkTableBlockEntity::new, ModBlocks.POTTERY_WORK_TABLE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<ResearchTableBlockEntity>> RESEARCH_TABLE = Iridynamics.REGISTRY.blockEntity("research_table", () -> BlockEntityType.Builder.of(ResearchTableBlockEntity::new, ModBlocks.RESEARCH_TABLE.get()).build(null)).register();
+    public static final RegistryObject<BlockEntityType<FurnaceBlockEntity>> FURNACE = Iridynamics.REGISTRY.blockEntity("furnace", () -> BlockEntityType.Builder.of(FurnaceBlockEntity::new, ModBlocks.FURNACE.get()).build(null)).register();
 
     public static final RegistryObject<BlockEntityType<AxleBlockEntity>> AXLE = Iridynamics.REGISTRY.blockEntity("axle", () -> BlockEntityType.Builder.of(AxleBlockEntity::new, ModBlocks.AXLE.get()).build(null)).register();
     public static final RegistryObject<BlockEntityType<GearboxBlockEntity>> GEARBOX = Iridynamics.REGISTRY.blockEntity("gearbox", () -> BlockEntityType.Builder.of(GearboxBlockEntity::new, ModBlocks.GEARBOX.get()).build(null)).register();
