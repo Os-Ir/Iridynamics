@@ -14,8 +14,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PlacedStoneBlockEntity extends SyncedBlockEntity {
-    public static final MaterialBase[] RESULT = new MaterialBase[]{ModMaterials.STONE, ModMaterials.FLINT, ModMaterials.COPPER, ModMaterials.IRON, ModMaterials.TIN, ModMaterials.LEAD, ModMaterials.BISMUTH, ModMaterials.ZINC, ModMaterials.ANTIMONY};
-    public static final double[] WEIGHTS = new double[]{2.0, 4.0, 1.0, 1.0, 0.5, 0.3, 0.3, 0.3, 0.3};
+    public static final MaterialBase[] RESULT = new MaterialBase[]{ModMaterials.STONE, ModMaterials.FLINT, ModMaterials.CHALCOPYRITE, ModMaterials.HEMATITE, ModMaterials.CASSITERITE, ModMaterials.GALENA,  ModMaterials.SPHALERITE, ModMaterials.ANTIMONITE};
+    public static final double[] WEIGHTS = new double[]{2.0, 4.0, 1.0, 1.0, 0.5, 0.3, 0.3, 0.3};
 
     private MaterialBase material;
 

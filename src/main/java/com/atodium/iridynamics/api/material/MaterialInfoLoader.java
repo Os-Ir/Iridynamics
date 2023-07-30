@@ -61,10 +61,11 @@ public class MaterialInfoLoader extends SimpleJsonLoader {
                 if (json.has("heat")) {
                     JsonObject heatJson = json.getAsJsonObject("heat");
                     String type = heatJson.get("type").getAsString();
-                    if (type.equals("simple_solid_liquid")) {
-                        double moleCapacity = heatCapacity * density / 9.0;
+                    double moleCapacity = heatCapacity * density / 9.0;
+                    if (type.equals("simple_solid"))
+                        material.setHeatInfo(MaterialHeatInfo.getSimplified(SubMaterialHeatInfo.getSimplified(Phase.SOLID, moleCapacity)));
+                    else if (type.equals("simple_solid_liquid"))
                         material.setHeatInfo(MaterialHeatInfo.getSimplified(SubMaterialHeatInfo.builder().putCapacity(Phase.SOLID, moleCapacity).putCapacity(Phase.LIQUID, moleCapacity).setCriticalPoints(MonotonicMap.<Phase>builder().addData(0.0, Phase.SOLID).addData(heatJson.get("melting_point").getAsDouble(), Phase.LIQUID).build()).build()));
-                    }
                 }
             }
             if (json.has("alloy")) {

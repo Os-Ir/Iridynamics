@@ -114,20 +114,46 @@ public class ModMaterials {
     public static final PlasticityMaterial STERLING_GOLD = new PlasticityMaterial("sterling_gold").color(0xfadc14).cast();
     public static final PlasticityMaterial INVAR = new PlasticityMaterial("invar").color(0xd2d28c).cast();
 
-    public static final DustMaterial REDSTONE = new DustMaterial("redstone").color(0xc80000).cast();
-    public static final DustMaterial BLUESTONE = new DustMaterial("bluestone").color(0x005ac8).cast();
-    public static final DustMaterial GLOWSTONE = new DustMaterial("glowstone").color(0xffffbe).cast();
-    public static final GemMaterial DIAMOND = new GemMaterial("diamond").color(0xb4f0f0).cast();
-    public static final GemMaterial EMERALD = new GemMaterial("emerald").color(0x64f064).cast();
-    public static final DustMaterial COAL = new DustMaterial("coal").color(0x323232).cast();
-    public static final DustMaterial CHARCOAL = new DustMaterial("charcoal").color(0x463232).cast();
-
     public static final DustMaterial FLINT = new DustMaterial("flint").color(0x002040).setToolProperty(6400, 1, 4.0f).cast();
     public static final DustMaterial STONE = new DustMaterial("stone").color(0xc8c8c8).setToolProperty(3200, 1, 4.0f).cast();
     public static final DustMaterial WOOD = new DustMaterial("wood").color(0x8c5a28).cast();
 
+    public static final GemMaterial DIAMOND = new GemMaterial("diamond").color(0xb4f0f0).cast();
+    public static final GemMaterial EMERALD = new GemMaterial("emerald").color(0x64f064).cast();
+    public static final GemMaterial RUBY = new GemMaterial("ruby");
+    public static final GemMaterial SAPPHIRE = new GemMaterial("sapphire");
+
+    public static final OreMaterial REDSTONE = new OreMaterial("redstone").color(0xc80000).cast();
+    public static final OreMaterial BLUESTONE = new OreMaterial("bluestone").color(0x005ac8).cast();
+    public static final OreMaterial GLOWSTONE = new OreMaterial("glowstone").color(0xffffbe).cast();
+    public static final OreMaterial COAL = new OreMaterial("coal").color(0x323232).cast();
+    public static final OreMaterial CHARCOAL = new OreMaterial("charcoal").color(0x463232).cast();
+    public static final OreMaterial LAPIS_LAZULI = new OreMaterial("lapis_lazuli");
+    public static final OreMaterial CINNABAR = new OreMaterial("cinnabar");
+    public static final OreMaterial APATITE = new OreMaterial("apatite");
+    public static final OreMaterial SALT = new OreMaterial("salt");
+    public static final OreMaterial HEMATITE = new OreMaterial("hematite");
+    public static final OreMaterial MAGNETITE = new OreMaterial("magnetite");
+    public static final OreMaterial PYRITE = new OreMaterial("pyrite");
+    public static final OreMaterial BAUXITE = new OreMaterial("bauxite");
+    public static final OreMaterial CHALCOPYRITE = new OreMaterial("chalcopyrite");
+    public static final OreMaterial TETRAHEDRITE = new OreMaterial("tetrahedrite");
+    public static final OreMaterial CHALCOCITE = new OreMaterial("chalcocite");
+    public static final OreMaterial CASSITERITE = new OreMaterial("cassiterite");
+    public static final OreMaterial PYROLUSITE = new OreMaterial("pyrolusite");
+    public static final OreMaterial ANTIMONITE = new OreMaterial("antimonite");
+    public static final OreMaterial SPHALERITE = new OreMaterial("sphalerite");
+    public static final OreMaterial GARNIERITE = new OreMaterial("garnierite");
+    public static final OreMaterial PENTLANDITE = new OreMaterial("pentlandite");
+    public static final OreMaterial MAGNESITE = new OreMaterial("magnesite");
+    public static final OreMaterial GALENA = new OreMaterial("galena");
+    public static final OreMaterial ARGENTITE = new OreMaterial("argentite");
+    public static final OreMaterial CHLORARGYRITE = new OreMaterial("chlorargyrite");
+
+
     public static void register() {
-        MaterialBase.GENERATE_ORE.setFlagForMaterial(IRON, COBALT, NICKEL, COPPER, ZINC, SILVER, TIN, ANTIMONY, GOLD, LEAD, BISMUTH, NETHERITE, REDSTONE, BLUESTONE, DIAMOND, EMERALD, COAL);
+//        MaterialBase.GENERATE_ORE.setFlagForMaterial(IRON, COBALT, NICKEL, COPPER, ZINC, SILVER, TIN, ANTIMONY, GOLD, LEAD, BISMUTH, NETHERITE);
+        MaterialBase.GENERATE_ORE.setFlagForMaterial(GOLD, SILVER, NETHERITE);
         MaterialBase.GENERATE_TOOL.setFlagForMaterial(IRON, COPPER, WROUGHT_IRON, PIG_IRON, STEEL, BRONZE, BLACK_BRONZE, BISMUTH_BRONZE, FLINT, STONE);
         MaterialBase.GENERATE_ROD.setFlagForMaterial(WOOD);
         MaterialBase.GENERATE_GEAR.setFlagForMaterial(WOOD);

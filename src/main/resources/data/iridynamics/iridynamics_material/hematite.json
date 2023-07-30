@@ -1,0 +1,14 @@
+{
+  "type": "hematite",
+  "render": {
+    "color": 9525850
+  },
+  "physical": {
+    "density": 5300.0,
+    "thermal_conductivity": 20.0,
+    "heat_capacity": 400.0
+  },
+  "heat": {
+    "type": "simple_solid"
+  }
+}
