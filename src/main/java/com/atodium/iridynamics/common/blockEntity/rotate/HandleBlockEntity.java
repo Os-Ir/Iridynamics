@@ -38,7 +38,6 @@ public class HandleBlockEntity extends SyncedBlockEntity implements ITickable, I
             this.rotate.setTorque(torque);
             this.handleTick--;
         } else this.rotate.setTorque(0.0);
-        RotateModule.tryTick((ServerLevel) level, pos);
         this.sendSyncPacket();
     }
 

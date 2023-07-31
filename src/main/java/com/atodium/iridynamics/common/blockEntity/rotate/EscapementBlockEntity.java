@@ -27,7 +27,6 @@ public class EscapementBlockEntity extends SyncedBlockEntity implements ITickabl
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
-        RotateModule.tryTick((ServerLevel) level, pos);
         this.sendSyncPacket();
     }
 

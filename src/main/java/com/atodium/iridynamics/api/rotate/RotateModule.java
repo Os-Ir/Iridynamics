@@ -43,9 +43,8 @@ public class RotateModule {
         node.serializer().readSyncTagRaw(node, tag);
     }
 
-    public static void tryTick(ServerLevel level, BlockPos pos) {
-        RotateSavedData data = RotateSavedData.get(level);
-        data.tryTick(level, pos, level.getGameTime());
+    public static void tick(ServerLevel level) {
+        RotateSavedData.get(level).tryTick(level, level.getGameTime());
     }
 
     public static void addRotateBlock(ServerLevel level, BlockPos pos, IRotateNode node) {

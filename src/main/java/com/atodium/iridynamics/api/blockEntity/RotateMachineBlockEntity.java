@@ -26,7 +26,6 @@ public abstract class RotateMachineBlockEntity extends SyncedBlockEntity impleme
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
-        RotateModule.tryTick((ServerLevel) level, pos);
         this.sendSyncPacket();
     }
 

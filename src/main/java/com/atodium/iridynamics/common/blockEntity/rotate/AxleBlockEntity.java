@@ -29,7 +29,6 @@ public class AxleBlockEntity extends SyncedBlockEntity implements ITickable, IRo
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
-        RotateModule.tryTick((ServerLevel) level, pos);
         this.sendSyncPacket();
     }
 

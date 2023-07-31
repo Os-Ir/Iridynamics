@@ -187,6 +187,10 @@ public class MathUtil {
         return a * b / gcd(a, b);
     }
 
+    public static double castAngle(double angle, double period) {
+        return angle - Math.floor(angle / period) * period;
+    }
+
     public static double castAngle(double angle) {
         return angle - Math.floor(angle / TWO_PI) * TWO_PI;
     }

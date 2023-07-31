@@ -51,11 +51,8 @@ public class ClockworkBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
-        if (result.getDirection() == state.getValue(DIRECTION).getOpposite()) {
-            Vec3 location = MathUtil.transformPosition(MathUtil.minus(result.getLocation(), pos), Direction.NORTH, state.getValue(DIRECTION));
-            boolean isLeft = location.x <= 0.5;
-            level.getBlockEntity(pos, ModBlockEntities.CLOCKWORK.get()).ifPresent((clockwork) -> clockwork.handle(isLeft));
-        }
+        if (result.getDirection() == state.getValue(DIRECTION).getOpposite())
+            level.getBlockEntity(pos, ModBlockEntities.CLOCKWORK.get()).ifPresent(ClockworkBlockEntity::handle);
         return InteractionResult.CONSUME;
     }
 

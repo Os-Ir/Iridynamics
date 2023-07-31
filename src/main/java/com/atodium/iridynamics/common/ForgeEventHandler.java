@@ -15,6 +15,7 @@ import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.research.ResearchNodeLoader;
+import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
@@ -44,10 +45,7 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -207,5 +205,10 @@ public class ForgeEventHandler {
         ItemStack stack = player.getItemInHand(event.getHand());
         if (entity instanceof IIgnitable ignitable && stack.getItem() == ModItems.IGNITER.get() && ToolIgniter.igniteBlock(stack, ignitable, direction))
             event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void tickRotate(TickEvent.WorldTickEvent event) {
+        if (!event.world.isClientSide) RotateModule.tick((ServerLevel) event.world);
     }
 }

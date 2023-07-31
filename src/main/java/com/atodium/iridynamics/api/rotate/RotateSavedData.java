@@ -24,6 +24,7 @@ public class RotateSavedData extends SavedData {
 
     private final List<RotateNetwork> allNetworks;
     private final Map<ChunkPos, List<RotateNetwork>> chunkNetworks;
+    private long lastTickTime;
 
     public RotateSavedData() {
         this.allNetworks = Lists.newArrayList();
@@ -42,6 +43,7 @@ public class RotateSavedData extends SavedData {
             network.deserializeNBT(networksTag.getCompound(i));
             data.allNetworks.add(network);
         }
+        data.lastTickTime = tag.getLong("lastTickTime");
         return data;
     }
 
@@ -50,13 +52,14 @@ public class RotateSavedData extends SavedData {
         ListTag networksTag = new ListTag();
         for (RotateNetwork allNetwork : this.allNetworks) networksTag.add(allNetwork.serializeNBT());
         tag.put("networks", networksTag);
+        tag.putLong("lastTickTime", this.lastTickTime);
         return tag;
     }
 
-    public void tryTick(ServerLevel level, BlockPos pos, long tick) {
-        for (Direction to : DataUtil.DIRECTIONS) {
-            RotateNetwork network = this.getPosNetwork(new DirectionInfo(pos, to));
-            if (network != null) network.tryTick(level, tick);
+    public void tryTick(ServerLevel level, long time) {
+        if (this.lastTickTime < time) {
+            this.allNetworks.forEach((network) -> network.tryTick(level));
+            this.lastTickTime = time;
         }
     }
 

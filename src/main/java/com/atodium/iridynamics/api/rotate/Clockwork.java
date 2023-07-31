@@ -9,7 +9,7 @@ public class Clockwork implements IRotateNode {
     public static final Serializer SERIALIZER = new Serializer();
 
     private final Direction direction;
-    private double angle, angularVelocity;
+    private double angle, angularVelocity, torque;
 
     public Clockwork(Direction direction) {
         this.direction = direction;
@@ -62,7 +62,7 @@ public class Clockwork implements IRotateNode {
 
     @Override
     public double getTorque(Direction direction) {
-        return 0;
+        return this.torque;
     }
 
     @Override
@@ -74,6 +74,14 @@ public class Clockwork implements IRotateNode {
     @Override
     public double maxAngularVelocity(Direction direction) {
         return 300.0;
+    }
+
+    public void setTorque(double torque) {
+        this.torque = torque;
+    }
+
+    public double tickAngleChange() {
+        return this.angularVelocity / 20.0;
     }
 
     public static class Serializer implements IRotateNode.Serializer<Clockwork> {

@@ -29,7 +29,6 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
     private boolean locked;
     private final Map<DirectionInfo, IntFraction> scaleMap;
     private double angularMomentum, angle, angularVelocity;
-    private long lastTickTime;
 
     public RotateNetwork(RotateSavedData savedData) {
         this.savedData = savedData;
@@ -54,9 +53,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         return this.allNodes.containsKey(info);
     }
 
-    protected void tryTick(ServerLevel level, long tick) {
-        if (this.lastTickTime == tick) return;
-        this.lastTickTime = tick;
+    protected void tryTick(ServerLevel level) {
         if (this.locked) {
             this.angularMomentum = 0.0;
             this.angle = 0.0;
@@ -73,8 +70,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
                 }
             }
         } else {
-            this.updateAngularVelocity();
-            this.angle = MathUtil.castAngle(this.angle + this.angularVelocity / 20.0);
+            this.angle = MathUtil.castAngle(this.angle + this.angularVelocity / 20.0, MathUtil.TWO_PI / this.updateAngularVelocity());
             Set<BlockPos> received = Sets.newHashSet();
             for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
                 DirectionInfo info = entry.getKey();
@@ -91,16 +87,18 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         }
     }
 
-    protected void updateAngularVelocity() {
+    protected double updateAngularVelocity() {
         double scaledInertia = 0.0;
         double scaledTorque = 0.0;
         double maxAngularVelocity = Double.MAX_VALUE;
+        double minScale = Double.MAX_VALUE;
         int frictionDirection = Double.compare(this.angularMomentum, 0.0);
         for (Map.Entry<DirectionInfo, IRotateNode> entry : this.allNodes.entrySet()) {
             DirectionInfo info = entry.getKey();
             Direction direction = info.direction();
             IRotateNode node = entry.getValue();
             double scale = this.scaleMap.get(info).doubleValue();
+            minScale = Math.min(minScale, Math.abs(scale));
             scaledInertia += node.getInertia(direction) * scale * scale;
             scaledTorque += node.getTorque(direction) * scale;
             scaledTorque -= Math.abs(node.getFriction(info.direction()) * scale) * frictionDirection;
@@ -115,6 +113,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
             this.angularVelocity = -maxAngularVelocity;
             this.angularMomentum = -scaledInertia * maxAngularVelocity;
         }
+        return minScale;
     }
 
     protected DirectionInfo center() {

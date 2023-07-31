@@ -15,7 +15,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ClockworkBlockEntity extends SyncedBlockEntity implements ITickable, IRotateNodeHolder<Clockwork> {
+    public static final double MAX_TORQUE = 1000.0;
+    public static final double MAX_ANGLE = MathUtil.TWO_PI * 10;
+
     private Clockwork rotate;
+    private int handleTick;
+    private double angle;
 
     public ClockworkBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CLOCKWORK.get(), pos, state);
@@ -25,7 +30,15 @@ public class ClockworkBlockEntity extends SyncedBlockEntity implements ITickable
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
-        RotateModule.tryTick((ServerLevel) level, pos);
+        if (this.handleTick > 0) {
+            this.angle = Math.min(this.angle + MAX_ANGLE / 200.0, MAX_ANGLE);
+            this.handleTick--;
+            this.rotate.setTorque(0.0);
+        } else {
+            this.rotate.setTorque(this.angle / MAX_ANGLE * MAX_TORQUE);
+            double tickAngle = this.rotate.tickAngleChange();
+            if (tickAngle > 0) this.angle = Math.max(this.angle - tickAngle, 0.0);
+        }
         this.sendSyncPacket();
     }
 
@@ -38,8 +51,8 @@ public class ClockworkBlockEntity extends SyncedBlockEntity implements ITickable
         return MathUtil.castAngle(this.rotate.getAngle(this.getBlockState().getValue(ClockworkBlock.DIRECTION)));
     }
 
-    public void handle(boolean isLeft) {
-
+    public void handle() {
+        this.handleTick += 4;
     }
 
     @Override
