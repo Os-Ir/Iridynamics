@@ -68,6 +68,11 @@
   "item.iridynamics.tool.chisel": "Chisel",
   "item.iridynamics.tool.knife": "Knife",
 
+  "item.iridynamics.grass_helmet": "Grass Helmet",
+  "item.iridynamics.grass_chestplate": "Grass Chestplate",
+  "item.iridynamics.grass_leggings": "Grass Legging",
+  "item.iridynamics.grass_boots": "Grass Boots",
+
   "iridynamics.info.heat.heatable": "Heatable",
   "iridynamics.info.heat.weldable": "Weldable",
   "iridynamics.info.heat.progress": "Heating Progress",

@@ -68,6 +68,11 @@
   "item.iridynamics.tool.chisel": "凿子",
   "item.iridynamics.tool.knife": "刀",
 
+  "item.iridynamics.grass_helmet": "草帽",
+  "item.iridynamics.grass_chestplate": "草衣",
+  "item.iridynamics.grass_leggings": "草裤",
+  "item.iridynamics.grass_boots": "草鞋",
+
   "iridynamics.info.heat.heatable": "可加热",
   "iridynamics.info.heat.weldable": "可焊接",
   "iridynamics.info.heat.progress": "加热进度",
