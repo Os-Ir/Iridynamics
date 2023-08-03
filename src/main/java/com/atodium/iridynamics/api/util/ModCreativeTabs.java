@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api;
+package com.atodium.iridynamics.api.util;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.common.block.ModBlocks;

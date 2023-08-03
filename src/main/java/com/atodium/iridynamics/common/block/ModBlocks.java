@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.ModCreativeTabs;
+import com.atodium.iridynamics.api.util.ModCreativeTabs;
 import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.common.block.equipment.*;
 import com.atodium.iridynamics.common.block.rotate.*;

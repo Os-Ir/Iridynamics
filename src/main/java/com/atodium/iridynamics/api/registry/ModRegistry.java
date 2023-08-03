@@ -1,6 +1,5 @@
 package com.atodium.iridynamics.api.registry;
 
-import com.atodium.iridynamics.Iridynamics;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.world.Container;
@@ -19,6 +18,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -31,6 +31,7 @@ public final class ModRegistry {
     private final String modid;
     private final DeferredRegister<Item> itemRegistry;
     private final DeferredRegister<Block> blockRegistry;
+    private final DeferredRegister<Fluid> fluidRegistry;
     private final DeferredRegister<EntityType<?>> entityRegistry;
     private final DeferredRegister<BlockEntityType<?>> blockEntityRegistry;
     private final DeferredRegister<RecipeType<?>> recipeTypeRegistry;
@@ -41,20 +42,22 @@ public final class ModRegistry {
 
     public ModRegistry(String modid) {
         this.modid = modid;
-        this.itemRegistry = DeferredRegister.create(ForgeRegistries.ITEMS, Iridynamics.MODID);
-        this.blockRegistry = DeferredRegister.create(ForgeRegistries.BLOCKS, Iridynamics.MODID);
-        this.entityRegistry = DeferredRegister.create(ForgeRegistries.ENTITIES, Iridynamics.MODID);
-        this.blockEntityRegistry = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, Iridynamics.MODID);
-        this.recipeTypeRegistry = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, Iridynamics.MODID);
-        this.recipeSerializerRegistry = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Iridynamics.MODID);
-        this.featureRegistry = DeferredRegister.create(ForgeRegistries.FEATURES, Iridynamics.MODID);
-        this.configuredFeatureRegistry = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, Iridynamics.MODID);
-        this.placementModifierRegister = DeferredRegister.create(Registry.PLACEMENT_MODIFIER_REGISTRY, Iridynamics.MODID);
+        this.itemRegistry = DeferredRegister.create(ForgeRegistries.ITEMS, modid);
+        this.blockRegistry = DeferredRegister.create(ForgeRegistries.BLOCKS, modid);
+        this.fluidRegistry = DeferredRegister.create(ForgeRegistries.FLUIDS, modid);
+        this.entityRegistry = DeferredRegister.create(ForgeRegistries.ENTITIES, modid);
+        this.blockEntityRegistry = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, modid);
+        this.recipeTypeRegistry = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, modid);
+        this.recipeSerializerRegistry = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, modid);
+        this.featureRegistry = DeferredRegister.create(ForgeRegistries.FEATURES, modid);
+        this.configuredFeatureRegistry = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, modid);
+        this.placementModifierRegister = DeferredRegister.create(Registry.PLACEMENT_MODIFIER_REGISTRY, modid);
     }
 
     public void init(IEventBus bus) {
         this.itemRegistry.register(bus);
         this.blockRegistry.register(bus);
+        this.fluidRegistry.register(bus);
         this.entityRegistry.register(bus);
         this.blockEntityRegistry.register(bus);
         this.recipeTypeRegistry.register(bus);
@@ -74,6 +77,10 @@ public final class ModRegistry {
 
     public DeferredRegister<Block> getBlockRegistry() {
         return this.blockRegistry;
+    }
+
+    public DeferredRegister<Fluid> getFluidRegistry() {
+        return this.fluidRegistry;
     }
 
     public DeferredRegister<EntityType<?>> getEntityRegistry() {
@@ -114,6 +121,10 @@ public final class ModRegistry {
 
     public BlockBuilder block(String name, Function<BlockBehaviour.Properties, Block> supplier, Material material) {
         return BlockBuilder.builder(this, name, supplier, material);
+    }
+
+    public FluidBuilder fluid(String name, Supplier<Fluid> supplier) {
+        return FluidBuilder.builder(this, name, supplier);
     }
 
     public <H extends Entity> EntityBuilder<H> entity(String name, Supplier<EntityType<H>> supplier) {

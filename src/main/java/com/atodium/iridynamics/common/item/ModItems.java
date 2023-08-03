@@ -1,7 +1,7 @@
 package com.atodium.iridynamics.common.item;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.ModCreativeTabs;
+import com.atodium.iridynamics.api.util.ModCreativeTabs;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.api.material.ModMaterials;
