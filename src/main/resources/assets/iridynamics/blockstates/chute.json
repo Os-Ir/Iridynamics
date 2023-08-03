@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "iridynamics:block/chute_down"
+    },
+    "facing=north": {
+      "model": "iridynamics:block/chute"
+    },
+    "facing=east": {
+      "model": "iridynamics:block/chute",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "iridynamics:block/chute",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "iridynamics:block/chute",
+      "y": 270
+    }
+  }
+}

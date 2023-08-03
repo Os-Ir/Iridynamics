@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "iridynamics:block/empty"
+      "model": "iridynamics:block/carving_table"
     }
   }
 }
