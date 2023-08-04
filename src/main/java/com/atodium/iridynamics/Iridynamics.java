@@ -1,11 +1,12 @@
 package com.atodium.iridynamics;
 
+import com.atodium.iridynamics.api.fluid.ModFluids;
 import com.atodium.iridynamics.api.gui.plan.PlanGuiCodec;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.ModSolidShapes;
-import com.atodium.iridynamics.api.recipe.decorator.ModOutputDecorators;
 import com.atodium.iridynamics.api.recipe.ModRecipeSerializers;
 import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
+import com.atodium.iridynamics.api.recipe.decorator.ModOutputDecorators;
 import com.atodium.iridynamics.api.registry.ModRegistry;
 import com.atodium.iridynamics.api.research.ResearchModule;
 import com.atodium.iridynamics.api.rotate.RotateModule;
@@ -40,6 +41,7 @@ public class Iridynamics {
         REGISTRY.init(bus);
         ModMaterials.register();
         ModSolidShapes.register();
+        ModFluids.init();
         ModBlocks.init();
         ModItems.init();
         ModEntities.init();

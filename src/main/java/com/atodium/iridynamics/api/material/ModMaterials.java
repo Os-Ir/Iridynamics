@@ -99,6 +99,10 @@ public class ModMaterials {
     public static final DustMaterial ASTATINE = new DustMaterial("astatine").color(0xaaaaaa).cast();
     public static final GasMaterial RADON = new GasMaterial("radon").color(0xf000f0).cast();
 
+    public static final LiquidMaterial WATER = new LiquidMaterial("water");
+    public static final LiquidMaterial LAVA = new LiquidMaterial("lava");
+    public static final LiquidMaterial MILK = new LiquidMaterial("milk");
+
     public static final PlasticityMaterial NETHERITE = new PlasticityMaterial("netherite").color(0x46322d).cast();
     public static final PlasticityMaterial WROUGHT_IRON = new PlasticityMaterial("wrought_iron").color(0xc8b4b4).setToolProperty(204800, 2, 6.0f).cast();
     public static final PlasticityMaterial PIG_IRON = new PlasticityMaterial("pig_iron").color(0xc8b4b4).setToolProperty(204800, 2, 6.0f).cast();
@@ -150,6 +154,21 @@ public class ModMaterials {
     public static final OreMaterial ARGENTITE = new OreMaterial("argentite");
     public static final OreMaterial CHLORARGYRITE = new OreMaterial("chlorargyrite");
 
+    public static final GasMaterial AIR = new GasMaterial("air");
+    public static final GasMaterial STEAM = new GasMaterial("steam");
+    public static final GasMaterial METHANE = new GasMaterial("methane");
+    public static final GasMaterial ETHANE = new GasMaterial("ethane");
+    public static final GasMaterial VINYL = new GasMaterial("vinyl");
+    public static final GasMaterial ACETYLENE = new GasMaterial("acetylene");
+    public static final GasMaterial PROPANE = new GasMaterial("propane");
+    public static final GasMaterial PROPYLENE = new GasMaterial("propylene");
+    public static final GasMaterial CARBON_MONOXIDE = new GasMaterial("carbon_monoxide");
+    public static final GasMaterial CARBON_DIOXIDE = new GasMaterial("carbon_dioxide");
+    public static final GasMaterial NITRIC_OXIDE = new GasMaterial("nitric_oxide");
+    public static final GasMaterial NITROGEN_DIOXIDE = new GasMaterial("nitrogen_dioxide");
+    public static final GasMaterial SULFUR_DIOXIDE = new GasMaterial("sulfur_dioxide");
+    public static final GasMaterial SULFUR_TRIOXIDE = new GasMaterial("sulfur_trioxide");
+    public static final GasMaterial HYDROGEN_CHLORIDE = new GasMaterial("hydrogen_chloride");
 
     public static void register() {
         MaterialBase.GENERATE_ORE.setFlagForMaterial(GOLD, SILVER, NETHERITE);

@@ -204,6 +204,10 @@
   "iridynamics.material.astatine": "砹",
   "iridynamics.material.radon": "氡",
 
+  "iridynamics.material.water": "水",
+  "iridynamics.material.lava": "岩浆",
+  "iridynamics.material.milk": "牛奶",
+
   "iridynamics.material.netherite": "下界合金",
   "iridynamics.material.wrought_iron": "熟铁",
   "iridynamics.material.pig_iron": "生铁",
@@ -253,5 +257,21 @@
   "iridynamics.material.magnesite": "菱镁矿",
   "iridynamics.material.galena": "方铅矿",
   "iridynamics.material.argentite": "辉银矿",
-  "iridynamics.material.chlorargyrite": "角银矿"
+  "iridynamics.material.chlorargyrite": "角银矿",
+
+  "iridynamics.material.air": "空气",
+  "iridynamics.material.steam": "蒸汽",
+  "iridynamics.material.methane": "甲烷",
+  "iridynamics.material.ethane": "乙烷",
+  "iridynamics.material.vinyl": "乙烯",
+  "iridynamics.material.acetylene": "乙炔",
+  "iridynamics.material.propane": "丙烷",
+  "iridynamics.material.propylene": "丙烯",
+  "iridynamics.material.carbon_monoxide": "一氧化碳",
+  "iridynamics.material.carbon_dioxide": "二氧化碳",
+  "iridynamics.material.nitric_oxide": "一氧化氮",
+  "iridynamics.material.nitrogen_dioxide": "二氧化氮",
+  "iridynamics.material.sulfur_dioxide": "二氧化硫",
+  "iridynamics.material.sulfur_trioxide": "三氧化硫",
+  "iridynamics.material.hydrogen_chloride": "氯化氢"
 }

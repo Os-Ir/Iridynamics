@@ -1,0 +1,14 @@
+{
+  "type": "water",
+  "render": {
+    "color": 15790320
+  },
+  "physical": {
+    "density": 1000.0,
+    "thermal_conductivity": 500.0,
+    "heat_capacity": 4200.0
+  },
+  "heat": {
+    "type": "simple_liquid"
+  }
+}

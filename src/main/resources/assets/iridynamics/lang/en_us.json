@@ -204,6 +204,10 @@
   "iridynamics.material.astatine": "Astatine",
   "iridynamics.material.radon": "Radon",
 
+  "iridynamics.material.water": "Water",
+  "iridynamics.material.lava": "Lava",
+  "iridynamics.material.milk": "Milk",
+
   "iridynamics.material.netherite": "Netherite",
   "iridynamics.material.wrought_iron": "Wrought Iron",
   "iridynamics.material.pig_iron": "Pig Iron",
@@ -253,5 +257,21 @@
   "iridynamics.material.magnesite": "Magnesite",
   "iridynamics.material.galena": "Galena",
   "iridynamics.material.argentite": "Argentite",
-  "iridynamics.material.chlorargyrite": "Chlorargyrite"
+  "iridynamics.material.chlorargyrite": "Chlorargyrite",
+
+  "iridynamics.material.air": "Air",
+  "iridynamics.material.steam": "Steam",
+  "iridynamics.material.methane": "Methane",
+  "iridynamics.material.ethane": "Ethane",
+  "iridynamics.material.vinyl": "Vinyl",
+  "iridynamics.material.acetylene": "Acetylene",
+  "iridynamics.material.propane": "Propane",
+  "iridynamics.material.propylene": "Propylene",
+  "iridynamics.material.carbon_monoxide": "Carbon Monoxide",
+  "iridynamics.material.carbon_dioxide": "Carbon Dioxide",
+  "iridynamics.material.nitric_oxide": "Nitric Oxide",
+  "iridynamics.material.nitrogen_dioxide": "Nitrogen Dioxide",
+  "iridynamics.material.sulfur_dioxide": "Sulfur Dioxide",
+  "iridynamics.material.sulfur_trioxide": "Sulfur Trioxide",
+  "iridynamics.material.hydrogen_chloride": "Hydrogen Chloride"
 }
