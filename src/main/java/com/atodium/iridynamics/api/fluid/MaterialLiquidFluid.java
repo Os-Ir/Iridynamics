@@ -11,7 +11,17 @@ public class MaterialLiquidFluid extends ContainerFluid {
     }
 
     @Override
-    public String getLocalizedName(FluidStack stack) {
+    public String localizedName(FluidStack stack) {
         return this.material.getLocalizedName();
+    }
+
+    @Override
+    public String translationKey() {
+        return this.material.getUnlocalizedName();
+    }
+
+    @Override
+    public int color() {
+        return this.material.getRenderInfo().color();
     }
 }

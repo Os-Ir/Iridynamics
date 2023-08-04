@@ -38,6 +38,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> POTTERY_WORK_TABLE = Iridynamics.REGISTRY.block("pottery_work_table", PotteryWorkTableBlock::new, Material.STONE).strength(3.0f, 2.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
     public static final RegistryObject<Block> RESEARCH_TABLE = Iridynamics.REGISTRY.block("research_table", ResearchTableBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
     public static final RegistryObject<Block> FURNACE = Iridynamics.REGISTRY.block("furnace", FurnaceBlock::new, Material.STONE).strength(4.0f, 2.0f).sound(SoundType.STONE).registerWithItem(ModCreativeTabs.EQUIPMENT);
+    public static final RegistryObject<Block> BARREL = Iridynamics.REGISTRY.block("barrel", BarrelBlock::new, Material.WOOD).strength(4.0f, 2.0f).sound(SoundType.WOOD).registerWithItem(ModCreativeTabs.EQUIPMENT);
 
     public static final RegistryObject<Block> AXLE = Iridynamics.REGISTRY.block("axle", AxleBlock::new, Material.WOOD).strength(2.0f, 1.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
     public static final RegistryObject<Block> GEARBOX = Iridynamics.REGISTRY.block("gearbox", GearboxBlock::new, Material.WOOD).strength(3.0f, 2.0f).sound(SoundType.WOOD).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);

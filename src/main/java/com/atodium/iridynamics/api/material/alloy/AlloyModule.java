@@ -12,6 +12,10 @@ import java.util.Optional;
 public class AlloyModule {
     public static final UnorderedRegistry<MaterialBase, Alloy> ALLOYS = new UnorderedRegistry<>();
 
+    public static void clearRegistry() {
+        ALLOYS.clear();
+    }
+
     public static void registerAlloy(Alloy alloy) {
         ALLOYS.register(alloy.material(), alloy);
     }

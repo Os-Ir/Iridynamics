@@ -2,6 +2,8 @@ package com.atodium.iridynamics.api.fluid;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -12,10 +14,25 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
 public abstract class ContainerFluid extends Fluid {
-    public abstract String getLocalizedName(FluidStack stack);
+    public abstract String translationKey();
+
+    public abstract int color();
+
+    public abstract String localizedName(FluidStack stack);
+
+    @Override
+    protected FluidAttributes createAttributes() {
+        return FluidAttributes.builder(new ResourceLocation("block/water_still"), new ResourceLocation("block/water_flow"))
+                .overlay(new ResourceLocation("block/water_overlay"))
+                .translationKey(this.translationKey())
+                .color(this.color())
+                .sound(SoundEvents.BUCKET_FILL, SoundEvents.BUCKET_EMPTY)
+                .build(this);
+    }
 
     @Override
     public Item getBucket() {

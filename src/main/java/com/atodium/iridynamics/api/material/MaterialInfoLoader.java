@@ -35,6 +35,7 @@ public class MaterialInfoLoader extends SimpleJsonLoader {
     @Override
     public void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
         Iridynamics.LOGGER.info("Applying material infos");
+        AlloyModule.clearRegistry();
         for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
             JsonObject json = entry.getValue().getAsJsonObject();
             MaterialBase material = MaterialBase.getMaterialByName(json.get("type").getAsString());
