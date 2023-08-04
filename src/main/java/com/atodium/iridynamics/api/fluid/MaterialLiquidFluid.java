@@ -8,6 +8,11 @@ public class MaterialLiquidFluid extends ContainerFluid {
 
     public MaterialLiquidFluid(LiquidMaterial material) {
         this.material = material;
+        FluidModule.registerLiquid(this);
+    }
+
+    public LiquidMaterial material() {
+        return this.material;
     }
 
     @Override

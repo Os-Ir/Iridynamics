@@ -45,6 +45,8 @@
   "block.iridynamics.centrifuge": "Centrifuge",
   "block.iridynamics.grinder": "Grinder",
 
+  "item.iridynamics.empty_cell": "Empty Cell",
+  "item.iridynamics.cell": "%s Cell",
   "item.iridynamics.wood_brick": "Wood Brick",
   "item.iridynamics.crushed_stone": "Crushed Stone",
   "item.iridynamics.grass": "Grass",

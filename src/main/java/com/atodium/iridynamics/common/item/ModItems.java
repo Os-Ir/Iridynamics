@@ -1,7 +1,6 @@
 package com.atodium.iridynamics.common.item;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.util.ModCreativeTabs;
 import com.atodium.iridynamics.api.heat.FuelInfo;
 import com.atodium.iridynamics.api.item.ItemDelegate;
 import com.atodium.iridynamics.api.material.ModMaterials;
@@ -10,6 +9,7 @@ import com.atodium.iridynamics.api.material.SolidShape;
 import com.atodium.iridynamics.api.module.ToolModule;
 import com.atodium.iridynamics.api.tool.MaterialToolItem;
 import com.atodium.iridynamics.api.tool.ToolItem;
+import com.atodium.iridynamics.api.util.ModCreativeTabs;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.tool.ToolChisel;
 import com.atodium.iridynamics.common.tool.ToolHammer;
@@ -51,6 +51,8 @@ public class ModItems {
     public static final RegistryObject<Item> GRASS_CHESTPLATE = Iridynamics.REGISTRY.item("grass_chestplate", (properties) -> new ArmorItem(ModArmorMaterials.GRASS, EquipmentSlot.CHEST, properties)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
     public static final RegistryObject<Item> GRASS_LEGGINGS = Iridynamics.REGISTRY.item("grass_leggings", (properties) -> new ArmorItem(ModArmorMaterials.GRASS, EquipmentSlot.LEGS, properties)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
     public static final RegistryObject<Item> GRASS_BOOTS = Iridynamics.REGISTRY.item("grass_boots", (properties) -> new ArmorItem(ModArmorMaterials.GRASS, EquipmentSlot.FEET, properties)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
+
+    public static final RegistryObject<Item> CELL = Iridynamics.REGISTRY.item("cell", CellItem::new).tab(ModCreativeTabs.TOOL).register();
 
     public static void init() {
         SolidShape.REGISTRY.values().forEach((shape) -> Iridynamics.REGISTRY.item("material_item/" + shape.getName(), (properties) -> new MaterialItem(properties, shape)).tab(ModCreativeTabs.MATERIAL).register());

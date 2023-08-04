@@ -45,6 +45,8 @@
   "block.iridynamics.centrifuge": "离心机",
   "block.iridynamics.grinder": "研磨机",
 
+  "item.iridynamics.empty_cell": "空单元",
+  "item.iridynamics.cell": "%s单元",
   "item.iridynamics.wood_brick": "木块",
   "item.iridynamics.crushed_stone": "碎石块",
   "item.iridynamics.grass": "草",

@@ -2,10 +2,7 @@ package com.atodium.iridynamics.common;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.IIgnitable;
-import com.atodium.iridynamics.api.capability.HeatCapability;
-import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
-import com.atodium.iridynamics.api.capability.PotteryCapability;
-import com.atodium.iridynamics.api.capability.ResearchCapability;
+import com.atodium.iridynamics.api.capability.*;
 import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.liquid.LiquidModule;
 import com.atodium.iridynamics.api.material.MaterialEntry;
@@ -22,6 +19,7 @@ import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.equipment.MoldBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.equipment.MoldToolBlockEntity;
+import com.atodium.iridynamics.common.item.CellItem;
 import com.atodium.iridynamics.common.item.ModItems;
 import com.atodium.iridynamics.common.level.levelgen.feature.ModFeatures;
 import com.atodium.iridynamics.common.module.SmallCrucibleModule;
@@ -101,6 +99,8 @@ public class ForgeEventHandler {
             event.addCapability(PotteryCapability.KEY, new PotteryCapability());
         else if (MaterialEntry.containsMaterialEntry(stack))
             HeatModule.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
+        else if (CellItem.isCellItem(stack))
+            event.addCapability(CellFluidCapability.KEY, new CellFluidCapability(stack));
     }
 
     @SubscribeEvent

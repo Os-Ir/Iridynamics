@@ -3,11 +3,10 @@ package com.atodium.iridynamics.api.fluid;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.material.ModMaterials;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModFluids {
-    public static final RegistryObject<Fluid> WATER = Iridynamics.REGISTRY.fluid("water", () -> new MaterialLiquidFluid(ModMaterials.WATER)).register();
-    public static final RegistryObject<Fluid> LAVA = Iridynamics.REGISTRY.fluid("lava", () -> new MaterialLiquidFluid(ModMaterials.LAVA)).register();
     public static final RegistryObject<Fluid> MILK = Iridynamics.REGISTRY.fluid("milk", () -> new MaterialLiquidFluid(ModMaterials.MILK)).register();
     public static final RegistryObject<Fluid> MERCURY = Iridynamics.REGISTRY.fluid("mercury", () -> new MaterialLiquidFluid(ModMaterials.MERCURY)).register();
 
@@ -23,7 +22,7 @@ public class ModFluids {
     public static final RegistryObject<Fluid> RADON = Iridynamics.REGISTRY.fluid("radon", () -> new MaterialGasFluid(ModMaterials.RADON)).register();
 
     public static final RegistryObject<Fluid> AIR = Iridynamics.REGISTRY.fluid("air", () -> new MaterialGasFluid(ModMaterials.AIR)).register();
-    public static final RegistryObject<Fluid> STEAM = Iridynamics.REGISTRY.fluid("steam", () -> new MaterialGasFluid(ModMaterials.RADON)).register();
+    public static final RegistryObject<Fluid> STEAM = Iridynamics.REGISTRY.fluid("steam", () -> new MaterialGasFluid(ModMaterials.STEAM)).register();
     public static final RegistryObject<Fluid> METHANE = Iridynamics.REGISTRY.fluid("methane", () -> new MaterialGasFluid(ModMaterials.METHANE)).register();
     public static final RegistryObject<Fluid> VINYL = Iridynamics.REGISTRY.fluid("vinyl", () -> new MaterialGasFluid(ModMaterials.VINYL)).register();
     public static final RegistryObject<Fluid> ETHANE = Iridynamics.REGISTRY.fluid("ethane", () -> new MaterialGasFluid(ModMaterials.ETHANE)).register();
@@ -40,6 +39,7 @@ public class ModFluids {
     public static final RegistryObject<Fluid> HYDROGEN_CHLORIDE = Iridynamics.REGISTRY.fluid("hydrogen_chloride", () -> new MaterialGasFluid(ModMaterials.HYDROGEN_CHLORIDE)).register();
 
     public static void init() {
-
+        FluidModule.registerLiquid(ModMaterials.WATER, Fluids.WATER);
+        FluidModule.registerLiquid(ModMaterials.LAVA, Fluids.LAVA);
     }
 }

@@ -24,6 +24,10 @@ public abstract class ContainerFluid extends Fluid {
 
     public abstract String localizedName(FluidStack stack);
 
+    public boolean is(Fluid fluid) {
+        return fluid == this;
+    }
+
     @Override
     protected FluidAttributes createAttributes() {
         return FluidAttributes.builder(new ResourceLocation("block/water_still"), new ResourceLocation("block/water_flow"))

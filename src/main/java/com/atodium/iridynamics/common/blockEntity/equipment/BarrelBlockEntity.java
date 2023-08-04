@@ -24,6 +24,7 @@ public class BarrelBlockEntity extends SyncedBlockEntity {
     }
 
     public void handle(Player player, InteractionHand hand, Level level, BlockPos pos, Direction direction) {
+        if (level.isClientSide) return;
         FluidUtil.interactWithFluidHandler(player, hand, level, pos, direction);
         this.markDirty();
     }

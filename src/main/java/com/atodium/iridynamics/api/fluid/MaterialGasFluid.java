@@ -8,6 +8,11 @@ public class MaterialGasFluid extends ContainerFluid {
 
     public MaterialGasFluid(GasMaterial material) {
         this.material = material;
+        FluidModule.registerGas(this);
+    }
+
+    public GasMaterial material() {
+        return this.material;
     }
 
     @Override

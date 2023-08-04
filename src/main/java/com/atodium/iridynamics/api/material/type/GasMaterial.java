@@ -3,7 +3,7 @@ package com.atodium.iridynamics.api.material.type;
 import com.atodium.iridynamics.Iridynamics;
 import net.minecraft.resources.ResourceLocation;
 
-public class GasMaterial extends MaterialBase {
+public class GasMaterial extends FluidMaterial {
     public static final ResourceLocation REGISTRY_NAME = Iridynamics.rl("gas");
     public static final long DEFAULT_FLAGS = 0L;
 

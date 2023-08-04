@@ -18,5 +18,6 @@ public class ModEventHandler {
         event.register(CarvingCapability.class);
         event.register(PotteryCapability.class);
         event.register(ResearchCapability.class);
+        event.register(CellFluidCapability.class);
     }
 }
