@@ -1,6 +1,13 @@
 package com.atodium.iridynamics.common.entity;
 
+import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.gui.TextureArea;
+import com.atodium.iridynamics.network.ModNetworkHandler;
+import com.atodium.iridynamics.network.ProjectileDataPacket;
+import com.google.common.collect.Maps;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -19,21 +26,43 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.network.NetworkDirection;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public abstract class ProjectileBaseEntity extends AbstractArrow {
+    public static final TextureArea SHOOT_OVERLAY = TextureArea.createTexture(Iridynamics.rl("textures/gui/hud/shoot_overlay.png"), 0.0f, 0.0f, 0.5f, 1.0f);
+    public static final TextureArea SHOOT_OVERLAY_KILLED = TextureArea.createTexture(Iridynamics.rl("textures/gui/hud/shoot_overlay.png"), 0.5f, 0.0f, 0.5f, 1.0f);
+
+    @OnlyIn(Dist.CLIENT)
+    public static final Map<AbstractClientPlayer, Pair<Long, Boolean>> LAST_HIT_TIME = Maps.newHashMap();
+
     protected BlockPos groundPos;
     protected BlockState lastGround;
     protected int inAirTime;
 
     public ProjectileBaseEntity(EntityType<? extends ProjectileBaseEntity> type, Level level) {
         super(type, level);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void onPlayerHit(AbstractClientPlayer player, boolean killed) {
+        LAST_HIT_TIME.put(player, Pair.of(System.currentTimeMillis(), killed));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static Pair<Long, Boolean> playerLastHitTime(Player player) {
+        for (Map.Entry<AbstractClientPlayer, Pair<Long, Boolean>> entry : LAST_HIT_TIME.entrySet())
+            if (entry.getKey().getUUID().equals(player.getUUID())) return entry.getValue();
+        return Pair.of(0L, false);
     }
 
     @Override
@@ -152,6 +181,8 @@ public abstract class ProjectileBaseEntity extends AbstractArrow {
             if (owner instanceof LivingEntity) ((LivingEntity) owner).setLastHurtMob(entity);
         }
         if (entity.hurt(damageSource, damage)) {
+            if (this.getOwner() instanceof ServerPlayer player && entity instanceof LivingEntity living)
+                ModNetworkHandler.CHANNEL.sendTo(new ProjectileDataPacket(player.getUUID(), living.isDeadOrDying()), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
             if (entity instanceof LivingEntity living) {
                 if (!this.level.isClientSide && owner instanceof LivingEntity) {
                     EnchantmentHelper.doPostHurtEffects(living, owner);

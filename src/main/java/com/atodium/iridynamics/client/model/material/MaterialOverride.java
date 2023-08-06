@@ -9,7 +9,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.IModelConfiguration;
@@ -36,7 +35,6 @@ public class MaterialOverride extends ItemOverrides {
 
     @Override
     public BakedModel resolve(BakedModel originalModel, ItemStack stack, ClientLevel level, LivingEntity entity, int seed) {
-        Item item = stack.getItem();
         MaterialBase material = MaterialItem.getItemMaterial(stack);
         if (material == null) material = ModMaterials.COPPER;
         return this.cache.computeIfAbsent(material, this::bake);

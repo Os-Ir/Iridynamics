@@ -7,14 +7,12 @@ import com.atodium.iridynamics.client.model.ColoredItemLayerModel;
 import com.atodium.iridynamics.client.model.DynamicTextureLoader;
 import com.atodium.iridynamics.client.model.TexturePixelFlag;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Transformation;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +36,6 @@ public class MaterialModel implements IModelGeometry<MaterialModel> {
     }
 
     public static BakedModel bakeMaterialModel(IModelConfiguration owner, Function<Material, TextureAtlasSprite> spriteGetter, Transformation transform, ItemOverrides overrides, SolidShape shape, MaterialBase material) {
-        ImmutableMap<ItemTransforms.TransformType, Transformation> transformMap = PerspectiveMapWrapper.getTransforms(owner.getCombinedTransform());
         TextureAtlasSprite sprite;
         ImmutableList<BakedQuad> quads;
         if (material == null) {
@@ -66,14 +63,12 @@ public class MaterialModel implements IModelGeometry<MaterialModel> {
                 quads = ColoredItemLayerModel.getQuadsForSprite(0, sprite, transform, renderInfo.argb(), renderInfo.light());
             }
         }
-        return new BakedItemModel(quads, sprite, Maps.immutableEnumMap(transformMap), overrides, true, owner.isSideLit());
+        return new BakedItemModel(quads, sprite, Maps.immutableEnumMap(PerspectiveMapWrapper.getTransforms(owner.getCombinedTransform())), overrides, true, owner.isSideLit());
     }
 
     @Override
     public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState transform, ItemOverrides originalOverrides, ResourceLocation modelLocation) {
-        ItemOverrides overrides = ItemOverrides.EMPTY;
-        if (this.material == null) overrides = new MaterialOverride(owner, Transformation.identity(), this.shape);
-        return bakeMaterialModel(owner, spriteGetter, Transformation.identity(), overrides, this.shape, this.material);
+        return bakeMaterialModel(owner, spriteGetter, Transformation.identity(), this.material == null ? new MaterialOverride(owner, Transformation.identity(), this.shape) : ItemOverrides.EMPTY, this.shape, this.material);
     }
 
     @Override

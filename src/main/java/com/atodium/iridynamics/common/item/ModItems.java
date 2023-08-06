@@ -52,7 +52,7 @@ public class ModItems {
     public static final RegistryObject<Item> GRASS_LEGGINGS = Iridynamics.REGISTRY.item("grass_leggings", (properties) -> new ArmorItem(ModArmorMaterials.GRASS, EquipmentSlot.LEGS, properties)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
     public static final RegistryObject<Item> GRASS_BOOTS = Iridynamics.REGISTRY.item("grass_boots", (properties) -> new ArmorItem(ModArmorMaterials.GRASS, EquipmentSlot.FEET, properties)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
 
-    public static final RegistryObject<Item> CELL = Iridynamics.REGISTRY.item("cell", CellItem::new).tab(ModCreativeTabs.TOOL).register();
+    public static final RegistryObject<Item> CELL = Iridynamics.REGISTRY.item("tool/cell", CellItem::new).tab(ModCreativeTabs.TOOL).register();
 
     public static void init() {
         SolidShape.REGISTRY.values().forEach((shape) -> Iridynamics.REGISTRY.item("material_item/" + shape.getName(), (properties) -> new MaterialItem(properties, shape)).tab(ModCreativeTabs.MATERIAL).register());

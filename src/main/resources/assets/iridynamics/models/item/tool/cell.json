@@ -1,0 +1,8 @@
+{
+  "loader": "iridynamics:cell",
+  "parent": "forge:item/default",
+  "textures": {
+    "texture0": "iridynamics:item/tool/cell_0",
+    "texture1": "iridynamics:item/tool/cell_1"
+  }
+}

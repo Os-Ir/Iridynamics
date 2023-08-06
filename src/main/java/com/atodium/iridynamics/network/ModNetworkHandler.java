@@ -20,6 +20,7 @@ public class ModNetworkHandler {
         register(ModularGuiTaskPacket.class, ModularGuiTaskPacket::encode, ModularGuiTaskPacket::new, ModularGuiTaskPacket::handle);
         register(ModularToClientPacket.class, ModularToClientPacket::encode, ModularToClientPacket::new, ModularToClientPacket::handle);
         register(ModularToServerPacket.class, ModularToServerPacket::encode, ModularToServerPacket::new, ModularToServerPacket::handle);
+        register(ProjectileDataPacket.class, ProjectileDataPacket::encode, ProjectileDataPacket::new, ProjectileDataPacket::handle);
     }
 
     private static <T> void register(Class<T> type, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, NetworkEvent.Context> handler) {

@@ -3,6 +3,7 @@ package com.atodium.iridynamics.client;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.client.model.DynamicTextureLoader;
 import com.atodium.iridynamics.client.model.material.MaterialModelLoader;
+import com.atodium.iridynamics.client.model.tool.CellModelLoader;
 import com.atodium.iridynamics.client.model.tool.MaterialToolModelLoader;
 import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.atodium.iridynamics.client.renderer.block.*;
@@ -27,6 +28,7 @@ public class ClientModEventHandler {
     public static void registerModelLoaders(ModelRegistryEvent event) {
         ModelLoaderRegistry.registerLoader(Iridynamics.rl("material"), MaterialModelLoader.INSTANCE);
         ModelLoaderRegistry.registerLoader(Iridynamics.rl("material_tool"), MaterialToolModelLoader.INSTANCE);
+        ModelLoaderRegistry.registerLoader(Iridynamics.rl("cell"), CellModelLoader.INSTANCE);
     }
 
     @SubscribeEvent

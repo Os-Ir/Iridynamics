@@ -3,9 +3,9 @@ package com.atodium.iridynamics.client;
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.blockEntity.ITipInfoRenderer;
 import com.atodium.iridynamics.api.capability.*;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.impl.HeatProcessPhasePortrait;
 import com.atodium.iridynamics.api.material.MaterialEntry;
-import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
@@ -15,6 +15,7 @@ import com.atodium.iridynamics.common.block.equipment.ForgeBlock;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.blockEntity.equipment.AnvilBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.equipment.CarvingTableBlockEntity;
+import com.atodium.iridynamics.common.entity.ProjectileBaseEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -35,9 +36,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawSelectionEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -45,6 +49,15 @@ import java.util.concurrent.atomic.AtomicReference;
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = Iridynamics.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientForgeEventHandler {
+    @SubscribeEvent
+    public static void onOverlayRender(RenderGameOverlayEvent.PreLayer event) {
+        if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT) return;
+        Pair<Long, Boolean> last = ProjectileBaseEntity.playerLastHitTime(Minecraft.getInstance().player);
+        if (System.currentTimeMillis() - last.getLeft() > 600) return;
+        (last.getRight() ? ProjectileBaseEntity.SHOOT_OVERLAY_KILLED : ProjectileBaseEntity.SHOOT_OVERLAY).draw(event.getMatrixStack(), Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2.0f - 8.0f, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2.0f - 8.0f, 16.0f, 16.0f);
+        event.setCanceled(true);
+    }
+
     @SubscribeEvent
     public static void addItemTooltip(ItemTooltipEvent e) {
         ItemStack stack = e.getItemStack();
