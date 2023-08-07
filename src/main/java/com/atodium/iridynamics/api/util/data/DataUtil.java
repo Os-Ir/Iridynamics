@@ -18,6 +18,11 @@ public class DataUtil {
     public static final Direction[] DIRECTIONS = {Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
     public static final Direction[] HORIZONTALS = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
 
+    @SuppressWarnings("unchecked")
+    public static <L> L cast(Object a) {
+        return (L) a;
+    }
+
     @SuppressWarnings("deprecation")
     public static String writeItemToString(Item item) {
         return Registry.ITEM.getKey(item).toString();

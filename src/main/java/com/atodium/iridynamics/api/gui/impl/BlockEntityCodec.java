@@ -3,6 +3,7 @@ package com.atodium.iridynamics.api.gui.impl;
 import com.atodium.iridynamics.api.gui.IGuiHolderCodec;
 import com.atodium.iridynamics.api.gui.IModularGuiHolder;
 import com.atodium.iridynamics.api.gui.ModularGuiInfo;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -33,10 +34,9 @@ public class BlockEntityCodec<T extends BlockEntity> implements IGuiHolderCodec<
         else throw new IllegalArgumentException("The ModularGuiHolder is not BlockEntity");
     }
 
-    @SuppressWarnings("unchecked")
     @OnlyIn(Dist.CLIENT)
     @Override
     public IBlockEntityGuiHolder<T> readHolder(FriendlyByteBuf buf) {
-        return (IBlockEntityGuiHolder<T>) Minecraft.getInstance().level.getBlockEntity(buf.readBlockPos());
+        return DataUtil.cast(Minecraft.getInstance().level.getBlockEntity(buf.readBlockPos()));
     }
 }

@@ -1,11 +1,21 @@
 package com.atodium.iridynamics.api.rotate;
 
+import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.util.math.IntFraction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-public interface IRotateNode {
-    Serializer<?> serializer();
+public interface IRotateNode extends ITickable {
+    @Override
+    default void tick(Level level, BlockPos pos, BlockState state) {
+        if (!level.isClientSide) RotateModule.tryTick((ServerLevel) level, pos);
+        this.nodeTick(level, pos, state);
+    }
+
+    void nodeTick(Level level, BlockPos pos, BlockState state);
 
     boolean isConnectable(Direction direction);
 
@@ -28,29 +38,4 @@ public interface IRotateNode {
     double getFriction(Direction direction);
 
     double maxAngularVelocity(Direction direction);
-
-    interface Serializer<T extends IRotateNode> {
-        T deserialize(CompoundTag tag);
-
-        CompoundTag serialize(T node);
-
-        CompoundTag writeSyncTag(T node);
-
-        void readSyncTag(T node, CompoundTag tag);
-
-        @SuppressWarnings("unchecked")
-        default CompoundTag serializeRaw(IRotateNode node) {
-            return this.serialize((T) node);
-        }
-
-        @SuppressWarnings("unchecked")
-        default CompoundTag writeSyncTagRaw(IRotateNode node) {
-            return this.writeSyncTag((T) node);
-        }
-
-        @SuppressWarnings("unchecked")
-        default void readSyncTagRaw(IRotateNode node, CompoundTag tag) {
-            this.readSyncTag((T) node, tag);
-        }
-    }
 }

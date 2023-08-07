@@ -52,7 +52,6 @@ public class Iridynamics {
         ModFeatures.init();
         ModNetworkHandler.init();
         PlanGuiCodec.init();
-        RotateModule.init();
         ResearchModule.init();
     }
 

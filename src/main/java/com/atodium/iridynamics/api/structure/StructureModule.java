@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.api.structure;
 
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import net.minecraft.resources.ResourceLocation;
 
@@ -16,14 +17,12 @@ public class StructureModule {
         STRUCTURES.register(type.id(), type);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T extends MovingStructure<T>> StructureType<T> getStructureById(ResourceLocation id) {
-        return (StructureType<T>) STRUCTURES.get(id);
+        return DataUtil.cast(STRUCTURES.get(id));
     }
 
-    @SuppressWarnings("unchecked")
     public static <T extends MovingStructure<T>> T createStructureById(ResourceLocation id) {
-        if (STRUCTURES.containsKey(id)) return (T) STRUCTURES.get(id).create();
+        if (STRUCTURES.containsKey(id)) return DataUtil.cast(STRUCTURES.get(id).create());
         return null;
     }
 }

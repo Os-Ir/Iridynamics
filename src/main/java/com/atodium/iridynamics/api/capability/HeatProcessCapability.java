@@ -1,9 +1,10 @@
 package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.IHeatProcess;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
-import com.atodium.iridynamics.api.heat.HeatModule;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -41,10 +42,9 @@ public class HeatProcessCapability implements IHeatProcess, ICapabilitySerializa
         this.energy = this.processEnergy = 0.0;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends IPhasePortrait> T getPhasePortrait() {
-        return (T) this.portrait;
+        return DataUtil.cast(this.portrait);
     }
 
     @Override

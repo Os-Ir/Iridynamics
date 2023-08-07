@@ -8,6 +8,7 @@ import com.atodium.iridynamics.api.heat.impl.LiquidContainerPortrait;
 import com.atodium.iridynamics.api.heat.liquid.ILiquidContainer;
 import com.atodium.iridynamics.api.heat.liquid.SimpleLiquidContainer;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -32,10 +33,9 @@ public class LiquidContainerCapability implements IHeat, ILiquidContainer, ICapa
         this.container = new SimpleLiquidContainer(liquidCapacity);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends IPhasePortrait> T getPhasePortrait() {
-        return (T) this.portrait;
+        return DataUtil.cast(this.portrait);
     }
 
     @Override

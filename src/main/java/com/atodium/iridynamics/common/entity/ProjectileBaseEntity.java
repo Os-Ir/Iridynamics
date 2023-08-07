@@ -13,6 +13,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.EnderDragonPart;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -59,7 +60,7 @@ public abstract class ProjectileBaseEntity extends AbstractArrow {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static Pair<Long, Boolean> playerLastHitTime(Player player) {
+    public static Pair<Long, Boolean> playerLastHitTime(AbstractClientPlayer player) {
         for (Map.Entry<AbstractClientPlayer, Pair<Long, Boolean>> entry : LAST_HIT_TIME.entrySet())
             if (entry.getKey().getUUID().equals(player.getUUID())) return entry.getValue();
         return Pair.of(0L, false);
@@ -180,17 +181,17 @@ public abstract class ProjectileBaseEntity extends AbstractArrow {
             damageSource = DamageSource.arrow(this, owner);
             if (owner instanceof LivingEntity) ((LivingEntity) owner).setLastHurtMob(entity);
         }
-        if (entity.hurt(damageSource, damage)) {
-            if (this.getOwner() instanceof ServerPlayer player && entity instanceof LivingEntity living)
+        entity.hurt(damageSource, damage);
+        if (entity instanceof EnderDragonPart dragon) entity = dragon.parentMob;
+        if (entity instanceof LivingEntity living) {
+            if (this.getOwner() instanceof ServerPlayer player)
                 ModNetworkHandler.CHANNEL.sendTo(new ProjectileDataPacket(player.getUUID(), living.isDeadOrDying()), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
-            if (entity instanceof LivingEntity living) {
-                if (!this.level.isClientSide && owner instanceof LivingEntity) {
-                    EnchantmentHelper.doPostHurtEffects(living, owner);
-                    EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, living);
-                }
-                this.doPostHurtEffects(living);
-                living.invulnerableTime = 0;
+            if (!this.level.isClientSide && owner instanceof LivingEntity livingOwner) {
+                EnchantmentHelper.doPostHurtEffects(living, owner);
+                EnchantmentHelper.doPostDamageEffects(livingOwner, living);
             }
+            this.doPostHurtEffects(living);
+            living.invulnerableTime = 0;
         }
     }
 

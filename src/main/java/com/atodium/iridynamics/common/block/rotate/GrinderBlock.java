@@ -4,7 +4,6 @@ import com.atodium.iridynamics.api.blockEntity.ITickable;
 import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
-import com.atodium.iridynamics.common.blockEntity.rotate.CentrifugeBlockEntity;
 import com.atodium.iridynamics.common.blockEntity.rotate.GrinderBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

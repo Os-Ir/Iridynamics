@@ -38,14 +38,14 @@ public class CentrifugeBlockEntity extends RotateMachineBlockEntity implements I
     }
 
     @Override
-    public void tick(Level level, BlockPos pos, BlockState state) {
+    public void nodeTick(Level level, BlockPos pos, BlockState state) {
         if (this.level.isClientSide) return;
         if (this.recipeUpdateFlag) {
             this.updateRecipe();
             this.recipeUpdateFlag = false;
         }
         if (this.recipe != null) {
-            this.progress += this.rotate.tickAngleChange();
+            this.progress += this.tickAngleChange();
             if (this.progress >= this.recipe.angle()) {
                 this.progress = 0.0;
                 ItemStackContainer container = RecipeUtil.container(this.inventory.getStackInSlot(0));

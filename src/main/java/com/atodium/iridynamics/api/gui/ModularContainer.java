@@ -4,6 +4,7 @@ import com.atodium.iridynamics.api.gui.widget.ISlotWidget;
 import com.atodium.iridynamics.api.gui.widget.IWidget;
 import com.atodium.iridynamics.api.gui.widget.VariableListWidget;
 import com.atodium.iridynamics.api.recipe.container.EmptyContainer;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.math.Vector2i;
 import com.atodium.iridynamics.network.ModNetworkHandler;
 import com.atodium.iridynamics.network.ModularGuiTaskPacket;
@@ -23,7 +24,6 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.network.NetworkDirection;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -72,10 +72,9 @@ public class ModularContainer extends AbstractContainerMenu implements ISyncedWi
         return this.info.getPlayer();
     }
 
-    @SuppressWarnings("unchecked")
     public static List<ContainerListener> getContainerListeners(AbstractContainerMenu container) {
         try {
-            return (List<ContainerListener>) ObfuscationReflectionHelper.findField(AbstractContainerMenu.class, "f_38848_").get(container);
+            return DataUtil.cast(ObfuscationReflectionHelper.findField(AbstractContainerMenu.class, "f_38848_").get(container));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -190,12 +189,9 @@ public class ModularContainer extends AbstractContainerMenu implements ISyncedWi
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected void setInventoryItemStacks(int slotNumber, ItemStack stack) {
         try {
-            Field fieldItemStacks = ObfuscationReflectionHelper.findField(AbstractContainerMenu.class, "f_38841_");
-            NonNullList<ItemStack> lastSlots = (NonNullList<ItemStack>) fieldItemStacks.get(this);
-            lastSlots.set(slotNumber, stack);
+            DataUtil.<NonNullList<ItemStack>>cast(ObfuscationReflectionHelper.findField(AbstractContainerMenu.class, "f_38841_").get(this)).set(slotNumber, stack);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

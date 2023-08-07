@@ -4,9 +4,10 @@ import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.heat.MaterialHeatInfo;
 import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialPhysicalInfo;
-import com.atodium.iridynamics.api.material.MaterialToolPropertyInfo;
-import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import com.atodium.iridynamics.api.material.MaterialRenderInfo;
+import com.atodium.iridynamics.api.material.MaterialToolPropertyInfo;
+import com.atodium.iridynamics.api.util.data.DataUtil;
+import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import com.atodium.iridynamics.common.item.MaterialItem;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
@@ -173,9 +174,8 @@ public abstract class MaterialBase {
         return I18n.get(this.getUnlocalizedName());
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends MaterialBase> T cast() {
-        return (T) this;
+        return DataUtil.cast(this);
     }
 
     @Override

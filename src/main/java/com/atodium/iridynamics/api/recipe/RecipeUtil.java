@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.recipe;
 
 import com.atodium.iridynamics.api.recipe.container.ItemStackContainer;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
@@ -49,10 +50,9 @@ public class RecipeUtil {
         return getAllRecipes(getRecipeManager(), type);
     }
 
-    @SuppressWarnings("unchecked")
     public static <C extends Container, T extends Recipe<C>> List<T> getAllRecipes(RecipeManager manager, RecipeType<T> type) {
-        if (!RECIPE_CACHE.containsKey(type)) RECIPE_CACHE.put(type, (List<Recipe<?>>) manager.getAllRecipesFor(type));
-        return (List<T>) RECIPE_CACHE.get(type);
+        if (!RECIPE_CACHE.containsKey(type)) RECIPE_CACHE.put(type, DataUtil.cast(manager.getAllRecipesFor(type)));
+        return DataUtil.cast(RECIPE_CACHE.get(type));
     }
 
     public static <C extends Container, T extends Recipe<C>> T getRecipe(RecipeType<T> type, C container) {

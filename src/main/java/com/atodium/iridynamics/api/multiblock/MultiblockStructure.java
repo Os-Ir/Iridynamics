@@ -164,7 +164,6 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
     }
 
     private void updateStructureInternal() {
-        System.out.println(this.structureInfo);
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
         int minZ = Integer.MAX_VALUE;

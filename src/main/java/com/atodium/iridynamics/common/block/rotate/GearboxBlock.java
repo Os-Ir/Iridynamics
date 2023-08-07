@@ -63,7 +63,7 @@ public class GearboxBlock extends Block implements EntityBlock {
         if (!player.isCreative() && harvest)
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModBlocks.GEARBOX.get()));
         level.getBlockEntity(pos, ModBlockEntities.GEARBOX.get()).ifPresent((gearbox) -> {
-            for (ItemStack stack : gearbox.getAllGears()) ItemHandlerHelper.giveItemToPlayer(player, stack);
+            for (ItemStack stack : gearbox.getAllGearItems()) ItemHandlerHelper.giveItemToPlayer(player, stack);
         });
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }

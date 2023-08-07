@@ -1,10 +1,11 @@
 package com.atodium.iridynamics.api.capability;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.heat.HeatModule;
 import com.atodium.iridynamics.api.heat.IHeat;
 import com.atodium.iridynamics.api.heat.IPhasePortrait;
 import com.atodium.iridynamics.api.heat.impl.SolidPhasePortrait;
-import com.atodium.iridynamics.api.heat.HeatModule;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -58,10 +59,9 @@ public class HeatCapability implements IHeat, ICapabilitySerializable<CompoundTa
         else this.resistances = new double[6];
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends IPhasePortrait> T getPhasePortrait() {
-        return (T) this.portrait;
+        return DataUtil.cast(this.portrait);
     }
 
     @Override

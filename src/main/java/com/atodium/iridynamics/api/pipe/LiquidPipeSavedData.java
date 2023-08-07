@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.rotate;
+package com.atodium.iridynamics.api.pipe;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.util.data.DataUtil;
@@ -19,68 +19,71 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
-public class RotateSavedData extends SavedData {
-    public static final String ID = Iridynamics.MODID + "_rotate";
+public class LiquidPipeSavedData extends SavedData {
+    public static final String ID = Iridynamics.MODID + "_liquid_pipe";
 
     private final ServerLevel level;
-    private final List<RotateNetwork> allNetworks;
-    private final Map<ChunkPos, List<RotateNetwork>> chunkNetworks;
+    private final List<LiquidPipeNetwork> allNetworks;
+    private final Map<ChunkPos, List<LiquidPipeNetwork>> chunkNetworks;
+    private long lastTickTime;
 
-    public RotateSavedData(ServerLevel level) {
+    public LiquidPipeSavedData(ServerLevel level) {
         this.level = level;
         this.allNetworks = Lists.newArrayList();
         this.chunkNetworks = Maps.newHashMap();
     }
 
-    public static RotateSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent((tag) -> load(level, tag), () -> new RotateSavedData(level), ID);
+    public static LiquidPipeSavedData get(ServerLevel level) {
+        return level.getDataStorage().computeIfAbsent((tag) -> load(level, tag), () -> new LiquidPipeSavedData(level), ID);
     }
 
-    private static RotateSavedData load(ServerLevel level, CompoundTag tag) {
-        RotateSavedData data = new RotateSavedData(level);
+    private static LiquidPipeSavedData load(ServerLevel level, CompoundTag tag) {
+        LiquidPipeSavedData data = new LiquidPipeSavedData(level);
         ListTag networksTag = tag.getList("networks", Tag.TAG_COMPOUND);
         for (int i = 0; i < networksTag.size(); i++) {
-            RotateNetwork network = new RotateNetwork(data);
+            LiquidPipeNetwork network = new LiquidPipeNetwork(data);
             network.deserializeNBT(networksTag.getCompound(i));
             data.allNetworks.add(network);
         }
+        data.lastTickTime = tag.getLong("lastTickTime");
         return data;
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
         ListTag networksTag = new ListTag();
-        for (RotateNetwork allNetwork : this.allNetworks) networksTag.add(allNetwork.serializeNBT());
+        for (LiquidPipeNetwork allNetwork : this.allNetworks) networksTag.add(allNetwork.serializeNBT());
         tag.put("networks", networksTag);
+        tag.putLong("lastTickTime", this.lastTickTime);
         return tag;
     }
 
-    public void tryTick(ServerLevel level, BlockPos pos, long time) {
-        for (Direction direction : DataUtil.DIRECTIONS) {
-            RotateNetwork network = this.getPosNetwork(new PosDirection(pos, direction));
-            if (network != null) network.tryTick(time);
+    public void tryTick(ServerLevel level, long time) {
+        if (this.lastTickTime < time) {
+            this.allNetworks.forEach((network) -> network.tryTick(level));
+            this.lastTickTime = time;
         }
     }
 
-    public void addNode(BlockPos pos, IRotateNode node) {
-        EnumMap<Direction, RotateNetwork> relatives = Maps.newEnumMap(Direction.class);
+    public void addNode(BlockPos pos, ILiquidPipeNode node) {
+        EnumMap<Direction, LiquidPipeNetwork> relatives = Maps.newEnumMap(Direction.class);
         EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
         for (Direction to : DataUtil.DIRECTIONS) {
             if (!node.isConnectable(to)) finish.put(to, true);
             else finish.put(to, false);
             PosDirection toInfo = new PosDirection(pos, to).relative();
-            RotateNetwork networkTo = this.getPosNetwork(toInfo);
+            LiquidPipeNetwork networkTo = this.getPosNetwork(toInfo);
             relatives.put(to, networkTo);
         }
-        for (Map.Entry<Direction, RotateNetwork> outer : relatives.entrySet()) {
+        for (Map.Entry<Direction, LiquidPipeNetwork> outer : relatives.entrySet()) {
             Direction direction = outer.getKey();
-            RotateNetwork network = outer.getValue();
+            LiquidPipeNetwork network = outer.getValue();
             if (finish.get(direction) || network == null) continue;
             finish.put(direction, true);
             network.addNode(new PosDirection(pos, direction), node);
-            for (Map.Entry<Direction, RotateNetwork> inner : relatives.entrySet()) {
+            for (Map.Entry<Direction, LiquidPipeNetwork> inner : relatives.entrySet()) {
                 Direction innerDirection = inner.getKey();
-                RotateNetwork innerNetwork = inner.getValue();
+                LiquidPipeNetwork innerNetwork = inner.getValue();
                 if (finish.get(innerDirection)) continue;
                 if (innerNetwork == network || node.isRelated(direction, innerDirection)) {
                     finish.put(innerDirection, true);
@@ -91,7 +94,7 @@ public class RotateSavedData extends SavedData {
         }
         for (Direction direction : DataUtil.DIRECTIONS) {
             if (finish.get(direction)) continue;
-            RotateNetwork network = new RotateNetwork(this);
+            LiquidPipeNetwork network = new LiquidPipeNetwork(this);
             network.addNode(new PosDirection(pos, direction), node);
             finish.put(direction, true);
             for (Direction innerDirection : DataUtil.DIRECTIONS) {
@@ -105,17 +108,17 @@ public class RotateSavedData extends SavedData {
     }
 
     public void removeNode(BlockPos pos) {
-        EnumMap<Direction, RotateNetwork> relatives = Maps.newEnumMap(Direction.class);
+        EnumMap<Direction, LiquidPipeNetwork> relatives = Maps.newEnumMap(Direction.class);
         EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
         for (Direction to : DataUtil.DIRECTIONS) {
             PosDirection toInfo = new PosDirection(pos, to);
-            RotateNetwork networkTo = this.getPosNetwork(toInfo);
+            LiquidPipeNetwork networkTo = this.getPosNetwork(toInfo);
             finish.put(to, networkTo == null);
             relatives.put(to, networkTo);
         }
         for (Direction direction : DataUtil.DIRECTIONS) {
             if (finish.get(direction)) continue;
-            RotateNetwork network = relatives.get(direction);
+            LiquidPipeNetwork network = relatives.get(direction);
             EnumSet<Direction> connected = EnumSet.noneOf(Direction.class);
             connected.add(direction);
             finish.put(direction, true);
@@ -127,12 +130,10 @@ public class RotateSavedData extends SavedData {
             if (network.isEmpty()) continue;
             this.removeNetwork(network);
             for (Direction toSearch : connected) {
-                Map<PosDirection, IRotateNode> subNodes = network.searchAllNodes(new PosDirection(pos, toSearch));
+                Map<PosDirection, ILiquidPipeNode> subNodes = network.searchAllNodes(new PosDirection(pos, toSearch));
                 if (!subNodes.isEmpty() && this.getPosNetwork(subNodes.keySet().toArray(new PosDirection[0])[0]) == null) {
-                    RotateNetwork subNetwork = new RotateNetwork(this);
+                    LiquidPipeNetwork subNetwork = new LiquidPipeNetwork(this);
                     subNetwork.addAllNodes(subNodes);
-                    subNetwork.setAngularVelocity(network.angularVelocity(subNetwork.center()));
-                    subNetwork.setAngle(network.angle(subNetwork.center()));
                     this.allNetworks.add(subNetwork);
                 }
             }
@@ -144,26 +145,26 @@ public class RotateSavedData extends SavedData {
         return this.level;
     }
 
-    protected void removeNetwork(RotateNetwork network) {
+    protected void removeNetwork(LiquidPipeNetwork network) {
         this.allNetworks.remove(network);
         network.getAllChunks().forEach((chunk) -> {
             if (this.chunkNetworks.containsKey(chunk)) this.chunkNetworks.get(chunk).remove(network);
         });
     }
 
-    protected RotateNetwork getPosNetwork(PosDirection pos) {
+    protected LiquidPipeNetwork getPosNetwork(PosDirection pos) {
         ChunkPos chunk = pos.chunk();
         if (!this.chunkNetworks.containsKey(chunk)) return null;
-        for (RotateNetwork network : this.chunkNetworks.get(chunk)) if (network.contains(pos)) return network;
+        for (LiquidPipeNetwork network : this.chunkNetworks.get(chunk)) if (network.contains(pos)) return network;
         return null;
     }
 
-    protected void addNetworkChunk(ChunkPos chunk, RotateNetwork network) {
+    protected void addNetworkChunk(ChunkPos chunk, LiquidPipeNetwork network) {
         if (!this.chunkNetworks.containsKey(chunk)) this.chunkNetworks.put(chunk, Lists.newArrayList());
         this.chunkNetworks.get(chunk).add(network);
     }
 
-    protected void removeNetworkChunk(ChunkPos chunk, RotateNetwork network) {
+    protected void removeNetworkChunk(ChunkPos chunk, LiquidPipeNetwork network) {
         if (this.chunkNetworks.computeIfPresent(chunk, (c, list) -> {
             list.remove(network);
             return list;

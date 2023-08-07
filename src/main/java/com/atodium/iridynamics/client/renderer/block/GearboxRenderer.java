@@ -29,7 +29,7 @@ public class GearboxRenderer implements BlockEntityRenderer<GearboxBlockEntity> 
         transform.pushPose();
         transform.translate(0.5, 0.5, 0.5);
         for (Direction direction : Direction.values()) {
-            if (!gearbox.isDirectionValid(direction)) continue;
+            if (!gearbox.isConnectable(direction)) continue;
             transform.pushPose();
             if (direction.get2DDataValue() >= 0)
                 transform.mulPose(Vector3f.YP.rotationDegrees(RendererUtil.getDirectionAngel(direction)));

@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.api.gui;
 
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.network.CapabilityUpdatePacket;
 import com.atodium.iridynamics.network.ModNetworkHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -28,16 +29,14 @@ public class CapabilityUpdateListener implements ContainerListener {
         REGISTRY.put(key, cap);
     }
 
-    @SuppressWarnings("unchecked")
     public static CompoundTag readCapabilityData(ItemStack stack) {
         CompoundTag tag = new CompoundTag();
-        REGISTRY.forEach((key, cap) -> stack.getCapability(cap).ifPresent((data) -> tag.put(key.toString(), ((ICapabilitySerializable<CompoundTag>) data).serializeNBT())));
+        REGISTRY.forEach((key, cap) -> stack.getCapability(cap).ifPresent((data) -> tag.put(key.toString(), DataUtil.<ICapabilitySerializable<CompoundTag>>cast(data).serializeNBT())));
         return tag;
     }
 
-    @SuppressWarnings("unchecked")
     public static void applyCapabilityData(ItemStack stack, CompoundTag nbt) {
-        REGISTRY.forEach((key, cap) -> stack.getCapability(cap).ifPresent((data) -> ((ICapabilitySerializable<CompoundTag>) data).deserializeNBT((CompoundTag) nbt.get(key.toString()))));
+        REGISTRY.forEach((key, cap) -> stack.getCapability(cap).ifPresent((data) -> DataUtil.<ICapabilitySerializable<CompoundTag>>cast(data).deserializeNBT((CompoundTag) nbt.get(key.toString()))));
     }
 
     public static boolean shouldSync(ItemStack stack) {
