@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.common.blockEntity.rotate;
 
+import com.atodium.iridynamics.api.blockEntity.ISavedDataTickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.rotate.IRotateNode;
 import com.atodium.iridynamics.api.rotate.RotateModule;
@@ -15,7 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ClockworkBlockEntity extends SyncedBlockEntity implements IRotateNode {
+public class ClockworkBlockEntity extends SyncedBlockEntity implements IRotateNode, ISavedDataTickable {
     public static final double MAX_TORQUE = 1000.0;
     public static final double MAX_ANGLE = MathUtil.TWO_PI * 10;
 
@@ -27,7 +28,7 @@ public class ClockworkBlockEntity extends SyncedBlockEntity implements IRotateNo
     }
 
     @Override
-    public void nodeTick(Level level, BlockPos pos, BlockState state) {
+    public void blockTick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
         if (this.handleTick > 0) {
             this.clockworkAngle = Math.min(this.clockworkAngle + MAX_ANGLE / 200.0, MAX_ANGLE);

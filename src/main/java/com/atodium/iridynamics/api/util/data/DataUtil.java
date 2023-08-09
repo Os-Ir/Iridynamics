@@ -1,8 +1,10 @@
 package com.atodium.iridynamics.api.util.data;
 
 import com.google.gson.Gson;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,6 +23,21 @@ public class DataUtil {
     @SuppressWarnings("unchecked")
     public static <L> L cast(Object a) {
         return (L) a;
+    }
+
+    public static CompoundTag saveBlockPos(BlockPos pos) {
+        return saveBlockPos(new CompoundTag(), pos);
+    }
+
+    public static CompoundTag saveBlockPos(CompoundTag tag, BlockPos pos) {
+        tag.putInt("x", pos.getX());
+        tag.putInt("y", pos.getY());
+        tag.putInt("z", pos.getZ());
+        return tag;
+    }
+
+    public static BlockPos loadBlockPos(CompoundTag tag) {
+        return new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
     }
 
     @SuppressWarnings("deprecation")

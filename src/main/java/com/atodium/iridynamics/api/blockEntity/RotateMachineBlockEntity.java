@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class RotateMachineBlockEntity extends SyncedBlockEntity implements IRotateNode {
+public abstract class RotateMachineBlockEntity extends SyncedBlockEntity implements IRotateNode, ISavedDataTickable {
     private double inertia, friction, angle, angularVelocity;
 
     public RotateMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -23,7 +23,7 @@ public abstract class RotateMachineBlockEntity extends SyncedBlockEntity impleme
     public abstract Direction direction();
 
     @Override
-    public void tick(Level level, BlockPos pos, BlockState state) {
+    public void blockTick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
         this.sendSyncPacket();
     }

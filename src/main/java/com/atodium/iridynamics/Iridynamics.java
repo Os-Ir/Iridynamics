@@ -1,5 +1,6 @@
 package com.atodium.iridynamics;
 
+import com.atodium.iridynamics.api.blockEntity.SavedDataTickManager;
 import com.atodium.iridynamics.api.fluid.ModFluids;
 import com.atodium.iridynamics.api.gui.plan.PlanGuiCodec;
 import com.atodium.iridynamics.api.material.ModMaterials;
@@ -9,7 +10,6 @@ import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.decorator.ModOutputDecorators;
 import com.atodium.iridynamics.api.registry.ModRegistry;
 import com.atodium.iridynamics.api.research.ResearchModule;
-import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.entity.ModEntities;
@@ -53,6 +53,7 @@ public class Iridynamics {
         ModNetworkHandler.init();
         PlanGuiCodec.init();
         ResearchModule.init();
+        SavedDataTickManager.init();
     }
 
     public static ResourceLocation rl(String path) {

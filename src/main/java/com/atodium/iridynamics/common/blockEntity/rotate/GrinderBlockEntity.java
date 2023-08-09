@@ -1,6 +1,6 @@
 package com.atodium.iridynamics.common.blockEntity.rotate;
 
-import com.atodium.iridynamics.api.blockEntity.ITickable;
+import com.atodium.iridynamics.api.blockEntity.ISavedDataTickable;
 import com.atodium.iridynamics.api.blockEntity.RotateMachineBlockEntity;
 import com.atodium.iridynamics.api.item.InventoryUtil;
 import com.atodium.iridynamics.api.item.ItemUtil;
@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GrinderBlockEntity extends RotateMachineBlockEntity implements ITickable {
+public class GrinderBlockEntity extends RotateMachineBlockEntity implements ISavedDataTickable {
     public static final double INERTIA = 15.0, FRICTION = 2.0;
 
     private boolean recipeUpdateFlag;
@@ -38,7 +38,7 @@ public class GrinderBlockEntity extends RotateMachineBlockEntity implements ITic
     }
 
     @Override
-    public void nodeTick(Level level, BlockPos pos, BlockState state) {
+    public void blockTick(Level level, BlockPos pos, BlockState state) {
         if (this.level.isClientSide) return;
         if (this.recipeUpdateFlag) {
             this.updateRecipe();
@@ -56,6 +56,7 @@ public class GrinderBlockEntity extends RotateMachineBlockEntity implements ITic
                 this.markForItemChange();
             } else this.markDirty();
         }
+        super.blockTick(level, pos, state);
     }
 
     public void markRecipeUpdate() {

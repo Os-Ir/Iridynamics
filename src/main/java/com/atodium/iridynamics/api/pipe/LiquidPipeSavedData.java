@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.pipe;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.blockEntity.SavedDataTickManager;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.data.PosDirection;
 import com.google.common.collect.Maps;
@@ -11,7 +12,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.EnumMap;
@@ -19,13 +19,12 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
-public class LiquidPipeSavedData extends SavedData {
+public class LiquidPipeSavedData extends SavedDataTickManager.TickableSavedData {
     public static final String ID = Iridynamics.MODID + "_liquid_pipe";
 
     private final ServerLevel level;
     private final List<LiquidPipeNetwork> allNetworks;
     private final Map<ChunkPos, List<LiquidPipeNetwork>> chunkNetworks;
-    private long lastTickTime;
 
     public LiquidPipeSavedData(ServerLevel level) {
         this.level = level;
@@ -45,7 +44,6 @@ public class LiquidPipeSavedData extends SavedData {
             network.deserializeNBT(networksTag.getCompound(i));
             data.allNetworks.add(network);
         }
-        data.lastTickTime = tag.getLong("lastTickTime");
         return data;
     }
 
@@ -54,57 +52,52 @@ public class LiquidPipeSavedData extends SavedData {
         ListTag networksTag = new ListTag();
         for (LiquidPipeNetwork allNetwork : this.allNetworks) networksTag.add(allNetwork.serializeNBT());
         tag.put("networks", networksTag);
-        tag.putLong("lastTickTime", this.lastTickTime);
         return tag;
     }
 
-    public void tryTick(ServerLevel level, long time) {
-        if (this.lastTickTime < time) {
-            this.allNetworks.forEach((network) -> network.tryTick(level));
-            this.lastTickTime = time;
+    @Override
+    public void tryTick(ServerLevel level, BlockPos pos, long time) {
+        for (Direction direction : DataUtil.DIRECTIONS) {
+            LiquidPipeNetwork network = this.getPosNetwork(new PosDirection(pos, direction));
+            if (network != null) network.tryTick(time);
         }
     }
 
-    public void addNode(BlockPos pos, ILiquidPipeNode node) {
-        EnumMap<Direction, LiquidPipeNetwork> relatives = Maps.newEnumMap(Direction.class);
-        EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
-        for (Direction to : DataUtil.DIRECTIONS) {
-            if (!node.isConnectable(to)) finish.put(to, true);
-            else finish.put(to, false);
-            PosDirection toInfo = new PosDirection(pos, to).relative();
-            LiquidPipeNetwork networkTo = this.getPosNetwork(toInfo);
-            relatives.put(to, networkTo);
-        }
-        for (Map.Entry<Direction, LiquidPipeNetwork> outer : relatives.entrySet()) {
-            Direction direction = outer.getKey();
-            LiquidPipeNetwork network = outer.getValue();
-            if (finish.get(direction) || network == null) continue;
-            finish.put(direction, true);
-            network.addNode(new PosDirection(pos, direction), node);
-            for (Map.Entry<Direction, LiquidPipeNetwork> inner : relatives.entrySet()) {
-                Direction innerDirection = inner.getKey();
-                LiquidPipeNetwork innerNetwork = inner.getValue();
-                if (finish.get(innerDirection)) continue;
-                if (innerNetwork == network || node.isRelated(direction, innerDirection)) {
-                    finish.put(innerDirection, true);
-                    network.addNode(new PosDirection(pos, innerDirection), node);
-                    if (innerNetwork != network && innerNetwork != null) network.combine(innerNetwork);
-                }
-            }
-        }
+    public void addNode(BlockPos pos, ILiquidPipeNode... nodes) {
         for (Direction direction : DataUtil.DIRECTIONS) {
-            if (finish.get(direction)) continue;
-            LiquidPipeNetwork network = new LiquidPipeNetwork(this);
-            network.addNode(new PosDirection(pos, direction), node);
-            finish.put(direction, true);
-            for (Direction innerDirection : DataUtil.DIRECTIONS) {
-                if (finish.get(innerDirection) || !node.isRelated(direction, innerDirection)) continue;
-                network.addNode(new PosDirection(pos, innerDirection), node);
-                finish.put(innerDirection, true);
+            boolean flag = false;
+            for (ILiquidPipeNode node : nodes) {
+                if (flag && node.isConnectable(direction))
+                    throw new IllegalArgumentException("Different liquid pipe nodes can not connect to the same direction");
+                if (node.isConnectable(direction)) flag = true;
             }
-            this.allNetworks.add(network);
         }
+        for (ILiquidPipeNode node : nodes) this.addSingleNode(pos, node);
         this.setDirty();
+    }
+
+    private void addSingleNode(BlockPos pos, ILiquidPipeNode node) {
+        EnumMap<Direction, LiquidPipeNetwork> relatives = Maps.newEnumMap(Direction.class);
+        List<Direction> connectable = node.connectableDirections();
+        Direction firstDirection = null;
+        for (Direction direction : connectable) {
+            LiquidPipeNetwork network = this.getPosNetwork(new PosDirection(pos, direction).relative());
+            if (network == null) continue;
+            if (firstDirection == null) firstDirection = direction;
+            relatives.put(direction, network);
+        }
+        if (firstDirection == null) {
+            LiquidPipeNetwork network = new LiquidPipeNetwork(this);
+            for (Direction direction : connectable) network.addNode(new PosDirection(pos, direction), node);
+            this.allNetworks.add(network);
+        } else {
+            LiquidPipeNetwork network = relatives.get(firstDirection);
+            for (Direction direction : connectable) network.addNode(new PosDirection(pos, direction), node);
+            for (Direction direction : relatives.keySet()) {
+                LiquidPipeNetwork innerNetwork = relatives.get(direction);
+                if (innerNetwork != network && innerNetwork != null) network.combine(innerNetwork);
+            }
+        }
     }
 
     public void removeNode(BlockPos pos) {

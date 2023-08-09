@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.rotate;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.blockEntity.SavedDataTickManager;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.data.PosDirection;
 import com.google.common.collect.Maps;
@@ -11,7 +12,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.EnumMap;
@@ -19,7 +19,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
-public class RotateSavedData extends SavedData {
+public class RotateSavedData extends SavedDataTickManager.TickableSavedData {
     public static final String ID = Iridynamics.MODID + "_rotate";
 
     private final ServerLevel level;
@@ -55,6 +55,7 @@ public class RotateSavedData extends SavedData {
         return tag;
     }
 
+    @Override
     public void tryTick(ServerLevel level, BlockPos pos, long time) {
         for (Direction direction : DataUtil.DIRECTIONS) {
             RotateNetwork network = this.getPosNetwork(new PosDirection(pos, direction));

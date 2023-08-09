@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.common.blockEntity.rotate;
 
+import com.atodium.iridynamics.api.blockEntity.ISavedDataTickable;
 import com.atodium.iridynamics.api.blockEntity.ITipInfoRenderer;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.item.ItemDelegate;
@@ -26,7 +27,7 @@ import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
-public class GearboxBlockEntity extends SyncedBlockEntity implements IRotateNode, ITipInfoRenderer {
+public class GearboxBlockEntity extends SyncedBlockEntity implements IRotateNode, ISavedDataTickable, ITipInfoRenderer {
     public static final ItemDelegate SMALL_GEAR = ItemDelegate.of(ModSolidShapes.SMALL_GEAR, ModMaterials.IRON);
     public static final ItemDelegate GEAR = ItemDelegate.of(ModSolidShapes.GEAR, ModMaterials.IRON);
 
@@ -40,7 +41,7 @@ public class GearboxBlockEntity extends SyncedBlockEntity implements IRotateNode
     }
 
     @Override
-    public void nodeTick(Level level, BlockPos pos, BlockState state) {
+    public void blockTick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
         this.sendSyncPacket();
     }

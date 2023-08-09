@@ -283,6 +283,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         tag.put("nodes", nodesTag);
         tag.putDouble("angularMomentum", this.angularMomentum);
         tag.putDouble("angle", this.angle);
+        tag.putLong("lastTickTime", this.lastTickTime);
         return tag;
     }
 
@@ -299,5 +300,6 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
         this.addAllNodes(nodes);
         this.angularMomentum = tag.getDouble("angularMomentum");
         this.angle = tag.getDouble("angle");
+        this.lastTickTime = tag.getLong("lastTickTime");
     }
 }

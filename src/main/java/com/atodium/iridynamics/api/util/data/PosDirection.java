@@ -32,7 +32,6 @@ public record PosDirection(BlockPos pos, Direction direction) {
     }
 
     public PosDirection change(Direction direction) {
-        if (this.direction == direction) return this;
-        return new PosDirection(this.pos, direction);
+        return this.direction == direction ? this : new PosDirection(this.pos, direction);
     }
 }

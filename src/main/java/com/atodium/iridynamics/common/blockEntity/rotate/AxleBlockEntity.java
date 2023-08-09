@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.common.blockEntity.rotate;
 
+import com.atodium.iridynamics.api.blockEntity.ISavedDataTickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.rotate.IRotateNode;
 import com.atodium.iridynamics.api.rotate.RotateModule;
@@ -14,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode {
+public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode, ISavedDataTickable {
     public static final double INERTIA = 10.0;
     public static final double FRICTION = 0.4;
 
@@ -25,7 +26,7 @@ public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode {
     }
 
     @Override
-    public void nodeTick(Level level, BlockPos pos, BlockState state) {
+    public void blockTick(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
         this.sendSyncPacket();
     }
