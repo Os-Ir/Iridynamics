@@ -1,14 +1,16 @@
 package com.atodium.iridynamics.api.pipe;
 
 import com.atodium.iridynamics.api.util.data.DataUtil;
+import com.atodium.iridynamics.api.util.math.MathUtil;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.material.Fluid;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.List;
 
 public interface ILiquidPipeNode {
-    boolean isConnectable(Direction direction);
+    boolean contains(Direction direction);
+
+    boolean connected(Direction direction);
 
     int capacity();
 
@@ -16,17 +18,21 @@ public interface ILiquidPipeNode {
 
     int addFluidAmount(int amount);
 
-    Fluid fluid();
-
     boolean canInput();
 
     boolean canOutput();
 
     int maxFlowRate(Direction direction);
 
-    default List<Direction> connectableDirections() {
+    default List<Direction> containedDirections() {
         List<Direction> directions = Lists.newArrayList();
-        for (Direction direction : DataUtil.DIRECTIONS) if (this.isConnectable(direction)) directions.add(direction);
+        for (Direction direction : DataUtil.DIRECTIONS) if (this.contains(direction)) directions.add(direction);
+        return directions;
+    }
+
+    default List<Direction> connectedDirections() {
+        List<Direction> directions = Lists.newArrayList();
+        for (Direction direction : DataUtil.DIRECTIONS) if (this.connected(direction)) directions.add(direction);
         return directions;
     }
 
@@ -38,8 +44,12 @@ public interface ILiquidPipeNode {
         return this.capacity() - this.fluidAmount();
     }
 
+    default boolean empty() {
+        return this.fluidAmount() == 0;
+    }
+
     default boolean full() {
-        return this.fluidAmount() == this.capacity();
+        return MathUtil.between(this.fluidAmount(), this.capacity() * 0.9, this.capacity());
     }
 
     default double scaledPressure() {

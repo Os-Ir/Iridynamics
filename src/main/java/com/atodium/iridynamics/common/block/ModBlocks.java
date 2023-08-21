@@ -1,9 +1,11 @@
 package com.atodium.iridynamics.common.block;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.util.ModCreativeTabs;
+import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.multiblock.MultiblockModule;
+import com.atodium.iridynamics.api.util.ModCreativeTabs;
 import com.atodium.iridynamics.common.block.equipment.*;
+import com.atodium.iridynamics.common.block.factory.LiquidPipeBlock;
 import com.atodium.iridynamics.common.block.rotate.*;
 import com.atodium.iridynamics.common.multiblock.Smelter;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +21,10 @@ public class ModBlocks {
     public static final RegistryObject<Block> PLACED_STONE = Iridynamics.REGISTRY.block("placed_stone", PlacedStoneBlock::new, Material.STONE).strength(0.0f, 0.0f).sound(SoundType.STONE).noOcclusion().register();
 
     public static final RegistryObject<Block> SMELTER_WALL = Iridynamics.REGISTRY.block("smelter_wall", Block::new, Material.STONE).strength(6.0f, 4.0f).sound(SoundType.STONE).registerWithItem(ModCreativeTabs.BLOCK);
+
+    public static final RegistryObject<Block> WOOD_LIQUID_PIPE = Iridynamics.REGISTRY.block("wood_liquid_pipe", (properties) -> new LiquidPipeBlock(properties, ModMaterials.WOOD), Material.WOOD).strength(4.0f, 2.0f).sound(SoundType.WOOD).registerWithItem(ModCreativeTabs.EQUIPMENT);
+    public static final RegistryObject<Block> BRONZE_LIQUID_PIPE = Iridynamics.REGISTRY.block("bronze_liquid_pipe", (properties) -> new LiquidPipeBlock(properties, ModMaterials.BRONZE), Material.METAL).strength(6.0f, 4.0f).sound(SoundType.METAL).registerWithItem(ModCreativeTabs.EQUIPMENT);
+    public static final RegistryObject<Block> STEEL_LIQUID_PIPE = Iridynamics.REGISTRY.block("steel_liquid_pipe", (properties) -> new LiquidPipeBlock(properties, ModMaterials.STEEL), Material.METAL).strength(6.0f, 4.0f).sound(SoundType.METAL).registerWithItem(ModCreativeTabs.EQUIPMENT);
 
     public static final RegistryObject<Block> CHUTE = Iridynamics.REGISTRY.block("chute", ChuteBlock::new, Material.STONE).strength(4.0f, 2.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);
     public static final RegistryObject<Block> FORGE = Iridynamics.REGISTRY.block("forge", ForgeBlock::new, Material.STONE).strength(2.0f, 1.0f).sound(SoundType.STONE).noOcclusion().registerWithItem(ModCreativeTabs.EQUIPMENT);

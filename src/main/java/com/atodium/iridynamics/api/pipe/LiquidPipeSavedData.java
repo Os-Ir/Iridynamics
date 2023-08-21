@@ -12,6 +12,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.material.Fluid;
 import org.apache.commons.compress.utils.Lists;
 
 import java.util.EnumMap;
@@ -63,13 +64,27 @@ public class LiquidPipeSavedData extends SavedDataTickManager.TickableSavedData 
         }
     }
 
-    public void addNode(BlockPos pos, ILiquidPipeNode... nodes) {
+    public Fluid getFluid(PosDirection pos) {
+        LiquidPipeNetwork network = this.getPosNetwork(pos);
+        return network == null ? null : network.fluid();
+    }
+
+    public boolean trySetFluid(PosDirection pos, Fluid fluid) {
+        LiquidPipeNetwork network = this.getPosNetwork(pos);
+        return network != null && network.trySetFluid(fluid);
+    }
+
+    public void addNodeContainer(BlockPos pos, ILiquidPipeNodeContainer block) {
+        this.addAllNodes(pos, block.getAllBlockNodes());
+    }
+
+    public void addAllNodes(BlockPos pos, ILiquidPipeNode... nodes) {
         for (Direction direction : DataUtil.DIRECTIONS) {
             boolean flag = false;
             for (ILiquidPipeNode node : nodes) {
-                if (flag && node.isConnectable(direction))
+                if (flag && node.contains(direction))
                     throw new IllegalArgumentException("Different liquid pipe nodes can not connect to the same direction");
-                if (node.isConnectable(direction)) flag = true;
+                if (node.contains(direction)) flag = true;
             }
         }
         for (ILiquidPipeNode node : nodes) this.addSingleNode(pos, node);
@@ -78,34 +93,38 @@ public class LiquidPipeSavedData extends SavedDataTickManager.TickableSavedData 
 
     private void addSingleNode(BlockPos pos, ILiquidPipeNode node) {
         EnumMap<Direction, LiquidPipeNetwork> relatives = Maps.newEnumMap(Direction.class);
-        List<Direction> connectable = node.connectableDirections();
+        List<Direction> contained = node.containedDirections();
         Direction firstDirection = null;
-        for (Direction direction : connectable) {
-            LiquidPipeNetwork network = this.getPosNetwork(new PosDirection(pos, direction).relative());
-            if (network == null) continue;
+        for (Direction direction : node.connectedDirections()) {
+            PosDirection posTo = new PosDirection(pos, direction).relative();
+            LiquidPipeNetwork network = this.getPosNetwork(posTo);
+            if (network == null || !network.node(posTo).connected(posTo.direction())) continue;
             if (firstDirection == null) firstDirection = direction;
             relatives.put(direction, network);
         }
         if (firstDirection == null) {
             LiquidPipeNetwork network = new LiquidPipeNetwork(this);
-            for (Direction direction : connectable) network.addNode(new PosDirection(pos, direction), node);
+            for (Direction direction : contained) network.addNode(new PosDirection(pos, direction), node);
             this.allNetworks.add(network);
         } else {
             LiquidPipeNetwork network = relatives.get(firstDirection);
-            for (Direction direction : connectable) network.addNode(new PosDirection(pos, direction), node);
+            for (Direction direction : contained) network.addNode(new PosDirection(pos, direction), node);
             for (Direction direction : relatives.keySet()) {
                 LiquidPipeNetwork innerNetwork = relatives.get(direction);
-                if (innerNetwork != network && innerNetwork != null) network.combine(innerNetwork);
+                if (innerNetwork != network) {
+                    network.combine(innerNetwork);
+                    if (network.isFluidEmpty()) network.trySetFluid(innerNetwork.fluid());
+                }
             }
         }
     }
 
-    public void removeNode(BlockPos pos) {
+    public void removeAllNodesIn(BlockPos pos) {
         EnumMap<Direction, LiquidPipeNetwork> relatives = Maps.newEnumMap(Direction.class);
         EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
         for (Direction to : DataUtil.DIRECTIONS) {
-            PosDirection toInfo = new PosDirection(pos, to);
-            LiquidPipeNetwork networkTo = this.getPosNetwork(toInfo);
+            PosDirection posTo = new PosDirection(pos, to);
+            LiquidPipeNetwork networkTo = this.getPosNetwork(posTo);
             finish.put(to, networkTo == null);
             relatives.put(to, networkTo);
         }
@@ -123,10 +142,13 @@ public class LiquidPipeSavedData extends SavedDataTickManager.TickableSavedData 
             if (network.isEmpty()) continue;
             this.removeNetwork(network);
             for (Direction toSearch : connected) {
-                Map<PosDirection, ILiquidPipeNode> subNodes = network.searchAllNodes(new PosDirection(pos, toSearch));
+                PosDirection posToSearch = new PosDirection(pos, toSearch);
+                if (!network.node(posToSearch).connected(toSearch)) continue;
+                Map<PosDirection, ILiquidPipeNode> subNodes = network.searchAllNodes(posToSearch);
                 if (!subNodes.isEmpty() && this.getPosNetwork(subNodes.keySet().toArray(new PosDirection[0])[0]) == null) {
                     LiquidPipeNetwork subNetwork = new LiquidPipeNetwork(this);
                     subNetwork.addAllNodes(subNodes);
+                    subNetwork.trySetFluid(network.fluid());
                     this.allNetworks.add(subNetwork);
                 }
             }
@@ -143,6 +165,14 @@ public class LiquidPipeSavedData extends SavedDataTickManager.TickableSavedData 
         network.getAllChunks().forEach((chunk) -> {
             if (this.chunkNetworks.containsKey(chunk)) this.chunkNetworks.get(chunk).remove(network);
         });
+    }
+
+    protected ILiquidPipeNode getPosNode(PosDirection pos) {
+        ChunkPos chunk = pos.chunk();
+        if (!this.chunkNetworks.containsKey(chunk)) return null;
+        for (LiquidPipeNetwork network : this.chunkNetworks.get(chunk))
+            if (network.contains(pos)) return network.node(pos);
+        return null;
     }
 
     protected LiquidPipeNetwork getPosNetwork(PosDirection pos) {
