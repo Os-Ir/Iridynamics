@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.client;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.model.SpecialJsonModel;
 import com.atodium.iridynamics.client.model.DynamicTextureLoader;
 import com.atodium.iridynamics.client.model.material.MaterialModelLoader;
 import com.atodium.iridynamics.client.model.tool.CellModelLoader;
@@ -13,10 +14,7 @@ import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
 import com.atodium.iridynamics.common.entity.ModEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -25,10 +23,16 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Iridynamics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEventHandler {
     @SubscribeEvent
-    public static void registerModelLoaders(ModelRegistryEvent event) {
+    public static void onModelRegistry(ModelRegistryEvent event) {
         ModelLoaderRegistry.registerLoader(Iridynamics.rl("material"), MaterialModelLoader.INSTANCE);
         ModelLoaderRegistry.registerLoader(Iridynamics.rl("material_tool"), MaterialToolModelLoader.INSTANCE);
         ModelLoaderRegistry.registerLoader(Iridynamics.rl("cell"), CellModelLoader.INSTANCE);
+        SpecialJsonModel.onModelRegistry(event);
+    }
+
+    @SubscribeEvent
+    public static void onModelBake(ModelBakeEvent event) {
+        SpecialJsonModel.onModelBake(event);
     }
 
     @SubscribeEvent
