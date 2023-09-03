@@ -68,15 +68,19 @@ public class ModelVertexList {
         return this.vertexData.getFloat(this.stride * index + 20);
     }
 
-    public float nx(int index) {
+    public float light(int index) {
         return this.vertexData.getFloat(this.stride * index + 24);
     }
 
+    public float nx(int index) {
+        return this.vertexData.get(this.stride * index + 28) / 127.0f;
+    }
+
     public float ny(int index) {
-        return this.vertexData.getFloat(this.stride * index + 38);
+        return this.vertexData.get(this.stride * index + 29) / 127.0f;
     }
 
     public float nz(int index) {
-        return this.vertexData.getFloat(this.stride * index + 32);
+        return this.vertexData.get(this.stride * index + 30) / 127.0f;
     }
 }

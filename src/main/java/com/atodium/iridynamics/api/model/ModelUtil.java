@@ -2,7 +2,9 @@ package com.atodium.iridynamics.api.model;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -40,6 +42,8 @@ public class ModelUtil {
         }
     };
 
+    private static int MAX_MODEL_SIZE = 512;
+
     private static BlockRenderDispatcher tryCreateEmptyDispatcher() {
         BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
         BlockRenderDispatcher emptyDispatcher = new BlockRenderDispatcher(null, null, null);
@@ -60,27 +64,32 @@ public class ModelUtil {
         return new Random(0);
     }
 
-    public static TransformableVertexList createVertexData(BakedModel model) {
+    public static void enlargeMaxModelSize(int size) {
+        MAX_MODEL_SIZE = Math.max(MAX_MODEL_SIZE, size);
+    }
+
+    public static TransformableModelVertexList createVertexData(BakedModel model) {
         return createVertexData(model, EMPTY_BLOCK_STATE, new PoseStack());
     }
 
-    public static TransformableVertexList createVertexData(BakedModel model, PoseStack transform) {
+    public static TransformableModelVertexList createVertexData(BakedModel model, PoseStack transform) {
         return createVertexData(model, EMPTY_BLOCK_STATE, transform);
     }
 
-    public static TransformableVertexList createVertexData(BakedModel model, BlockState state) {
+    public static TransformableModelVertexList createVertexData(BakedModel model, BlockState state) {
         return createVertexData(model, EMPTY_BLOCK_STATE, new PoseStack());
     }
 
-    public static TransformableVertexList createVertexData(BakedModel model, BlockState state, PoseStack transform) {
-        BufferBuilder builder = new BufferBuilder(512);
+    public static TransformableModelVertexList createVertexData(BakedModel model, BlockState state, PoseStack transform) {
+        BufferBuilder builder = new BufferBuilder(MAX_MODEL_SIZE);
+        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
         EMPTY_BLOCK_RENDER_DISPATCHER.getModelRenderer().tesselateBlock(EmptyRenderLevel.INSTANCE, model, state, BlockPos.ZERO, transform, builder, false, emptyRandom(), 0, OverlayTexture.NO_OVERLAY, EMPTY_MODEL_DATA);
+        builder.end();
         return createVertexList(builder);
     }
 
-    public static TransformableVertexList createVertexList(BufferBuilder builder) {
-        builder.end();
+    public static TransformableModelVertexList createVertexList(BufferBuilder builder) {
         Pair<BufferBuilder.DrawState, ByteBuffer> data = builder.popNextBuffer();
-        return new TransformableVertexList(data.getFirst(), data.getSecond());
+        return new TransformableModelVertexList(data.getFirst(), data.getSecond());
     }
 }

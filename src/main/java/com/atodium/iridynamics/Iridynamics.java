@@ -10,6 +10,7 @@ import com.atodium.iridynamics.api.recipe.ModRecipeTypes;
 import com.atodium.iridynamics.api.recipe.decorator.ModOutputDecorators;
 import com.atodium.iridynamics.api.registry.ModRegistry;
 import com.atodium.iridynamics.api.research.ResearchModule;
+import com.atodium.iridynamics.client.model.ModSpecialModels;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
 import com.atodium.iridynamics.common.entity.ModEntities;
@@ -54,6 +55,7 @@ public class Iridynamics {
         PlanGuiCodec.init();
         ResearchModule.init();
         SavedDataTickManager.init();
+        ModSpecialModels.init();
     }
 
     public static ResourceLocation rl(String path) {

@@ -1,6 +1,7 @@
 package com.atodium.iridynamics.api.model;
 
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -27,6 +28,20 @@ public class SpecialJsonModel {
 
     public static void onModelBake(ModelBakeEvent event) {
         REGISTRY.entrySet().forEach((entry) -> entry.getValue().model = event.getModelRegistry().get(entry.getKey()));
+    }
+
+    public static SpecialJsonModel getJsonModel(ResourceLocation location) {
+        return REGISTRY.get(location);
+    }
+
+    public static TransformableModelVertexList createTransformableModel(ResourceLocation location) {
+        if (!REGISTRY.containsKey(location)) return null;
+        return ModelUtil.createVertexData(REGISTRY.get(location).bakedModel());
+    }
+
+    public static TransformableModelVertexList createTransformableModel(ResourceLocation location, PoseStack transform) {
+        if (!REGISTRY.containsKey(location)) return null;
+        return ModelUtil.createVertexData(REGISTRY.get(location).bakedModel(), transform);
     }
 
     public ResourceLocation location() {

@@ -1,6 +1,8 @@
 package com.atodium.iridynamics.client.renderer.block;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.model.SpecialJsonModel;
+import com.atodium.iridynamics.api.model.TransformableModelVertexList;
 import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.atodium.iridynamics.common.block.rotate.AxleBlock;
 import com.atodium.iridynamics.common.blockEntity.rotate.AxleBlockEntity;
@@ -20,13 +22,13 @@ import java.util.function.Function;
 public class AxleRenderer implements BlockEntityRenderer<AxleBlockEntity> {
     public static final AxleRenderer INSTANCE = new AxleRenderer();
 
+    public static TransformableModelVertexList MODEL = null;
+
     @Override
     public void render(AxleBlockEntity axle, float partialTicks, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+        if (MODEL == null) MODEL = SpecialJsonModel.createTransformableModel(Iridynamics.rl("item/axle_item"));
         Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS);
-        TextureAtlasSprite texture1 = atlas.apply(Iridynamics.rl("block/axle_1"));
-        TextureAtlasSprite texture2 = atlas.apply(Iridynamics.rl("block/axle_2"));
-        TextureAtlasSprite texture3 = atlas.apply(Iridynamics.rl("block/axle_3"));
-        VertexConsumer consumer = buffer.getBuffer(RenderType.cutout());
+        VertexConsumer consumer = buffer.getBuffer(RenderType.solid());
         Direction direction = axle.getBlockState().getValue(AxleBlock.DIRECTION);
         transform.pushPose();
         transform.translate(0.5, 0.5, 0.5);
@@ -34,13 +36,8 @@ public class AxleRenderer implements BlockEntityRenderer<AxleBlockEntity> {
             transform.mulPose(Vector3f.YP.rotationDegrees(RendererUtil.getDirectionAngel(direction)));
         else transform.mulPose(Vector3f.XP.rotationDegrees(direction == Direction.UP ? 90.0f : -90.0f));
         transform.mulPose(Vector3f.ZP.rotationDegrees((float) Math.toDegrees(axle.getRenderAngle(partialTicks))));
-        transform.translate(-0.125, -0.125, -0.5);
-        RendererUtil.renderFace(transform, consumer, texture1, combinedLight, combinedOverlay, Direction.UP, 0.0f, 0.0f, 0.0f, 0.25f, 0.25f, 1.0f, 0.0f, 1.0f, 0.0f, 4.0f, 16.0f);
-        RendererUtil.renderFace(transform, consumer, texture1, combinedLight, combinedOverlay, Direction.DOWN, 0.0f, 0.0f, 0.0f, 0.25f, 0.25f, 1.0f, 0.0f, -1.0f, 0.0f, 4.0f, 16.0f);
-        RendererUtil.renderFace(transform, consumer, texture2, combinedLight, combinedOverlay, Direction.WEST, 0.0f, 0.0f, 0.0f, 0.25f, 0.25f, 1.0f, -1.0f, 0.0f, 0.0f, 16.0f, 4.0f);
-        RendererUtil.renderFace(transform, consumer, texture2, combinedLight, combinedOverlay, Direction.EAST, 0.0f, 0.0f, 0.0f, 0.25f, 0.25f, 1.0f, 1.0f, 0.0f, 0.0f, 16.0f, 4.0f);
-        RendererUtil.renderFace(transform, consumer, texture3, combinedLight, combinedOverlay, Direction.NORTH, 0.0f, 0.0f, 0.0f, 0.25f, 0.25f, 1.0f, 0.0f, 0.0f, -1.0f, 4.0f, 4.0f);
-        RendererUtil.renderFace(transform, consumer, texture3, combinedLight, combinedOverlay, Direction.SOUTH, 0.0f, 0.0f, 0.0f, 0.25f, 0.25f, 1.0f, 0.0f, 0.0f, 1.0f, 4.0f, 4.0f);
+        transform.translate(-0.5, -0.5, -0.5);
+        MODEL.render(transform, consumer, axle.getBlockPos());
         transform.popPose();
     }
 }

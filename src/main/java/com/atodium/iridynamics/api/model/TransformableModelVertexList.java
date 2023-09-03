@@ -11,16 +11,16 @@ import net.minecraft.core.Direction;
 
 import java.nio.ByteBuffer;
 
-public class TransformableVertexList {
+public class TransformableModelVertexList {
     private final ModelVertexList vertices;
     private final PoseStack modelTransform;
 
-    public TransformableVertexList(BufferBuilder.DrawState drawState, ByteBuffer buffer) {
+    public TransformableModelVertexList(BufferBuilder.DrawState drawState, ByteBuffer buffer) {
         this.vertices = new ModelVertexList(buffer, drawState.vertexCount(), drawState.format().getVertexSize());
         this.modelTransform = new PoseStack();
     }
 
-    public void render(PoseStack renderTransform, VertexConsumer consumer) {
+    public void render(PoseStack renderTransform, VertexConsumer consumer, BlockPos renderPos) {
         if (this.vertices.isEmpty()) return;
         Matrix4f matrix = renderTransform.last().pose().copy();
         Matrix3f normalMatrix = renderTransform.last().normal().copy();
@@ -29,76 +29,80 @@ public class TransformableVertexList {
         Vector4f pos = new Vector4f();
         Vector3f normal = new Vector3f();
         for (int i = 0; i < this.vertices.vertexCount(); i++) {
-            pos.set(this.vertices.x(i), this.vertices.y(i), this.vertices.z(i), 1.0f);
+            float x = this.vertices.x(i);
+            float y = this.vertices.y(i);
+            float z = this.vertices.z(i);
+            pos.set(x, y, z, 1.0f);
             pos.transform(matrix);
             consumer.vertex(pos.x(), pos.y(), pos.z());
+            consumer.color(0xffffffff);
             consumer.uv(this.vertices.u(i), this.vertices.v(i));
             normal.set(this.vertices.nx(i), this.vertices.ny(i), this.vertices.nz(i));
             normal.transform(normalMatrix);
+            consumer.uv2(LevelRenderer.getLightColor(Minecraft.getInstance().level, renderPos));
             consumer.normal(normal.x(), normal.y(), normal.z());
-            consumer.uv2(LevelRenderer.getLightColor(Minecraft.getInstance().level, new BlockPos(pos.x(), pos.y(), pos.z())));
             consumer.endVertex();
         }
         this.reset();
     }
 
-    public TransformableVertexList reset() {
+    public TransformableModelVertexList reset() {
         while (!modelTransform.clear()) modelTransform.popPose();
         modelTransform.pushPose();
         return this;
     }
 
-    public TransformableVertexList translate(float x, float y, float z) {
+    public TransformableModelVertexList translate(float x, float y, float z) {
         this.modelTransform.translate(x, y, z);
         return this;
     }
 
-    public TransformableVertexList multiply(Quaternion quaternion) {
+    public TransformableModelVertexList multiply(Quaternion quaternion) {
         this.modelTransform.mulPose(quaternion);
         return this;
     }
 
-    public TransformableVertexList rotate(Direction axis, float angle) {
+    public TransformableModelVertexList rotate(Direction axis, float angle) {
         if (angle == 0.0) return this;
         return this.multiply(axis.step().rotation(angle));
     }
 
-    public TransformableVertexList rotateCentered(Direction direction, float angle) {
+    public TransformableModelVertexList rotateCentered(Direction direction, float angle) {
         this.translate(0.5f, 0.5f, 0.5f).rotate(direction, angle).translate(-0.5f, -0.5f, -0.5f);
         return this;
     }
 
-    public TransformableVertexList rotateCentered(Quaternion q) {
+    public TransformableModelVertexList rotateCentered(Quaternion q) {
         this.translate(0.5f, 0.5f, 0.5f).multiply(q).translate(-0.5f, -0.5f, -0.5f);
         return this;
     }
 
-    public TransformableVertexList scale(float x, float y, float z) {
+    public TransformableModelVertexList scale(float x, float y, float z) {
         this.modelTransform.scale(x, y, z);
         return this;
     }
 
-    public TransformableVertexList pushPose() {
+    public TransformableModelVertexList pushPose() {
         this.modelTransform.pushPose();
         return this;
     }
 
-    public TransformableVertexList popPose() {
+    public TransformableModelVertexList popPose() {
         this.modelTransform.popPose();
         return this;
     }
 
-    public TransformableVertexList mulPose(Matrix4f pose) {
+    public TransformableModelVertexList mulPose(Matrix4f pose) {
         this.modelTransform.last().pose().multiply(pose);
         return this;
     }
 
-    public TransformableVertexList mulNormal(Matrix3f normal) {
+    public TransformableModelVertexList mulNormal(Matrix3f normal) {
         this.modelTransform.last().normal().mul(normal);
         return this;
     }
 
-    public TransformableVertexList transform(PoseStack stack) {
+    public TransformableModelVertexList transform(PoseStack stack) {
         this.modelTransform.last().pose().multiply(stack.last().pose());
         this.modelTransform.last().normal().mul(stack.last().normal());
         return this;
