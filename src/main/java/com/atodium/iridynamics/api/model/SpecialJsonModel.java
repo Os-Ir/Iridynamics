@@ -36,12 +36,12 @@ public class SpecialJsonModel {
 
     public static TransformableModelVertexList createTransformableModel(ResourceLocation location) {
         if (!REGISTRY.containsKey(location)) return null;
-        return ModelUtil.createVertexData(REGISTRY.get(location).bakedModel());
+        return ModelUtil.createBakedModelVertexData(REGISTRY.get(location).bakedModel());
     }
 
     public static TransformableModelVertexList createTransformableModel(ResourceLocation location, PoseStack transform) {
         if (!REGISTRY.containsKey(location)) return null;
-        return ModelUtil.createVertexData(REGISTRY.get(location).bakedModel(), transform);
+        return ModelUtil.createBakedModelVertexData(REGISTRY.get(location).bakedModel(), transform);
     }
 
     public ResourceLocation location() {

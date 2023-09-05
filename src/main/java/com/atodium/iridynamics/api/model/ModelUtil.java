@@ -68,27 +68,27 @@ public class ModelUtil {
         MAX_MODEL_SIZE = Math.max(MAX_MODEL_SIZE, size);
     }
 
-    public static TransformableModelVertexList createVertexData(BakedModel model) {
-        return createVertexData(model, EMPTY_BLOCK_STATE, new PoseStack());
+    public static TransformableModelVertexList createBakedModelVertexData(BakedModel model) {
+        return createBakedModelVertexData(model, EMPTY_BLOCK_STATE, new PoseStack());
     }
 
-    public static TransformableModelVertexList createVertexData(BakedModel model, PoseStack transform) {
-        return createVertexData(model, EMPTY_BLOCK_STATE, transform);
+    public static TransformableModelVertexList createBakedModelVertexData(BakedModel model, PoseStack transform) {
+        return createBakedModelVertexData(model, EMPTY_BLOCK_STATE, transform);
     }
 
-    public static TransformableModelVertexList createVertexData(BakedModel model, BlockState state) {
-        return createVertexData(model, EMPTY_BLOCK_STATE, new PoseStack());
+    public static TransformableModelVertexList createBakedModelVertexData(BakedModel model, BlockState state) {
+        return createBakedModelVertexData(model, EMPTY_BLOCK_STATE, new PoseStack());
     }
 
-    public static TransformableModelVertexList createVertexData(BakedModel model, BlockState state, PoseStack transform) {
+    public static TransformableModelVertexList createBakedModelVertexData(BakedModel model, BlockState state, PoseStack transform) {
         BufferBuilder builder = new BufferBuilder(MAX_MODEL_SIZE);
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
         EMPTY_BLOCK_RENDER_DISPATCHER.getModelRenderer().tesselateBlock(EmptyRenderLevel.INSTANCE, model, state, BlockPos.ZERO, transform, builder, false, emptyRandom(), 0, OverlayTexture.NO_OVERLAY, EMPTY_MODEL_DATA);
         builder.end();
-        return createVertexList(builder);
+        return createVertexListFromBuffer(builder);
     }
 
-    public static TransformableModelVertexList createVertexList(BufferBuilder builder) {
+    public static TransformableModelVertexList createVertexListFromBuffer(BufferBuilder builder) {
         Pair<BufferBuilder.DrawState, ByteBuffer> data = builder.popNextBuffer();
         return new TransformableModelVertexList(data.getFirst(), data.getSecond());
     }

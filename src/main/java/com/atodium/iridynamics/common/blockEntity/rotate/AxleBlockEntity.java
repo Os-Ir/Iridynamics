@@ -16,9 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode, ISavedDataTickable {
-    public static final double INERTIA = 10.0;
-    public static final double FRICTION = 0.4;
-
     private double angle, angularVelocity;
 
     public AxleBlockEntity(BlockPos pos, BlockState state) {
@@ -42,6 +39,10 @@ public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode, I
 
     private Direction direction() {
         return this.getBlockState().getValue(AxleBlock.DIRECTION);
+    }
+
+    private AxleBlock.AxleType axleType() {
+        return ((AxleBlock) this.getBlockState().getBlock()).axleType();
     }
 
     @Override
@@ -84,7 +85,7 @@ public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode, I
 
     @Override
     public double getInertia(Direction direction) {
-        if (this.isConnectable(direction)) return INERTIA / 2.0;
+        if (this.isConnectable(direction)) return this.axleType().inertia() / 2.0;
         return 0.0;
     }
 
@@ -95,13 +96,13 @@ public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode, I
 
     @Override
     public double getFriction(Direction direction) {
-        if (this.isConnectable(direction)) return FRICTION / 2.0;
+        if (this.isConnectable(direction)) return this.axleType().friction() / 2.0;
         return 0.0;
     }
 
     @Override
     public double maxAngularVelocity(Direction direction) {
-        return 300.0;
+        return this.axleType().maxAngularVelocity();
     }
 
     @Override

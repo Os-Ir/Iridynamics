@@ -5,6 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 
 public class RotateModule {
+    public static final double WOOD_MAX_ANGULAR_VELOCITY = Math.PI * 10;
+    public static final double BRONZE_MAX_ANGULAR_VELOCITY = Math.PI * 40;
+    public static final double STEEL_MAX_ANGULAR_VELOCITY = Math.PI * 60;
+
     public static boolean hasRotateNode(ServerLevel level, BlockPos pos) {
         return level.getBlockEntity(pos) instanceof IRotateNode;
     }

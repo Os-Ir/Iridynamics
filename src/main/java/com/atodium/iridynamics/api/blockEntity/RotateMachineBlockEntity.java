@@ -97,7 +97,7 @@ public abstract class RotateMachineBlockEntity extends SyncedBlockEntity impleme
 
     @Override
     public double maxAngularVelocity(Direction direction) {
-        return 300.0;
+        return RotateModule.WOOD_MAX_ANGULAR_VELOCITY;
     }
 
     public double tickAngleChange() {
