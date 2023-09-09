@@ -4,6 +4,7 @@ import com.atodium.iridynamics.api.blockEntity.ISavedDataTickable;
 import com.atodium.iridynamics.api.blockEntity.SyncedBlockEntity;
 import com.atodium.iridynamics.api.rotate.IRotateNode;
 import com.atodium.iridynamics.api.rotate.RotateModule;
+import com.atodium.iridynamics.api.rotate.axle.AxleCoverType;
 import com.atodium.iridynamics.api.util.math.IntFraction;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.rotate.AxleBlock;
@@ -15,11 +16,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Arrays;
+
 public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode, ISavedDataTickable {
     private double angle, angularVelocity;
+    private final AxleCoverType[] covers;
 
     public AxleBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.AXLE.get(), pos, state);
+        this.covers = new AxleCoverType[6];
     }
 
     @Override
@@ -109,23 +114,33 @@ public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode, I
     protected void writeSyncData(CompoundTag tag) {
         tag.putDouble("angle", this.angle);
         tag.putDouble("angularVelocity", this.angularVelocity);
+        int[] coverIndexes = new int[6];
+        for (int i = 0; i < 6; i++) coverIndexes[i] = this.covers[i] == null ? -1 : this.covers[i].index();
+        tag.putIntArray("covers", coverIndexes);
     }
 
     @Override
     protected void readSyncData(CompoundTag tag) {
         this.angle = tag.getDouble("angle");
         this.angularVelocity = tag.getDouble("angularVelocity");
+        int[] coverIndexes = tag.getIntArray("covers");
+        for (int i = 0; i < 6; i++) this.covers[i] = AxleCoverType.getTypeByIndex(coverIndexes[i]);
     }
 
     @Override
     protected void saveToTag(CompoundTag tag) {
         tag.putDouble("angle", this.angle);
         tag.putDouble("angularVelocity", this.angularVelocity);
+        int[] coverIndexes = new int[6];
+        for (int i = 0; i < 6; i++) coverIndexes[i] = this.covers[i] == null ? -1 : this.covers[i].index();
+        tag.putIntArray("covers", coverIndexes);
     }
 
     @Override
     protected void loadFromTag(CompoundTag tag) {
         this.angle = tag.getDouble("angle");
         this.angularVelocity = tag.getDouble("angularVelocity");
+        int[] coverIndexes = tag.getIntArray("covers");
+        for (int i = 0; i < 6; i++) this.covers[i] = AxleCoverType.getTypeByIndex(coverIndexes[i]);
     }
 }

@@ -51,12 +51,12 @@ public class CrucibleBlockEntity extends SyncedBlockEntity implements ITickable 
         }
     }
 
-    public boolean validateItem(ItemStack stack) {
+    public static boolean validateItem(ItemStack stack) {
         return MaterialEntry.containsMaterialEntry(stack) && MaterialEntry.getItemMaterialEntry(stack).shape().is(ModSolidShapes.DUSTS) && stack.getCapability(HeatCapability.HEAT).isPresent();
     }
 
     public ItemStack tryAddItem(ItemStack stack) {
-        if (!this.validateItem(stack)) return stack;
+        if (!validateItem(stack)) return stack;
         MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
         MaterialBase material = entry.material();
         int unit = entry.shape().getUnit();

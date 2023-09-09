@@ -28,7 +28,6 @@ public class AxleRenderer implements BlockEntityRenderer<AxleBlockEntity> {
     public void render(AxleBlockEntity axle, float partialTicks, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         if (model == null) model = SpecialJsonModel.createTransformableModel(Iridynamics.rl("item/axle_item"));
         Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS);
-        VertexConsumer consumer = buffer.getBuffer(RenderType.solid());
         Direction direction = axle.getBlockState().getValue(AxleBlock.DIRECTION);
         transform.pushPose();
         transform.translate(0.5, 0.5, 0.5);
@@ -37,7 +36,7 @@ public class AxleRenderer implements BlockEntityRenderer<AxleBlockEntity> {
         else transform.mulPose(Vector3f.XP.rotationDegrees(direction == Direction.UP ? 90.0f : -90.0f));
         transform.mulPose(Vector3f.ZP.rotationDegrees((float) Math.toDegrees(axle.getRenderAngle(partialTicks))));
         transform.translate(-0.5, -0.5, -0.5);
-        model.render(transform, consumer, axle.getBlockPos());
+        model.render(transform, buffer.getBuffer(RenderType.solid()), axle.getBlockPos());
         transform.popPose();
     }
 }

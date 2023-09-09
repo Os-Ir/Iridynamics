@@ -10,10 +10,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public final class RendererUtil {
     @SuppressWarnings("deprecation")
@@ -35,6 +38,10 @@ public final class RendererUtil {
 
     public static void drawScaledTexturedRect(PoseStack transform, float x, float y, float width, float height, float textureX, float textureY, float textureWidth, float textureHeight) {
         drawScaledTexturedRect(transform, x, y, width, height, textureX, textureY, textureWidth, textureHeight, 1.0f);
+    }
+
+    public static BlockPos castPosition(Position vec) {
+        return new BlockPos(vec.x(), vec.y(), vec.z());
     }
 
     /**
@@ -106,6 +113,18 @@ public final class RendererUtil {
         BUFFER_BUILDER.end();
         BufferUploader.end(BUFFER_BUILDER);
         RenderSystem.disableBlend();
+    }
+
+    public static void transformToDirection(PoseStack transform, Direction direction, double width) {
+        if (direction.get2DDataValue() >= 0) {
+            transform.translate(width, 0.0, width);
+            transform.mulPose(Vector3f.YP.rotationDegrees(getDirectionAngel(direction)));
+            transform.translate(-width, 0.0, -width);
+        } else {
+            transform.translate(0.0, width, width);
+            transform.mulPose(Vector3f.XP.rotationDegrees(direction == Direction.UP ? 90.0f : -90.0f));
+            transform.translate(0.0, -width, -width);
+        }
     }
 
     public static void transformToDirection(PoseStack transform, Direction direction) {
