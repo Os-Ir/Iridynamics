@@ -91,7 +91,7 @@ public abstract class MaterialHeatInfo {
         return new SimplifiedHeatInfo(sub);
     }
 
-    private static class FunctionHeatInfo extends MaterialHeatInfo {
+    public static class FunctionHeatInfo extends MaterialHeatInfo {
         private final Function<Double, SubMaterialHeatInfo> function;
 
         private FunctionHeatInfo(Function<Double, SubMaterialHeatInfo> function) {
@@ -104,7 +104,7 @@ public abstract class MaterialHeatInfo {
         }
     }
 
-    private static class SimplifiedHeatInfo extends MaterialHeatInfo {
+    public static class SimplifiedHeatInfo extends MaterialHeatInfo {
         private final SubMaterialHeatInfo sub;
         private final MonotonicMap<Phase> phaseEnergy;
 

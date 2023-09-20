@@ -9,11 +9,9 @@ import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialInfoLoader;
 import com.atodium.iridynamics.api.module.CarvingModule;
 import com.atodium.iridynamics.api.multiblock.MultiblockModule;
-import com.atodium.iridynamics.api.pipe.LiquidPipeModule;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.research.ResearchNodeLoader;
-import com.atodium.iridynamics.api.rotate.RotateModule;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
 import com.atodium.iridynamics.common.blockEntity.ModBlockEntities;
@@ -44,13 +42,15 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
-import net.minecraftforge.event.*;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -208,11 +208,4 @@ public class ForgeEventHandler {
         if (entity instanceof IIgnitable ignitable && stack.getItem() == ModItems.IGNITER.get() && ToolIgniter.igniteBlock(stack, ignitable, direction))
             event.setCanceled(true);
     }
-//    @SubscribeEvent
-//    public static void tickRotate(TickEvent.WorldTickEvent event) {
-//        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END) {
-//            RotateModule.tick((ServerLevel) event.world);
-//            LiquidPipeModule.tick((ServerLevel) event.world);
-//        }
-//    }
 }

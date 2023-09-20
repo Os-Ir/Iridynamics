@@ -66,8 +66,8 @@ public class ScaledDraggableWidget extends WidgetBase {
     @Override
     public boolean onMouseClickMove(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (button == 0) {
-            this.moveX += dragX;
-            this.moveY += dragY;
+            this.moveX += (float) dragX;
+            this.moveY += (float) dragY;
         }
         return true;
     }

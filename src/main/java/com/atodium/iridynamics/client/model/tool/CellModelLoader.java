@@ -2,7 +2,6 @@ package com.atodium.iridynamics.client.model.tool;
 
 import com.atodium.iridynamics.api.material.type.FluidMaterial;
 import com.atodium.iridynamics.api.material.type.MaterialBase;
-import com.atodium.iridynamics.client.model.material.MaterialModel;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.minecraft.server.packs.resources.ResourceManager;

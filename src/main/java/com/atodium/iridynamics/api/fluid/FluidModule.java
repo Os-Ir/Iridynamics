@@ -1,6 +1,5 @@
 package com.atodium.iridynamics.api.fluid;
 
-import com.atodium.iridynamics.api.material.ModMaterials;
 import com.atodium.iridynamics.api.material.type.FluidMaterial;
 import com.atodium.iridynamics.api.material.type.GasMaterial;
 import com.atodium.iridynamics.api.material.type.LiquidMaterial;
@@ -8,7 +7,6 @@ import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import com.atodium.iridynamics.common.item.CellItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 
 public class FluidModule {
     public static final UnorderedRegistry<LiquidMaterial, Fluid> LIQUID_FLUIDS = new UnorderedRegistry<>();

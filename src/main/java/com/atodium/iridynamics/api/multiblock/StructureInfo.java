@@ -13,11 +13,11 @@ public abstract class StructureInfo<T extends StructureInfo.StructureData> {
 
     public abstract LazyOptional<T> validate(MultiblockStructure structure);
 
-    public void onStructureFinish(ServerLevel level, StructureData data, MultiblockStructure structure) {
+    public void onStructureFinish(ServerLevel level, T data, MultiblockStructure structure) {
 
     }
 
-    public void onStructureDestroyed(ServerLevel level, StructureData data, MultiblockStructure structure) {
+    public void onStructureDestroyed(ServerLevel level, T data, MultiblockStructure structure) {
 
     }
 

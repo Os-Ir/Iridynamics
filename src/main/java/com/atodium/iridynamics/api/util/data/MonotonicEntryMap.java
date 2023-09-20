@@ -18,7 +18,7 @@ public class MonotonicEntryMap {
     }
 
     public boolean isEmpty() {
-        return this.map.size() == 0;
+        return this.map.isEmpty();
     }
 
     public double keyFloor(double key) {
@@ -97,7 +97,7 @@ public class MonotonicEntryMap {
         }
 
         public Builder addData(double key, double value) {
-            if (this.map.size() > 0 && (key < this.lastKey || value < this.lastValue))
+            if (!this.map.isEmpty() && (key < this.lastKey || value < this.lastValue))
                 throw new IllegalArgumentException("Keys or values of MonotonicEntryMap should be monotonic");
             this.lastKey = key;
             this.lastValue = value;

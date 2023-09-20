@@ -1,6 +1,8 @@
 package com.atodium.iridynamics.api.multiblock;
 
 import com.atodium.iridynamics.Iridynamics;
+import com.atodium.iridynamics.api.multiblock.assembled.AssembledMultiblockStructure;
+import com.atodium.iridynamics.api.multiblock.assembled.AssembledStructureInfo;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -14,26 +16,31 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
 public class MultiblockSavedData extends SavedData {
     public static final String ID = Iridynamics.MODID + "_multiblock";
 
+    private final ServerLevel level;
     private final List<MultiblockStructure> allStructures;
     private final Map<ChunkPos, List<MultiblockStructure>> chunkStructures;
+    private final List<AssembledMultiblockStructure> allAssembledStructures;
 
-    public MultiblockSavedData() {
+    public MultiblockSavedData(ServerLevel level) {
+        this.level = level;
         this.allStructures = Lists.newArrayList();
         this.chunkStructures = Maps.newHashMap();
+        this.allAssembledStructures = Lists.newArrayList();
     }
 
     public static MultiblockSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(MultiblockSavedData::load, MultiblockSavedData::new, ID);
+        return level.getDataStorage().computeIfAbsent((tag) -> load(level, tag), () -> new MultiblockSavedData(level), ID);
     }
 
-    private static MultiblockSavedData load(CompoundTag tag) {
-        MultiblockSavedData data = new MultiblockSavedData();
+    private static MultiblockSavedData load(ServerLevel level, CompoundTag tag) {
+        MultiblockSavedData data = new MultiblockSavedData(level);
         ListTag structuresTag = tag.getList("structures", Tag.TAG_COMPOUND);
         for (int i = 0; i < structuresTag.size(); i++) {
             MultiblockStructure network = new MultiblockStructure(data);
@@ -51,7 +58,24 @@ public class MultiblockSavedData extends SavedData {
         return tag;
     }
 
-    public void setBlock(ServerLevel level, BlockPos pos, Block block) {
+    public Optional<AssembledMultiblockStructure> tryAssemble(BlockPos checkPoint) {
+        Optional<Pair<AssembledStructureInfo<?>, AssembledStructureInfo.StructureData>> result = MultiblockModule.validateAssembledStructure(this.level, checkPoint);
+        if (result.isPresent()) {
+            Pair<AssembledStructureInfo<?>, AssembledStructureInfo.StructureData> pair = result.get();
+            AssembledMultiblockStructure structure = new AssembledMultiblockStructure(pair.getRight().allAssembledBlocks(), pair.getLeft(), pair.getRight());
+            this.allAssembledStructures.add(structure);
+            return Optional.of(structure);
+        }
+        return Optional.empty();
+    }
+
+    public boolean isBlockAssembled(BlockPos pos) {
+        for (AssembledMultiblockStructure structure : this.allAssembledStructures)
+            if (structure.contains(pos)) return true;
+        return false;
+    }
+
+    public void setBlock(BlockPos pos, Block block) {
         if (!MultiblockModule.validateBlock(block)) return;
         Set<MultiblockStructure> relatives = Sets.newHashSet();
         for (Direction direction : DataUtil.DIRECTIONS) {
@@ -59,19 +83,20 @@ public class MultiblockSavedData extends SavedData {
             MultiblockStructure structureTo = this.getStructure(relative);
             if (structureTo != null) relatives.add(structureTo);
         }
-        if (relatives.isEmpty()) this.allStructures.add(new MultiblockStructure(this).addBlock(level, pos, block));
-        else if (relatives.size() == 1) relatives.toArray(new MultiblockStructure[0])[0].addBlock(level, pos, block);
+        if (relatives.isEmpty()) this.allStructures.add(new MultiblockStructure(this).addBlock(this.level, pos, block));
+        else if (relatives.size() == 1)
+            relatives.toArray(new MultiblockStructure[0])[0].addBlock(this.level, pos, block);
         else {
             MultiblockStructure[] relativesArray = relatives.toArray(new MultiblockStructure[0]);
             MultiblockStructure[] combine = new MultiblockStructure[relativesArray.length - 1];
             System.arraycopy(relativesArray, 1, combine, 0, relativesArray.length - 1);
-            relativesArray[0].combine(level, combine);
-            relativesArray[0].addBlock(level, pos, block);
+            relativesArray[0].combine(this.level, combine);
+            relativesArray[0].addBlock(this.level, pos, block);
         }
         this.setDirty();
     }
 
-    public void removeBlock(ServerLevel level, BlockPos pos) {
+    public void removeBlock(BlockPos pos) {
         if (this.getStructure(pos) == null) return;
         EnumMap<Direction, MultiblockStructure> relatives = Maps.newEnumMap(Direction.class);
         EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
@@ -85,7 +110,7 @@ public class MultiblockSavedData extends SavedData {
         }
         if (single) {
             MultiblockStructure structure = this.getStructure(pos);
-            structure.destroyStructure(level);
+            structure.destroyStructure(this.level);
             this.removeStructure(structure);
         }
         for (Direction direction : DataUtil.DIRECTIONS) {
@@ -100,13 +125,13 @@ public class MultiblockSavedData extends SavedData {
                 finish.put(innerDirection, true);
             }
             if (structure.isEmpty()) continue;
-            structure.destroyStructure(level);
+            structure.destroyStructure(this.level);
             this.removeStructure(structure);
             for (Direction toSearch : connected) {
                 Map<BlockPos, Block> subBlocks = structure.searchAllBlocks(pos, toSearch);
                 if (!subBlocks.isEmpty() && this.getStructure(subBlocks.keySet().toArray(new BlockPos[0])[0]) == null) {
                     MultiblockStructure subStructure = new MultiblockStructure(this);
-                    subStructure.addAllBlocks(level, subBlocks);
+                    subStructure.addAllBlocks(this.level, subBlocks);
                     this.allStructures.add(subStructure);
                 }
             }

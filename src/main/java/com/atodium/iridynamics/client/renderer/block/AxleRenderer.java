@@ -7,7 +7,6 @@ import com.atodium.iridynamics.client.renderer.RendererUtil;
 import com.atodium.iridynamics.common.block.rotate.AxleBlock;
 import com.atodium.iridynamics.common.blockEntity.rotate.AxleBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

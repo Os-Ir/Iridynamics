@@ -211,13 +211,13 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         if (result.isPresent()) {
             this.structureInfo = LazyOptional.of(() -> result.get().getLeft());
             this.structureData = result.get().getRight();
-            this.structureInfo.orElseThrow(NullPointerException::new).onStructureFinish(level, this.structureData.orElse(null), this);
+            this.structureInfo.orElseThrow(NullPointerException::new).onStructureFinish(level, DataUtil.cast(this.structureData.orElse(null)), this);
         }
     }
 
     protected void destroyStructure(ServerLevel level) {
         if (this.structureInfo.isPresent())
-            this.structureInfo.orElseThrow(NullPointerException::new).onStructureDestroyed(level, this.structureData.orElse(null), this);
+            this.structureInfo.orElseThrow(NullPointerException::new).onStructureDestroyed(level, DataUtil.cast(this.structureData.orElse(null)), this);
     }
 
     @Override
@@ -227,10 +227,8 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         for (Map.Entry<BlockPos, Block> entry : this.allBlocks.entrySet()) {
             CompoundTag blockTag = new CompoundTag();
             BlockPos pos = entry.getKey();
-            blockTag.putString("block", MultiblockModule.getBlockId(entry.getValue()).toString());
-            blockTag.putInt("x", pos.getX());
-            blockTag.putInt("y", pos.getY());
-            blockTag.putInt("z", pos.getZ());
+            blockTag.putString("block", MultiblockModule.getStructureBlockId(entry.getValue()).toString());
+            DataUtil.saveBlockPos(blockTag, pos);
             blocksTag.add(blockTag);
         }
         tag.put("blocks", blocksTag);
@@ -248,7 +246,7 @@ public class MultiblockStructure implements INBTSerializable<CompoundTag> {
         Map<BlockPos, Block> blocks = Maps.newHashMap();
         for (int i = 0; i < blocksTag.size(); i++) {
             CompoundTag blockTag = blocksTag.getCompound(i);
-            blocks.put(new BlockPos(blockTag.getInt("x"), blockTag.getInt("y"), blockTag.getInt("z")), MultiblockModule.getBlock(new ResourceLocation(blockTag.getString("block"))));
+            blocks.put(DataUtil.loadBlockPos(blockTag), MultiblockModule.getStructureBlockById(new ResourceLocation(blockTag.getString("block"))));
         }
         this.addAllBlocksInternal(blocks);
         if (tag.contains("info"))

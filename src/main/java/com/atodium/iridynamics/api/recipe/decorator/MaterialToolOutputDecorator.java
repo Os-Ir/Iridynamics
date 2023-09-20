@@ -22,7 +22,7 @@ public class MaterialToolOutputDecorator implements OutputDecorator {
 
     @Override
     public ItemStack apply(ItemStack stack, ItemStack[] input) {
-        if (stack.getItem() instanceof MaterialToolItem toolItem) {
+        if (stack.getItem() instanceof MaterialToolItem) {
             for (Map.Entry<Integer, Pair<String, Integer>> entry : this.function.entrySet()) {
                 ItemStack part = input[entry.getValue().getRight()];
                 if (!MaterialEntry.containsMaterialEntry(part)) continue;

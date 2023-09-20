@@ -16,8 +16,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Arrays;
-
 public class AxleBlockEntity extends SyncedBlockEntity implements IRotateNode, ISavedDataTickable {
     private double angle, angularVelocity;
     private final AxleCoverType[] covers;

@@ -295,7 +295,7 @@ public class ColoredItemLayerModel implements IModelGeometry<ColoredItemLayerMod
         }
     }
 
-    private record LayerData(int color, int light, boolean hasTint) {
+    public record LayerData(int color, int light, boolean hasTint) {
 
     }
 }
