@@ -18,6 +18,10 @@ public class AssembledMultiblockStructure implements INBTSerializable<CompoundTa
     private AssembledStructureInfo<?> structureInfo;
     private AssembledStructureInfo.StructureData structureData;
 
+    public AssembledMultiblockStructure() {
+
+    }
+
     public AssembledMultiblockStructure(Set<BlockPos> allBlocks, AssembledStructureInfo<?> structureInfo, AssembledStructureInfo.StructureData structureData) {
         this.allBlocks = allBlocks;
         this.structureInfo = structureInfo;

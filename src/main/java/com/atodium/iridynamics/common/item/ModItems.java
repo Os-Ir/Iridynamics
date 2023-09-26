@@ -11,10 +11,7 @@ import com.atodium.iridynamics.api.tool.MaterialToolItem;
 import com.atodium.iridynamics.api.tool.ToolItem;
 import com.atodium.iridynamics.api.util.ModCreativeTabs;
 import com.atodium.iridynamics.common.blockEntity.PileBlockEntity;
-import com.atodium.iridynamics.common.tool.ToolChisel;
-import com.atodium.iridynamics.common.tool.ToolHammer;
-import com.atodium.iridynamics.common.tool.ToolIgniter;
-import com.atodium.iridynamics.common.tool.ToolKnife;
+import com.atodium.iridynamics.common.tool.*;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
@@ -46,6 +43,7 @@ public class ModItems {
     public static final RegistryObject<Item> HAMMER = Iridynamics.REGISTRY.item("tool/hammer", (properties) -> new MaterialToolItem(properties, ToolHammer.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
     public static final RegistryObject<Item> CHISEL = Iridynamics.REGISTRY.item("tool/chisel", (properties) -> new MaterialToolItem(properties, ToolChisel.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
     public static final RegistryObject<Item> KNIFE = Iridynamics.REGISTRY.item("tool/knife", (properties) -> new MaterialToolItem(properties, ToolKnife.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
+    public static final RegistryObject<Item> WRENCH = Iridynamics.REGISTRY.item("tool/wrench", (properties) -> new MaterialToolItem(properties, ToolWrench.INSTANCE)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
 
     public static final RegistryObject<Item> GRASS_HELMET = Iridynamics.REGISTRY.item("grass_helmet", (properties) -> new ArmorItem(ModArmorMaterials.GRASS, EquipmentSlot.HEAD, properties)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();
     public static final RegistryObject<Item> GRASS_CHESTPLATE = Iridynamics.REGISTRY.item("grass_chestplate", (properties) -> new ArmorItem(ModArmorMaterials.GRASS, EquipmentSlot.CHEST, properties)).stacksTo(1).tab(ModCreativeTabs.TOOL).register();

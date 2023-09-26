@@ -2,17 +2,25 @@ package com.atodium.iridynamics.api.multiblock;
 
 import com.atodium.iridynamics.api.multiblock.assembled.AssembledMultiblockStructure;
 import com.atodium.iridynamics.api.multiblock.assembled.AssembledStructureInfo;
+import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Collections;
+import java.util.Deque;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class MultiblockModule {
     public static final UnorderedRegistry<ResourceLocation, Block> MULTIBLOCKS = new UnorderedRegistry<>();
@@ -96,5 +104,46 @@ public class MultiblockModule {
             if (optional.isPresent()) return Optional.of(Pair.of(info, optional.orElse(null)));
         }
         return Optional.empty();
+    }
+
+    public static BlockSearchResult searchBlock(ServerLevel level, BlockPos checkPoint, Predicate<BlockState> predicate) {
+        BlockState checkPointBlock = level.getBlockState(checkPoint);
+        if (!predicate.test(checkPointBlock))
+            return new BlockSearchResult(Collections.emptyMap(), checkPoint, BlockPos.ZERO, false);
+        int minX, maxX, minY, maxY, minZ, maxZ;
+        Map<BlockPos, BlockState> allBlocks = Maps.newHashMap();
+        Deque<BlockPos> task = Lists.newLinkedList();
+        minX = maxX = checkPoint.getX();
+        minY = maxY = checkPoint.getY();
+        minZ = maxZ = checkPoint.getZ();
+        allBlocks.put(checkPoint, checkPointBlock);
+        task.addLast(checkPoint);
+        while (!task.isEmpty()) {
+            BlockPos poll = task.poll();
+            for (Direction to : DataUtil.DIRECTIONS) {
+                BlockPos relative = poll.relative(to);
+                BlockState relativeBlock = level.getBlockState(relative);
+                if (allBlocks.containsKey(relative) || !predicate.test(relativeBlock)) continue;
+                minX = Math.min(minX, relative.getX());
+                minY = Math.min(minY, relative.getY());
+                minZ = Math.min(minZ, relative.getZ());
+                maxX = Math.max(maxX, relative.getX());
+                maxY = Math.max(maxY, relative.getY());
+                maxZ = Math.max(maxZ, relative.getZ());
+                allBlocks.put(relative, relativeBlock);
+                task.addLast(relative);
+            }
+        }
+        int sizeX = maxX - minX + 1;
+        int sizeY = maxY - minY + 1;
+        int sizeZ = maxZ - minZ + 1;
+        return new BlockSearchResult(Collections.emptyMap(), new BlockPos(minX, minY, minZ), new BlockPos(sizeX, sizeY, sizeZ), sizeX * sizeY * sizeZ == allBlocks.size());
+    }
+
+    public record BlockSearchResult(Map<BlockPos, BlockState> allBlocks, BlockPos root, BlockPos size,
+                                    boolean isFilled) {
+        public boolean isCube() {
+            return this.size.getX() == this.size.getY() && this.size.getY() == this.size.getZ();
+        }
     }
 }

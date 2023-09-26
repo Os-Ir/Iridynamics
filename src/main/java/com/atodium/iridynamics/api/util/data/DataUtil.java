@@ -1,5 +1,6 @@
 package com.atodium.iridynamics.api.util.data;
 
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -38,6 +40,13 @@ public class DataUtil {
 
     public static BlockPos loadBlockPos(CompoundTag tag) {
         return new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
+    }
+
+    public static Set<BlockPos> allBlockPosBetween(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
+        Set<BlockPos> result = Sets.newHashSet();
+        for (int x = fromX; x <= toX; x++)
+            for (int y = fromY; y <= toY; y++) for (int z = fromZ; z <= toZ; z++) result.add(new BlockPos(x, y, z));
+        return result;
     }
 
     @SuppressWarnings("deprecation")

@@ -47,6 +47,12 @@ public class MultiblockSavedData extends SavedData {
             network.deserializeNBT(structuresTag.getCompound(i));
             data.allStructures.add(network);
         }
+        ListTag assembledStructuresTag = tag.getList("assembledStructures", Tag.TAG_COMPOUND);
+        for (int i = 0; i < assembledStructuresTag.size(); i++) {
+            AssembledMultiblockStructure network = new AssembledMultiblockStructure();
+            network.deserializeNBT(structuresTag.getCompound(i));
+            data.allAssembledStructures.add(network);
+        }
         return data;
     }
 
@@ -55,6 +61,10 @@ public class MultiblockSavedData extends SavedData {
         ListTag structuresTag = new ListTag();
         for (MultiblockStructure structure : this.allStructures) structuresTag.add(structure.serializeNBT());
         tag.put("structures", structuresTag);
+        ListTag assembledStructuresTag = new ListTag();
+        for (AssembledMultiblockStructure structure : this.allAssembledStructures)
+            assembledStructuresTag.add(structure.serializeNBT());
+        tag.put("assembledStructures", assembledStructuresTag);
         return tag;
     }
 
