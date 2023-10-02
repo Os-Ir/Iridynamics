@@ -22,7 +22,11 @@ import java.util.Map;
 public class RecipeUtil {
     private static final Map<RecipeType<?>, List<Recipe<?>>> RECIPE_CACHE = Maps.newHashMap();
 
-    public static RecipeManager getRecipeManager() {
+    public static boolean hasRawRecipeManager() {
+        return ServerLifecycleHooks.getCurrentServer() != null || Minecraft.getInstance().level != null;
+    }
+
+    public static RecipeManager getRawRecipeManager() {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server != null) return server.getRecipeManager();
         ClientLevel level = Minecraft.getInstance().level;
@@ -47,7 +51,8 @@ public class RecipeUtil {
     }
 
     public static <C extends Container, T extends Recipe<C>> List<T> getAllRecipes(RecipeType<T> type) {
-        return getAllRecipes(getRecipeManager(), type);
+        if (!hasRawRecipeManager()) return null;
+        return getAllRecipes(getRawRecipeManager(), type);
     }
 
     public static <C extends Container, T extends Recipe<C>> List<T> getAllRecipes(RecipeManager manager, RecipeType<T> type) {
@@ -56,7 +61,8 @@ public class RecipeUtil {
     }
 
     public static <C extends Container, T extends Recipe<C>> T getRecipe(RecipeType<T> type, C container) {
-        for (T recipe : getAllRecipes(getRecipeManager(), type)) if (recipe.matches(container, null)) return recipe;
+        if (!hasRawRecipeManager()) return null;
+        for (T recipe : getAllRecipes(getRawRecipeManager(), type)) if (recipe.matches(container, null)) return recipe;
         return null;
     }
 
@@ -68,7 +74,8 @@ public class RecipeUtil {
 
     public static <C extends Container, T extends Recipe<C>> List<T> getAllValidRecipes(RecipeType<T> type, C container) {
         List<T> list = Lists.newArrayList();
-        for (T recipe : getAllRecipes(getRecipeManager(), type)) if (recipe.matches(container, null)) list.add(recipe);
+        if (!hasRawRecipeManager()) return list;
+        for (T recipe : getAllRecipes(getRawRecipeManager(), type)) if (recipe.matches(container, null)) list.add(recipe);
         return list;
     }
 

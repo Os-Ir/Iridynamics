@@ -20,14 +20,12 @@ public class SmallCrucibleModule {
     public static final int CAPACITY = 576;
 
     public static boolean validateItem(ItemStack stack) {
-        if (!stack.getCapability(HeatCapability.HEAT).isPresent() || !MaterialEntry.containsMaterialEntry(stack))
-            return false;
+        if (!stack.getCapability(HeatCapability.HEAT).isPresent() || !MaterialEntry.containsMaterialEntry(stack)) return false;
         return MaterialEntry.getItemMaterialEntry(stack).material().hasHeatInfo();
     }
 
     public static void updateData(ItemStack stack) {
-        if (stack.getItem() != ModItems.SMALL_CRUCIBLE.get())
-            throw new IllegalArgumentException("ItemStack [ " + stack + " ] is not small crucible");
+        if (stack.getItem() != ModItems.SMALL_CRUCIBLE.get()) throw new IllegalArgumentException("ItemStack [ " + stack + " ] is not small crucible");
         updateData(stack.getCapability(InventoryCapability.INVENTORY).orElseThrow(NullPointerException::new), (LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new), (HeatCapability) stack.getCapability(HeatCapability.HEAT).orElseThrow(NullPointerException::new));
     }
 
@@ -50,8 +48,7 @@ public class SmallCrucibleModule {
                 inventory.setStackInSlot(i, ItemStack.EMPTY);
             }
         }
-        while (true)
-            if (AlloyModule.maxAlloyUnits(container, container, container.getTemperature(), true).isEmpty()) break;
+        while (true) if (AlloyModule.maxAlloyUnits(container, container, container.getTemperature(), true).isEmpty()) break;
     }
 
     public static void setupBlock(SmallCrucibleBlockEntity block, ItemStack item) {
@@ -63,8 +60,7 @@ public class SmallCrucibleModule {
     }
 
     public static void initItem(AttachCapabilitiesEvent<ItemStack> event, ItemStack stack) {
-        if (stack.getItem() != ModItems.SMALL_CRUCIBLE.get())
-            throw new IllegalArgumentException("ItemStack [ " + stack + " ] is not small crucible");
+        if (stack.getItem() != ModItems.SMALL_CRUCIBLE.get()) throw new IllegalArgumentException("ItemStack [ " + stack + " ] is not small crucible");
         LiquidModule.addItemLiquidContainer(event, CAPACITY);
         HeatModule.addItemHeat(event, stack, HEAT_CAPACITY, ITEM_RESISTANCE);
         HeatModule.addItemInventory(event, 4);

@@ -58,8 +58,7 @@ public class RotateNetwork implements INBTSerializable<CompoundTag> {
     }
 
     protected boolean shouldTick(ServerLevel level) {
-        for (PosDirection pos : this.allNodes.keySet())
-            if (level.shouldTickBlocksAt(ChunkPos.asLong(pos.pos()))) return true;
+        for (PosDirection pos : this.allNodes.keySet()) if (level.shouldTickBlocksAt(ChunkPos.asLong(pos.pos()))) return true;
         return false;
     }
 

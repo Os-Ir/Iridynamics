@@ -61,8 +61,7 @@ public class ForgeEventHandler {
     @SubscribeEvent
     public static void onBiomeLoad(BiomeLoadingEvent event) {
         BiomeGenerationSettingsBuilder generation = event.getGeneration();
-        for (Map.Entry<ResourceLocation, Holder<PlacedFeature>> entry : ModFeatures.PLACED_FEATURE.entrySet())
-            generation.addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, entry.getValue());
+        for (Map.Entry<ResourceLocation, Holder<PlacedFeature>> entry : ModFeatures.PLACED_FEATURE.entrySet()) generation.addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, entry.getValue());
     }
 
     @SubscribeEvent
@@ -89,26 +88,20 @@ public class ForgeEventHandler {
         ItemStack stack = event.getObject();
         Item item = stack.getItem();
         if (item == ModItems.IGNITER.get()) HeatModule.addItemHeat(event, stack, 800.0, 0.4);
-        else if (item == ModItems.MOLD.get())
-            LiquidModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
-        else if (item == ModItems.MOLD_TOOL.get())
-            LiquidModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
+        else if (item == ModItems.MOLD.get()) LiquidModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
+        else if (item == ModItems.MOLD_TOOL.get()) LiquidModule.addItemLiquidContainer(event, MoldBlockEntity.CAPACITY);
         else if (item == Items.CHICKEN) HeatModule.addItemHeat(event, stack, 16000.0, 0.2);
         else if (item == ModItems.UNFIRED_SMALL_CRUCIBLE.get()) HeatModule.addItemHeat(event, stack, 16000.0, 0.2);
         else if (item == ModItems.SMALL_CRUCIBLE.get()) SmallCrucibleModule.initItem(event, stack);
         else if (item == ModItems.MOLD_CLAY_ADOBE.get()) CarvingModule.addItemCarving(event, stack, 3, 0x788c96);
-        else if (item == ModItems.POT_CLAY_ADOBE.get())
-            event.addCapability(PotteryCapability.KEY, new PotteryCapability());
-        else if (MaterialEntry.containsMaterialEntry(stack))
-            HeatModule.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
-        else if (CellItem.isCellItem(stack))
-            event.addCapability(CellFluidCapability.KEY, new CellFluidCapability(stack));
+        else if (item == ModItems.POT_CLAY_ADOBE.get()) event.addCapability(PotteryCapability.KEY, new PotteryCapability());
+        else if (MaterialEntry.containsMaterialEntry(stack)) HeatModule.addMaterialItemCapability(event, MaterialEntry.getItemMaterialEntry(stack));
+        else if (CellItem.isCellItem(stack)) event.addCapability(CellFluidCapability.KEY, new CellFluidCapability(stack));
     }
 
     @SubscribeEvent
     public static void attachPlayerCapability(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof Player player)
-            event.addCapability(ResearchCapability.KEY, new ResearchCapability());
+        if (event.getObject() instanceof Player player) event.addCapability(ResearchCapability.KEY, new ResearchCapability());
     }
 
     @SubscribeEvent
@@ -118,10 +111,8 @@ public class ForgeEventHandler {
                 stack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> HeatModule.heatExchange(heat, HeatModule.AMBIENT_TEMPERATURE, heat.getResistance(Direction.UP) + HeatModule.RESISTANCE_AIR_FLOW));
                 Item item = stack.getItem();
                 if (item == ModItems.SMALL_CRUCIBLE.get()) SmallCrucibleModule.updateData(stack);
-                else if (item == ModItems.MOLD.get())
-                    MoldBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
-                else if (item == ModItems.MOLD_TOOL.get())
-                    MoldToolBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
+                else if (item == ModItems.MOLD.get()) MoldBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
+                else if (item == ModItems.MOLD_TOOL.get()) MoldToolBlockEntity.updateMold((LiquidContainerCapability) stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).orElseThrow(NullPointerException::new));
             });
         }
     }
@@ -130,8 +121,7 @@ public class ForgeEventHandler {
     public static void placeMultiblock(BlockEvent.EntityPlaceEvent event) {
         LevelAccessor level = event.getWorld();
         Block block = event.getPlacedBlock().getBlock();
-        if (!event.getWorld().isClientSide() && MultiblockModule.validateBlock(block))
-            MultiblockModule.setBlock((ServerLevel) level, event.getPos(), block);
+        if (!event.getWorld().isClientSide() && MultiblockModule.validateBlock(block)) MultiblockModule.setBlock((ServerLevel) level, event.getPos(), block);
     }
 
     @SubscribeEvent
@@ -171,26 +161,22 @@ public class ForgeEventHandler {
         ItemStack stack = player.getItemInHand(event.getHand());
         Item item = stack.getItem();
         if (state.getBlock() != ModBlocks.PILE.get() && PileBlockEntity.containsItemInfo(stack) && state.isFaceSturdy(level, pos, Direction.UP)) {
-            if (level.setBlockAndUpdate(posAbove, ModBlocks.PILE.get().defaultBlockState()))
-                level.getBlockEntity(posAbove, ModBlockEntities.PILE.get()).ifPresent((pile) -> {
-                    if (pile.setup(stack) && !player.isCreative()) stack.shrink(1);
-                });
+            if (level.setBlockAndUpdate(posAbove, ModBlocks.PILE.get().defaultBlockState())) level.getBlockEntity(posAbove, ModBlockEntities.PILE.get()).ifPresent((pile) -> {
+                if (pile.setup(stack) && !player.isCreative()) stack.shrink(1);
+            });
         } else if (item == ModItems.SMALL_CRUCIBLE.get() && state.isFaceSturdy(level, pos, Direction.UP)) {
-            if (level.setBlockAndUpdate(posAbove, ModBlocks.SMALL_CRUCIBLE.get().defaultBlockState()))
-                level.getBlockEntity(posAbove, ModBlockEntities.SMALL_CRUCIBLE.get()).ifPresent((crucible) -> {
-                    SmallCrucibleModule.setupBlock(crucible, stack);
-                    stack.shrink(1);
-                });
+            if (level.setBlockAndUpdate(posAbove, ModBlocks.SMALL_CRUCIBLE.get().defaultBlockState())) level.getBlockEntity(posAbove, ModBlockEntities.SMALL_CRUCIBLE.get()).ifPresent((crucible) -> {
+                SmallCrucibleModule.setupBlock(crucible, stack);
+                stack.shrink(1);
+            });
         } else if (item == ModItems.MOLD.get() && state.isFaceSturdy(level, pos, Direction.UP)) {
-            if (level.setBlockAndUpdate(posAbove, ModBlocks.MOLD.get().defaultBlockState()))
-                level.getBlockEntity(posAbove, ModBlockEntities.MOLD.get()).ifPresent((mold) -> {
-                    if (mold.setup(stack)) stack.shrink(1);
-                });
+            if (level.setBlockAndUpdate(posAbove, ModBlocks.MOLD.get().defaultBlockState())) level.getBlockEntity(posAbove, ModBlockEntities.MOLD.get()).ifPresent((mold) -> {
+                if (mold.setup(stack)) stack.shrink(1);
+            });
         } else if (item == ModItems.MOLD_TOOL.get() && state.isFaceSturdy(level, pos, Direction.UP)) {
-            if (level.setBlockAndUpdate(posAbove, ModBlocks.MOLD_TOOL.get().defaultBlockState()))
-                level.getBlockEntity(posAbove, ModBlockEntities.MOLD_TOOL.get()).ifPresent((mold) -> {
-                    if (mold.setup(stack)) stack.shrink(1);
-                });
+            if (level.setBlockAndUpdate(posAbove, ModBlocks.MOLD_TOOL.get().defaultBlockState())) level.getBlockEntity(posAbove, ModBlockEntities.MOLD_TOOL.get()).ifPresent((mold) -> {
+                if (mold.setup(stack)) stack.shrink(1);
+            });
         }
     }
 
@@ -205,7 +191,6 @@ public class ForgeEventHandler {
         BlockState state = level.getBlockState(pos);
         BlockEntity entity = level.getBlockEntity(pos);
         ItemStack stack = player.getItemInHand(event.getHand());
-        if (entity instanceof IIgnitable ignitable && stack.getItem() == ModItems.IGNITER.get() && ToolIgniter.igniteBlock(stack, ignitable, direction))
-            event.setCanceled(true);
+        if (entity instanceof IIgnitable ignitable && stack.getItem() == ModItems.IGNITER.get() && ToolIgniter.igniteBlock(stack, ignitable, direction)) event.setCanceled(true);
     }
 }

@@ -67,8 +67,7 @@ public class ClientForgeEventHandler {
                 MaterialEntry entry = MaterialEntry.getItemMaterialEntry(stack);
                 if (entry.shape().hasWeldingResult() && entry.material().hasHeatInfo()) {
                     double point = entry.material().getHeatInfo().getMeltingPoint() * 0.9;
-                    if (heat.getTemperature() >= point)
-                        tooltip.add(new TextComponent(ChatFormatting.GREEN + I18n.get("iridynamics.info.heat.weldable")));
+                    if (heat.getTemperature() >= point) tooltip.add(new TextComponent(ChatFormatting.GREEN + I18n.get("iridynamics.info.heat.weldable")));
                 }
             }
             tooltip.add(new TextComponent(ChatFormatting.DARK_RED + I18n.get("iridynamics.info.heat.heatable") + ChatFormatting.WHITE + " - " + String.format("%.1f", heat.getTemperature() - HeatModule.CELSIUS_ZERO) + "℃"));
@@ -78,8 +77,7 @@ public class ClientForgeEventHandler {
             }
         });
         stack.getCapability(ForgingCapability.FORGING).ifPresent((forging) -> {
-            if (forging.processed())
-                tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.forging.processed")));
+            if (forging.processed()) tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.forging.processed")));
             else tooltip.add(new TextComponent(ChatFormatting.GRAY + I18n.get("iridynamics.info.forging.unprocessed")));
         });
         stack.getCapability(LiquidContainerCapability.LIQUID_CONTAINER).ifPresent((container) -> {
@@ -99,14 +97,12 @@ public class ClientForgeEventHandler {
                 if (invStack.isEmpty()) continue;
                 StringBuilder add = new StringBuilder();
                 invStack.getCapability(HeatCapability.HEAT).ifPresent((heat) -> add.append(ChatFormatting.GRAY).append(" - ").append(String.format("%.1f", heat.getTemperature() - HeatModule.CELSIUS_ZERO)).append("℃"));
-                if (MaterialEntry.containsMaterialEntry(invStack))
-                    add.append(ChatFormatting.GRAY).append(" - ").append(ChatFormatting.GREEN).append(MaterialEntry.getItemMaterialEntry(invStack).shape().getUnit()).append(ChatFormatting.GRAY).append("L");
+                if (MaterialEntry.containsMaterialEntry(invStack)) add.append(ChatFormatting.GRAY).append(" - ").append(ChatFormatting.GREEN).append(MaterialEntry.getItemMaterialEntry(invStack).shape().getUnit()).append(ChatFormatting.GRAY).append("L");
                 tooltip.add(new TextComponent(ChatFormatting.GRAY + "---- " + invStack.getDisplayName().getString() + ChatFormatting.AQUA + " [" + (i + 1) + "]" + add));
             }
         });
         stack.getCapability(CarvingCapability.CARVING).ifPresent((carving) -> {
-            if (carving.processed())
-                tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.carving.processed")));
+            if (carving.processed()) tooltip.add(new TextComponent(ChatFormatting.WHITE + I18n.get("iridynamics.info.carving.processed")));
             else tooltip.add(new TextComponent(ChatFormatting.GRAY + I18n.get("iridynamics.info.carving.unprocessed")));
         });
     }
@@ -117,8 +113,7 @@ public class ClientForgeEventHandler {
         BlockHitResult result = event.getTarget();
         BlockPos pos = result.getBlockPos();
         BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof ITipInfoRenderer renderer)
-            renderer.render(event.getCamera(), result, event.getPoseStack(), event.getMultiBufferSource(), event.getPartialTicks());
+        if (entity instanceof ITipInfoRenderer renderer) renderer.render(event.getCamera(), result, event.getPoseStack(), event.getMultiBufferSource(), event.getPartialTicks());
     }
 
     @SubscribeEvent
