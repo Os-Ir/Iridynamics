@@ -9,6 +9,7 @@ import com.atodium.iridynamics.api.material.MaterialEntry;
 import com.atodium.iridynamics.api.material.MaterialInfoLoader;
 import com.atodium.iridynamics.api.module.CarvingModule;
 import com.atodium.iridynamics.api.multiblock.MultiblockModule;
+import com.atodium.iridynamics.api.multiblock.MultiblockSavedData;
 import com.atodium.iridynamics.api.recipe.JsonRecipeLoader;
 import com.atodium.iridynamics.api.recipe.RecipeUtil;
 import com.atodium.iridynamics.api.research.ResearchNodeLoader;
@@ -129,6 +130,11 @@ public class ForgeEventHandler {
         LevelAccessor level = event.getWorld();
         Block block = event.getState().getBlock();
         if (!event.getWorld().isClientSide()) MultiblockModule.removeBlock((ServerLevel) level, event.getPos());
+    }
+
+    @SubscribeEvent
+    public static void assembleStructure(PlayerInteractEvent.RightClickBlock event) {
+        if (!event.getWorld().isClientSide() && event.getPlayer().getItemInHand(event.getHand()).is(Items.STICK)) MultiblockModule.tryAssemble((ServerLevel) event.getWorld(), event.getPos());
     }
 
     @SubscribeEvent

@@ -1,4 +1,4 @@
-package com.atodium.iridynamics.api.multiblock.assembled;
+package com.atodium.iridynamics.api.multiblock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

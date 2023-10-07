@@ -1,7 +1,7 @@
-package com.atodium.iridynamics.api.multiblock.assembled;
+package com.atodium.iridynamics.api.multiblock;
 
-import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.api.util.data.DataUtil;
+import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -13,16 +13,19 @@ import net.minecraftforge.common.util.INBTSerializable;
 import java.util.Set;
 
 public class AssembledMultiblockStructure implements INBTSerializable<CompoundTag> {
-    protected Set<BlockPos> allBlocks;
+    private final MultiblockSavedData savedData;
+    private final Set<BlockPos> allBlocks;
     private BlockPos root, size;
     private AssembledStructureInfo<?> structureInfo;
     private AssembledStructureInfo.StructureData structureData;
 
-    public AssembledMultiblockStructure() {
-
+    public AssembledMultiblockStructure(MultiblockSavedData savedData) {
+        this.savedData = savedData;
+        this.allBlocks = Sets.newHashSet();
     }
 
-    public AssembledMultiblockStructure(Set<BlockPos> allBlocks, AssembledStructureInfo<?> structureInfo, AssembledStructureInfo.StructureData structureData) {
+    public AssembledMultiblockStructure(MultiblockSavedData savedData, Set<BlockPos> allBlocks, AssembledStructureInfo<?> structureInfo, AssembledStructureInfo.StructureData structureData) {
+        this.savedData = savedData;
         this.allBlocks = allBlocks;
         this.structureInfo = structureInfo;
         this.structureData = structureData;
@@ -68,6 +71,10 @@ public class AssembledMultiblockStructure implements INBTSerializable<CompoundTa
         return this.allBlocks.contains(pos);
     }
 
+    public Set<BlockPos> allBlocks() {
+        return this.allBlocks;
+    }
+
     public void finishStructure(ServerLevel level) {
         this.structureInfo.onStructureFinish(level, this.structureData(), this);
     }
@@ -99,5 +106,6 @@ public class AssembledMultiblockStructure implements INBTSerializable<CompoundTa
         this.structureInfo = MultiblockModule.getAssembledStructureInfo(new ResourceLocation(tag.getString("info")));
         this.structureData = this.structureInfo.createEmptyData();
         this.structureData.deserializeNBT(tag.getCompound("data"));
+        this.allBlocks.forEach((pos) -> this.savedData.setBlockAssembledStructure(pos, this));
     }
 }

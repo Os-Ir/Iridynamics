@@ -1,8 +1,6 @@
 package com.atodium.iridynamics.api.multiblock;
 
 import com.atodium.iridynamics.Iridynamics;
-import com.atodium.iridynamics.api.multiblock.assembled.AssembledMultiblockStructure;
-import com.atodium.iridynamics.api.multiblock.assembled.AssembledStructureInfo;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -27,12 +25,14 @@ public class MultiblockSavedData extends SavedData {
     private final List<MultiblockStructure> allStructures;
     private final Map<ChunkPos, List<MultiblockStructure>> chunkStructures;
     private final List<AssembledMultiblockStructure> allAssembledStructures;
+    private final Map<BlockPos, AssembledMultiblockStructure> blockAssembledStructures;
 
     public MultiblockSavedData(ServerLevel level) {
         this.level = level;
         this.allStructures = Lists.newArrayList();
         this.chunkStructures = Maps.newHashMap();
         this.allAssembledStructures = Lists.newArrayList();
+        this.blockAssembledStructures = Maps.newHashMap();
     }
 
     public static MultiblockSavedData get(ServerLevel level) {
@@ -49,8 +49,8 @@ public class MultiblockSavedData extends SavedData {
         }
         ListTag assembledStructuresTag = tag.getList("assembledStructures", Tag.TAG_COMPOUND);
         for (int i = 0; i < assembledStructuresTag.size(); i++) {
-            AssembledMultiblockStructure network = new AssembledMultiblockStructure();
-            network.deserializeNBT(structuresTag.getCompound(i));
+            AssembledMultiblockStructure network = new AssembledMultiblockStructure(data);
+            network.deserializeNBT(assembledStructuresTag.getCompound(i));
             data.allAssembledStructures.add(network);
         }
         return data;
@@ -69,11 +69,14 @@ public class MultiblockSavedData extends SavedData {
     }
 
     public Optional<AssembledMultiblockStructure> tryAssemble(BlockPos checkPoint) {
+        if (this.blockAssembledStructures.containsKey(checkPoint)) return Optional.empty();
         Optional<Pair<AssembledStructureInfo<?>, AssembledStructureInfo.StructureData>> result = MultiblockModule.validateAssembledStructure(this.level, checkPoint);
         if (result.isPresent()) {
             Pair<AssembledStructureInfo<?>, AssembledStructureInfo.StructureData> pair = result.get();
-            AssembledMultiblockStructure structure = new AssembledMultiblockStructure(pair.getRight().allAssembledBlocks(), pair.getLeft(), pair.getRight());
+            AssembledMultiblockStructure structure = new AssembledMultiblockStructure(this, pair.getRight().allAssembledBlocks(), pair.getLeft(), pair.getRight());
             this.allAssembledStructures.add(structure);
+            structure.allBlocks().forEach((pos) -> this.blockAssembledStructures.put(pos, structure));
+            this.setDirty();
             return Optional.of(structure);
         }
         return Optional.empty();
@@ -107,44 +110,50 @@ public class MultiblockSavedData extends SavedData {
     }
 
     public void removeBlock(BlockPos pos) {
-        if (this.getStructure(pos) == null) return;
-        EnumMap<Direction, MultiblockStructure> relatives = Maps.newEnumMap(Direction.class);
-        EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
-        boolean single = true;
-        for (Direction direction : DataUtil.DIRECTIONS) {
-            BlockPos relative = pos.relative(direction);
-            MultiblockStructure networkTo = this.getStructure(relative);
-            if (networkTo != null) single = false;
-            finish.put(direction, networkTo == null);
-            relatives.put(direction, networkTo);
-        }
-        if (single) {
-            MultiblockStructure structure = this.getStructure(pos);
-            structure.destroyStructure(this.level);
-            this.removeStructure(structure);
-        }
-        for (Direction direction : DataUtil.DIRECTIONS) {
-            if (finish.get(direction)) continue;
-            MultiblockStructure structure = relatives.get(direction);
-            EnumSet<Direction> connected = EnumSet.noneOf(Direction.class);
-            connected.add(direction);
-            finish.put(direction, true);
-            for (Direction innerDirection : DataUtil.DIRECTIONS) {
-                if (finish.get(innerDirection) || structure != relatives.get(innerDirection)) continue;
-                connected.add(innerDirection);
-                finish.put(innerDirection, true);
+        if (this.getStructure(pos) != null) {
+            EnumMap<Direction, MultiblockStructure> relatives = Maps.newEnumMap(Direction.class);
+            EnumMap<Direction, Boolean> finish = Maps.newEnumMap(Direction.class);
+            boolean single = true;
+            for (Direction direction : DataUtil.DIRECTIONS) {
+                BlockPos relative = pos.relative(direction);
+                MultiblockStructure networkTo = this.getStructure(relative);
+                if (networkTo != null) single = false;
+                finish.put(direction, networkTo == null);
+                relatives.put(direction, networkTo);
             }
-            if (structure.isEmpty()) continue;
-            structure.destroyStructure(this.level);
-            this.removeStructure(structure);
-            for (Direction toSearch : connected) {
-                Map<BlockPos, Block> subBlocks = structure.searchAllBlocks(pos, toSearch);
-                if (!subBlocks.isEmpty() && this.getStructure(subBlocks.keySet().toArray(new BlockPos[0])[0]) == null) {
-                    MultiblockStructure subStructure = new MultiblockStructure(this);
-                    subStructure.addAllBlocks(this.level, subBlocks);
-                    this.allStructures.add(subStructure);
+            if (single) {
+                MultiblockStructure structure = this.getStructure(pos);
+                structure.destroyStructure(this.level);
+                this.removeStructure(structure);
+            }
+            for (Direction direction : DataUtil.DIRECTIONS) {
+                if (finish.get(direction)) continue;
+                MultiblockStructure structure = relatives.get(direction);
+                EnumSet<Direction> connected = EnumSet.noneOf(Direction.class);
+                connected.add(direction);
+                finish.put(direction, true);
+                for (Direction innerDirection : DataUtil.DIRECTIONS) {
+                    if (finish.get(innerDirection) || structure != relatives.get(innerDirection)) continue;
+                    connected.add(innerDirection);
+                    finish.put(innerDirection, true);
+                }
+                if (structure.isEmpty()) continue;
+                structure.destroyStructure(this.level);
+                this.removeStructure(structure);
+                for (Direction toSearch : connected) {
+                    Map<BlockPos, Block> subBlocks = structure.searchAllBlocks(pos, toSearch);
+                    if (!subBlocks.isEmpty() && this.getStructure(subBlocks.keySet().toArray(new BlockPos[0])[0]) == null) {
+                        MultiblockStructure subStructure = new MultiblockStructure(this);
+                        subStructure.addAllBlocks(this.level, subBlocks);
+                        this.allStructures.add(subStructure);
+                    }
                 }
             }
+        }
+        AssembledMultiblockStructure structure = this.getAssembledStructure(pos);
+        if (structure != null) {
+            this.removeAssembledStructure(structure);
+            structure.destroyStructure(this.level);
         }
         this.setDirty();
     }
@@ -154,6 +163,10 @@ public class MultiblockSavedData extends SavedData {
         if (!this.chunkStructures.containsKey(chunk)) return null;
         for (MultiblockStructure network : this.chunkStructures.get(chunk)) if (network.contains(pos)) return network;
         return null;
+    }
+
+    public AssembledMultiblockStructure getAssembledStructure(BlockPos pos) {
+        return this.blockAssembledStructures.get(pos);
     }
 
     protected void removeStructure(MultiblockStructure structure) {
@@ -173,5 +186,14 @@ public class MultiblockSavedData extends SavedData {
             list.remove(structure);
             return list;
         }).isEmpty()) this.chunkStructures.remove(chunk);
+    }
+
+    protected void setBlockAssembledStructure(BlockPos pos, AssembledMultiblockStructure structure) {
+        this.blockAssembledStructures.put(pos, structure);
+    }
+
+    protected void removeAssembledStructure(AssembledMultiblockStructure structure) {
+        this.allAssembledStructures.remove(structure);
+        structure.allBlocks().forEach(this.blockAssembledStructures::remove);
     }
 }

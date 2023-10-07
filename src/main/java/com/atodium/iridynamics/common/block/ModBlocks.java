@@ -8,6 +8,7 @@ import com.atodium.iridynamics.common.block.equipment.*;
 import com.atodium.iridynamics.common.block.factory.LiquidPipeBlock;
 import com.atodium.iridynamics.common.block.factory.smelter.MultiblockCrucibleBlock;
 import com.atodium.iridynamics.common.block.rotate.*;
+import com.atodium.iridynamics.common.multiblock.MultiblockCrucible;
 import com.atodium.iridynamics.common.multiblock.Smelter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -67,5 +68,6 @@ public class ModBlocks {
     public static void setup() {
         MultiblockModule.registerBlock(Iridynamics.rl("smelter_wall"), SMELTER_WALL.get());
         MultiblockModule.registerStructure(Smelter.INSTANCE);
+        MultiblockModule.registerAssembledStructure(MultiblockCrucible.INSTANCE);
     }
 }

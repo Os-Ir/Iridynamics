@@ -38,8 +38,7 @@ public class Smelter extends StructureInfo<Smelter.SmelterData> {
         int sizeX = structure.size().getX();
         int sizeY = structure.size().getY();
         int sizeZ = structure.size().getZ();
-        if (!MathUtil.between(sizeX, 3, 7) || !MathUtil.between(sizeY, 2, 7) || !MathUtil.between(sizeZ, 3, 7))
-            return LazyOptional.empty();
+        if (!MathUtil.between(sizeX, 3, 7) || !MathUtil.between(sizeY, 2, 7) || !MathUtil.between(sizeZ, 3, 7)) return LazyOptional.empty();
         Block smelterWall = ModBlocks.SMELTER_WALL.get();
         for (Block block : blocks.values()) if (block != smelterWall) return LazyOptional.empty();
         StructureLayer[] allLayers = MultiblockModule.allLayer(blocks, sizeX, sizeY, sizeZ);
@@ -50,18 +49,12 @@ public class Smelter extends StructureInfo<Smelter.SmelterData> {
 
     @Override
     public void onStructureFinish(ServerLevel level, SmelterData data, MultiblockStructure structure) {
-        for (int x = 1; x < data.sizeX - 1; x++)
-            for (int y = 1; y < data.sizeY; y++)
-                for (int z = 1; z < data.sizeZ - 1; z++)
-                    LiquidModule.addLiquidContainer(level, new BlockPos(data.rx + x, data.ry + y, data.rz + z));
+        for (int x = 1; x < data.sizeX - 1; x++) for (int y = 1; y < data.sizeY; y++) for (int z = 1; z < data.sizeZ - 1; z++) LiquidModule.addLiquidContainer(level, new BlockPos(data.rx + x, data.ry + y, data.rz + z));
     }
 
     @Override
     public void onStructureDestroyed(ServerLevel level, SmelterData data, MultiblockStructure structure) {
-        for (int x = 1; x < data.sizeX - 1; x++)
-            for (int y = 1; y < data.sizeY; y++)
-                for (int z = 1; z < data.sizeZ - 1; z++)
-                    LiquidModule.removeLiquidContainer(level, new BlockPos(data.rx + x, data.ry + y, data.rz + z));
+        for (int x = 1; x < data.sizeX - 1; x++) for (int y = 1; y < data.sizeY; y++) for (int z = 1; z < data.sizeZ - 1; z++) LiquidModule.removeLiquidContainer(level, new BlockPos(data.rx + x, data.ry + y, data.rz + z));
     }
 
     public static class SmelterData extends StructureData {

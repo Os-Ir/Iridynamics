@@ -1,7 +1,5 @@
 package com.atodium.iridynamics.api.multiblock;
 
-import com.atodium.iridynamics.api.multiblock.assembled.AssembledMultiblockStructure;
-import com.atodium.iridynamics.api.multiblock.assembled.AssembledStructureInfo;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.data.UnorderedRegistry;
 import com.google.common.collect.Lists;
