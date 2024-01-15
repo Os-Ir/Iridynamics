@@ -25,13 +25,12 @@ public class AxleRenderer implements BlockEntityRenderer<AxleBlockEntity> {
 
     @Override
     public void render(AxleBlockEntity axle, float partialTicks, PoseStack transform, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        if (model == null) model = SpecialJsonModel.createTransformableModel(Iridynamics.rl("item/axle_item"));
+        if (model == null) model = SpecialJsonModel.createTransformableModel(Iridynamics.rl("block/axle"));
         Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RendererUtil.BLOCKS_ATLAS);
         Direction direction = axle.getBlockState().getValue(AxleBlock.DIRECTION);
         transform.pushPose();
         transform.translate(0.5, 0.5, 0.5);
-        if (direction.get2DDataValue() >= 0)
-            transform.mulPose(Vector3f.YP.rotationDegrees(RendererUtil.getDirectionAngel(direction)));
+        if (direction.get2DDataValue() >= 0) transform.mulPose(Vector3f.YP.rotationDegrees(RendererUtil.getDirectionAngel(direction)));
         else transform.mulPose(Vector3f.XP.rotationDegrees(direction == Direction.UP ? 90.0f : -90.0f));
         transform.mulPose(Vector3f.ZP.rotationDegrees((float) Math.toDegrees(axle.getRenderAngle(partialTicks))));
         transform.translate(-0.5, -0.5, -0.5);

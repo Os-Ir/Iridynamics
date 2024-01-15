@@ -2,8 +2,8 @@ package com.atodium.iridynamics.common.multiblock;
 
 import com.atodium.iridynamics.Iridynamics;
 import com.atodium.iridynamics.api.capability.LiquidContainerCapability;
-import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.api.multiblock.AssembledStructureInfo;
+import com.atodium.iridynamics.api.multiblock.MultiblockModule;
 import com.atodium.iridynamics.api.util.data.DataUtil;
 import com.atodium.iridynamics.api.util.math.MathUtil;
 import com.atodium.iridynamics.common.block.ModBlocks;
